@@ -12,15 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('materiales', function (Blueprint $table) {
-            $table->id();
+            $table->bigInteger("id");
             $table->string("referencia",10)->primary(true)->unique();
             $table->string("nombre_material",255)->unique();
             $table->decimal('costo',10,2);
-            $table->float('cantidad');
+            $table->float('cantidad');  
             $table->string("nit_proveedor");
             $table->string("nombre_proveedor");
             $table->string("descripcion_proveedor");    
-            $table->foreignId("numero_identificacion")->on("usuarios")->references("numero_identificacion");
+            $table->foreign("numero_identificacion")->references("numero_identificacion")->on("usuarios");
             $table->timestamps();
         });
     }
