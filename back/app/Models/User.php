@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -17,10 +18,13 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    protected $table="usuarios";
     protected $fillable = [
-        'name',
-        'email',
+        'numero_identificacion',
+        'nombre_completo',
         'password',
+        'rol_usuario',
+        'estado',
     ];
 
     /**
@@ -41,8 +45,14 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function materiale():HasOne{
+        return $this->hasOne(Materiale::class,"referencia_material","numero_identificacion");
+    }
+    public function proyecto():HasOne{
+        return $this->hasOne(Materiale::class,"codigo_proyecto","numero_identificacion");
     }
 }

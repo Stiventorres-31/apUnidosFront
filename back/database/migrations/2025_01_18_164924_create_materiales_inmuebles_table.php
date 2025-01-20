@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('presupuestos', function (Blueprint $table) {
            
-
+            $table->unsignedBigInteger('id');
             $table->string("nombre_inmueble");
             $table->string("referencia_material");
             $table->decimal("costo_material");
@@ -21,8 +21,11 @@ return new class extends Migration
             $table->string("codigo_proyecto");
 
             $table->primary(["nombre_inmueble","referencia_material","codigo_proyecto"]);
-
+            $table->index('id');
             $table->foreign("referencia_material")->references("referencia_material")->on("materiales");
+
+            $table->foreign("nombre_inmueble")->references("nombre_inmueble")->on("inmuebles");
+
             $table->foreign("codigo_proyecto")->references("codigo_proyecto")->on("proyectos");
             $table->timestamps();
         });

@@ -12,17 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('asignaciones', function (Blueprint $table) {
-   
+            $table->unsignedBigInteger('id');
             $table->string("numero_identificacion", 20);
             $table->string("referencia_material",10);
             $table->string("nombre_inmueble");
-            $table->string("codigo _proyecto");
+            $table->string("codigo_proyecto");
 
             $table->float("cantidad_material");
             $table->decimal("costo_material");
 
             $table->primary(["numero_identificacion", "referencia_material", "nombre_inmueble", "codigo_proyecto"]);
-
+            $table->index('id');
             $table->string("estado")->default("Activo");
 
             $table->foreign('numero_identificacion')->references("numero_identificacion")->on("usuarios");

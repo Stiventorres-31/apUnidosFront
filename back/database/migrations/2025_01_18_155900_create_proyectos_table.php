@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('proyectos', function (Blueprint $table) {
-        
+            $table->unsignedBigInteger('id');
             $table->string('codigo_proyecto');
             $table->string('nombre_proyecto');
             $table->string('departamento_proyecto');
@@ -24,7 +24,7 @@ return new class extends Migration
 
             // $table->unique(["codigo_proyecto","nombre_proyecto"]);
             $table->primary(["codigo_proyecto","nombre_proyecto"]);
-
+            $table->index('id');
             $table->foreign('numero_identificacion')->references("numero_identificacion")->on("usuarios");
             $table->string("estado")->default("Activo");  
             $table->timestamps();

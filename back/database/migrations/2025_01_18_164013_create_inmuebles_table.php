@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('inmuebles', function (Blueprint $table) {
          
-            
+            $table->unsignedBigInteger('id');
             $table->string("nombre_inmueble");
             $table->string("codigo_proyecto");
             $table->string("nombre_tipo_inmueble");
             $table->string("estado")->default("Activo");
             
             $table->primary(["nombre_inmueble","codigo_proyecto"]);
-
+            $table->index('id');
             $table->foreign("nombre_tipo_inmueble")->references("nombre_tipo_inmueble")->on("tipos_inmuebles");
             $table->foreign("codigo_proyecto")->references("codigo_proyecto")->on("proyectos");
             $table->timestamps();
