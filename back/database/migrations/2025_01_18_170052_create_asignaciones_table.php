@@ -12,14 +12,23 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('asignaciones', function (Blueprint $table) {
-            $table->id();
-            $table->foreign('numero_identificacion')->on("usuarios")->references("numero_identificacion");
-            $table->foreign('codigo_material')->on("usuarios")->references("codigo_material");
-            $table->foreign("inmueble_id")->on("inmuebles")->references("id"); 
-            $table->foreign("codigo_proyecto")->on("proyectos")->references("codigo_proyecto");
+   
+            $table->string("numero_identificacion", 20);
+            $table->string("referencia_material",10);
+            $table->string("nombre_inmueble");
+            $table->string("codigo _proyecto");
+
             $table->float("cantidad_material");
             $table->decimal("costo_material");
+
+            $table->primary(["numero_identificacion", "referencia_material", "nombre_inmueble", "codigo_proyecto"]);
+
             $table->string("estado")->default("Activo");
+
+            $table->foreign('numero_identificacion')->references("numero_identificacion")->on("usuarios");
+            $table->foreign('referencia_material')->references("referencia_material")->on("materiales");
+            $table->foreign("nombre_inmueble")->references("nombre_inmueble")->on("inmuebles");
+            $table->foreign("codigo_proyecto")->references("codigo_proyecto")->on("proyectos");
             $table->timestamps();
         });
     }

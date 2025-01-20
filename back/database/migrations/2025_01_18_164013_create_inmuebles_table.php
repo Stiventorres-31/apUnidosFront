@@ -12,11 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('inmuebles', function (Blueprint $table) {
-            $table->id();
-            $table->string("nombre_inmueble")->unique();
+         
+            
+            $table->string("nombre_inmueble");
+            $table->string("codigo_proyecto");
+            $table->string("nombre_tipo_inmueble");
             $table->string("estado")->default("Activo");
-            $table->foreign("tipo_inmueble_id")->on("tipos_inmuebles")->references("id");
-            $table->foreign("codigo_proyecto")->on("proyectos ")->references("codigo_proyecto");
+            
+            $table->primary(["nombre_inmueble","codigo_proyecto"]);
+
+            $table->foreign("nombre_tipo_inmueble")->references("nombre_tipo_inmueble")->on("tipos_inmuebles");
+            $table->foreign("codigo_proyecto")->references("codigo_proyecto")->on("proyectos");
             $table->timestamps();
         });
     }

@@ -12,9 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tipos_inmuebles', function (Blueprint $table) {
-            $table->bigInteger("id");
-            $table->string('nombre_inmueble')->primary(true)->unique();
-            $table->foreign('numero_identificacion')->on("usuarios")->references("numero_identificacion");
+  
+            $table->string('nombre_tipo_inmueble'); 
+            $table->string('numero_identificacion'); 
+            $table->string("estado")->default("Activo");
+
+            $table->primary(["nombre_tipo_inmueble","numero_identificacion"]);
+
+            $table->foreign('numero_identificacion')->references("numero_identificacion")->on("usuarios");
             $table->timestamps();
         });
     }

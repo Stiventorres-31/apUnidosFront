@@ -12,14 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('materiales', function (Blueprint $table) {
-            $table->bigInteger("id");
-            $table->string("referencia",10)->primary(true)->unique();
-            $table->string("nombre_material",255)->unique();
+
+            $table->string("referencia_material",10);
+            $table->string("nombre_material",255);
+            $table->string("numero_identificacion",20);
             $table->decimal('costo',10,2);
-            $table->float('cantidad');  
+            $table->float('cantidad');
             $table->string("nit_proveedor");
             $table->string("nombre_proveedor");
-            $table->string("descripcion_proveedor");    
+            $table->string("descripcion_proveedor");
+
+          
+
+            $table->primary(["referencia_material","nombre_material"]);
             $table->foreign("numero_identificacion")->references("numero_identificacion")->on("usuarios");
             $table->timestamps();
         });

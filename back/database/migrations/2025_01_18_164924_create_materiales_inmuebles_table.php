@@ -11,13 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('materiales_inmuebles', function (Blueprint $table) {
-            $table->id();
-            $table->foreign("inmueble_id")->on("inmuebles")->references("id");
-            $table->foreign("referencia")->on("materiales")->references("referencia");
+        Schema::create('presupuestos', function (Blueprint $table) {
+           
+
+            $table->string("nombre_inmueble");
+            $table->string("referencia_material");
             $table->decimal("costo_material");
             $table->float("cantidad_material");
-            $table->foreign("codigo_proyecto")->on("proyectos")->references("codigo_proyecto");
+            $table->string("codigo_proyecto");
+
+            $table->primary(["nombre_inmueble","referencia_material","codigo_proyecto"]);
+
+            $table->foreign("referencia_material")->references("referencia_material")->on("materiales");
+            $table->foreign("codigo_proyecto")->references("codigo_proyecto")->on("proyectos");
             $table->timestamps();
         });
     }
