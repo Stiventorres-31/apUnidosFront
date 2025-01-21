@@ -12,16 +12,24 @@ class LogoutController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function __invoke()
     {
         try {
             auth('api')->logout();
             JWTAuth::invalidate(JWTAuth::getToken());
-           return response()->json(['message'=>'Successfully logged out']);
-           
+            return response()->json([
+                "isError" => false,
+                "code" => 200,
+                "message" => "Se ha cerrado con exito",
+                "result" => []
+            ]);
         } catch (JWTException $ex) {
-            return response()->json(['message'=>'Token not found'], 401);
-           
+            return response()->json([
+                "isError" => true,
+                "code" => 401,
+                "message" => "El token no existe",
+                "result" => []
+            ], 401);
         }
     }
 }

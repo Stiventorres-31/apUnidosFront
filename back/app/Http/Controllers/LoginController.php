@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class LoginController extends Controller
@@ -15,21 +16,25 @@ class LoginController extends Controller
     {
         $credenciales = $request->only("numero_identificacion", "password");
 
-        if (!$token = JWTAuth::attempt($credenciales)) {
-            return response()->json(['error' => 'Unauthorized'], status: 401);
+        try {
+            if (!$token = JWTAuth::attempt($credenciales)) {
+                return response()->json([
+                    "isError" => true,
+                    "code" => 401,
+                    "message" => "Las credenciales no son correctas",
+                    "result" => []
+                ], status: 401);
+            }
+
+           
+        } catch (JWTException  $e) {
+            return response()->json([
+                "isError" => true,
+                "code" => 422,
+                "message" => "No se ha podido iniciar sesion",
+                "result" => []
+            ], status: 422);
         }
-
-        // $usuario = Auth::user();
-        // $customClaims = [
-        //     'user_id' => $usuario->id,
-        //     'nombre_completo' => $usuario->role,
-
-
-        // ];
-
-        // $token = JWTAuth::claims($customClaims)->attempt($credenciales);
-
-
         return response()->json([
             "isError" => false,
             "message" => "Se ha iniciado sesión con exito",

@@ -17,7 +17,9 @@ Route::group(['middleware' => ['auth:api'], "prefix" => 'auth'], function () {
 });
 
 Route::middleware('auth:api')->prefix("usuario")->group(function(){
-    Route::post("/", [UserController::class, 'save']);
-    Route::put("/{numero_identificacion}", [UserController::class, 'edit']);
+    Route::post("/", [UserController::class, 'store']);
+    Route::get("/", [UserController::class, 'index']);
+    Route::get("/{numero_identificacion}", [UserController::class, 'show']);
+    Route::put("/{numero_identificacion}", [UserController::class, 'update']);
 });
 
