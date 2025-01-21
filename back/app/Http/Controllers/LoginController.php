@@ -23,15 +23,20 @@ class LoginController extends Controller
         // $customClaims = [
         //     'user_id' => $usuario->id,
         //     'nombre_completo' => $usuario->role,
-            
-          
+
+
         // ];
 
         // $token = JWTAuth::claims($customClaims)->attempt($credenciales);
-        
+
 
         return response()->json([
-            'token' => $token
+            "isError" => false,
+            "message" => "Se ha iniciado sesión con exito",
+            "code" => 200,
+            "result" => [
+                'token' => $token
+            ]
         ]);
         //
     }
