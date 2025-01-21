@@ -15,19 +15,18 @@ return new class extends Migration
             $table->unsignedBigInteger('id');
             $table->string("numero_identificacion", 20);
             $table->string("referencia_material",10);
-            $table->string("nombre_inmueble");
+            $table->unsignedBigInteger("id_inmueble");
             $table->string("codigo_proyecto");
 
             $table->float("cantidad_material");
             $table->decimal("costo_material");
 
-            $table->primary(["numero_identificacion", "referencia_material", "nombre_inmueble", "codigo_proyecto"]);
+            $table->primary(["numero_identificacion", "referencia_material", "id_inmueble", "codigo_proyecto"]);
             $table->index('id');
-            $table->string("estado")->default("Activo");
-
+            $table->char("estado",1)->default("A");
             $table->foreign('numero_identificacion')->references("numero_identificacion")->on("usuarios");
             $table->foreign('referencia_material')->references("referencia_material")->on("materiales");
-            $table->foreign("nombre_inmueble")->references("nombre_inmueble")->on("inmuebles");
+            $table->foreign("id_inmueble")->references("id")->on("inmuebles");
             $table->foreign("codigo_proyecto")->references("codigo_proyecto")->on("proyectos");
             $table->timestamps();
         });

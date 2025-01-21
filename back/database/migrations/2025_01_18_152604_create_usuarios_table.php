@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('usuarios', function (Blueprint $table) {
             $table->id();
-            $table->string('numero_identificacion', 20)->unique()->index();
+            $table->string('numero_identificacion', 20);
             $table->string('nombre_completo', 30);
             $table->string('password');
             $table->string('rol_usuario', 20);
-            $table->string('estado', 50)->default('Activo');
-
+            $table->char("estado",1)->default("A");
+            $table->index(["numero_identificacion","nombre_completo"]);
+            $table->unique(["numero_identificacion","nombre_completo"]);
             $table->rememberToken();
             $table->timestamps();
         });

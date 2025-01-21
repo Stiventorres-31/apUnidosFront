@@ -27,7 +27,7 @@ class UserController extends Controller
         $usuario->nombre_completo = strtoupper($request->nombre_completo);
         $usuario->password = bcrypt($request->password);
         $usuario->rol_usuario = strtoupper($request->rol_usuario);
-        $usuario->estado = 'Activo';
+        $usuario->estado = 'A';
 
         $usuario->save();
 
