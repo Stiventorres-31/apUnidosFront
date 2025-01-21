@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -50,10 +51,25 @@ class User extends Authenticatable
         ];
     }
 
-    public function materiale():HasOne{
-        return $this->hasOne(Materiale::class,"referencia_material","numero_identificacion");
+    public function getJWTCustomClaims():array
+    {
+        return [
+            'user_id' => $this->id,
+            
+        ];
     }
-    public function proyecto():HasOne{
-        return $this->hasOne(Materiale::class,"codigo_proyecto","numero_identificacion");
+    public function getJWTIdentifier()
+    {
+        //identificacion real
+        return $this->getKey();
+    }
+
+    public function materiale(): HasOne
+    {
+        return $this->hasOne(Materiale::class, "referencia_material", "numero_identificacion");
+    }
+    public function proyecto(): HasOne
+    {
+        return $this->hasOne(Materiale::class, "codigo_proyecto", "numero_identificacion");
     }
 }
