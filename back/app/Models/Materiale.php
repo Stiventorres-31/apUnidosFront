@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Materiale extends Model
 {
+    protected $primaryKey ="referencia_material";
     protected $fillable =[
         "referencia_material",
         "nombre_material",

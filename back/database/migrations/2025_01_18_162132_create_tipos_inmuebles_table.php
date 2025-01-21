@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tipos_inmuebles', function (Blueprint $table) {
             $table->id();
             $table->string('nombre_tipo_inmueble'); 
-            $table->string('numero_identificacion'); 
+            $table->string('numero_identificacion',20); 
             $table->char("estado",1)->default("A");
             $table->foreign('numero_identificacion')->references("numero_identificacion")->on("usuarios");
             $table->timestamps();

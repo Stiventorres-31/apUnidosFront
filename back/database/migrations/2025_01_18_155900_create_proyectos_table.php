@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('departamento_proyecto');
             $table->string('ciudad_municipio_proyecto');
             $table->string('direccion_proyecto');
-            $table->string('numero_identificacion');
+            $table->string('numero_identificacion', 20);
             $table->date('fecha_inicio_proyecto');
             $table->date('fecha_final_proyecto');
 
@@ -26,7 +26,7 @@ return new class extends Migration
             // $table->unique(["codigo_proyecto", "nombre_proyecto"]);
 
             $table->foreign('numero_identificacion')->references("numero_identificacion")->on("usuarios");
-            $table->string("estado")->default("Activo");
+            $table->char("estado",1)->default("A");
             $table->timestamps();
         });
     }

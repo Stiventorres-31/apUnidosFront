@@ -15,7 +15,7 @@ return new class extends Migration
          
             $table->id();
             $table->string("nombre_inmueble")->index();
-            $table->string("estado")->default("Activo");
+            $table->string("estado",1)->default("A");
          
             $table->string("codigo_proyecto", 10);
             

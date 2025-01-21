@@ -9,3 +9,4 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 Route::post("/usuarios", [UserController::class,'save']);
+Route::put("/usuarios/{numero_identificacion}", [UserController::class,'edit']);
