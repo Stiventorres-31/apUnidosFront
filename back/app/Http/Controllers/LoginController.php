@@ -40,7 +40,8 @@ class LoginController extends Controller
             "message" => "Se ha iniciado sesión con exito",
             "code" => 200,
             "result" => [
-                'token' => $token
+                'token' => $token,
+                'user'=> auth::user()
             ]
         ]);
         //
