@@ -17,8 +17,17 @@ class Materiale extends Model
         "nit_proveedor",
         "nombre_proveedor",
         "descripcion_proveedor",
+        "estado"
     ];
-
+    protected $hidden = [
+        'updated_at',
+        'created_at'
+    ];
+    protected function casts(){
+        return [
+            "estado"=>"string"
+        ];
+    }
     public function usuarios():BelongsTo{
         return $this->belongsTo(User::class,"numero_identificacion","numero_identificacion");
     }

@@ -16,12 +16,10 @@ return new class extends Migration
             $table->id();
             $table->string("nombre_inmueble")->index();
             $table->string("estado",1)->default("A");
-         
             $table->string("codigo_proyecto", 10);
             
             $table->foreignId("tipo_inmueble")->references("id")->on("tipos_inmuebles");
             $table->foreign("codigo_proyecto")->references("codigo_proyecto")->on("proyectos");
-
             $table->timestamps();
         });
     }

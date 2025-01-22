@@ -29,5 +29,6 @@ Route::middleware('auth:api')->prefix('materiale')->group(function(){
     Route::get("/",[MaterialeController::class,"index"]);
     Route::post("/",[MaterialeController::class,"store"]);
     Route::put("/{referencia}",[MaterialeController::class,"update"]);
+    Route::delete("/", [MaterialeController::class,'delete']);
 });
 

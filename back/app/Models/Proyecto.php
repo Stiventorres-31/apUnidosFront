@@ -23,10 +23,15 @@ class Proyecto extends Model
         return[
             "fecha_inicio_proyecto"=>"date",
             "fecha_final_proyecto"=>"date",
-            "estado"=>"char"
+            "estado"=>"string"
         ];
     }
 
+    protected $hidden = [
+
+        'updated_at',
+        'created_at'
+    ];
     public function usuarios():BelongsTo{
         return $this->belongsTo(User::class,"numero_identificacion","numero_identificacion");
     }
