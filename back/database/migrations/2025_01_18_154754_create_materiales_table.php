@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string("nit_proveedor");
             $table->string("nombre_proveedor");
             $table->string("descripcion_proveedor");
-
+            $table->char("estado",1)->default("A");
             $table->index(["referencia_material"]);
             $table->unique(["referencia_material","nombre_material"]);
             // Definir clave foránea

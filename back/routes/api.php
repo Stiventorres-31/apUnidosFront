@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\MaterialeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,5 +22,11 @@ Route::middleware('auth:api')->prefix("usuario")->group(function(){
     Route::get("/", [UserController::class, 'index']);
     Route::get("/{numero_identificacion}", [UserController::class, 'show']);
     Route::put("/{numero_identificacion}", [UserController::class, 'update']);
+});
+
+Route::middleware('auth:api')->prefix('materiale')->group(function(){
+    Route::get("/",[MaterialeController::class,"index"]);
+    Route::post("/",[MaterialeController::class,"store"]);
+    Route::put("/{referencia}",[MaterialeController::class,"update"]);
 });
 

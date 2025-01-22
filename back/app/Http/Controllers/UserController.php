@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-
-use Nette\Utils\Validators;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -32,7 +32,7 @@ class UserController extends Controller
                 'message' => __('Usuario encontrado'),
                 'result' => ['usuario' => $usuario],
             ]);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json([
                 'isError' => true,
                 'code' => 404,
@@ -45,7 +45,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $validateDate = Validators::make($request->all(), [
+        $validateDate = Validator::make($request->all(), [
             'numero_identificacion' => 'required|unique:usuarios|max:20',
             'nombre_completo' => 'required|max:50',
             'password' => 'required|min:6',
@@ -80,7 +80,7 @@ class UserController extends Controller
 
     public function update(Request $request, $numero_identificacion)
     {
-        $validateDate = Validators::make($request->all(), [
+        $validateDate = Validator::make($request->all(), [
             'nombre_completo' => 'required|max:50',
             'password' => 'required|min:6',
             'rol_usuario' => 'required|array',
