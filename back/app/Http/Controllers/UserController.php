@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -45,7 +46,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $validateDate = Validator::make($request->all(), [
+        $validateData = Validator::make($request->all(), [
             'numero_identificacion' => 'required|unique:usuarios|max:20',
             'nombre_completo' => 'required|max:50',
             'password' => 'required|min:6',
@@ -53,12 +54,12 @@ class UserController extends Controller
             "rol_usuario.id" => "required|min:1",
             "rol_usuario.name" => "required|max:20"
         ]);
-        if ($validateDate->fails()) {
+        if ($validateData->fails()) {
             return response()->json([
                 'isError' => true,
                 'code' => 422,
                 'message' => 'Verificar la información',
-                'result' => $validateDate->errors(),
+                'result' => $validateData->errors(),
             ], 422);
         }
         $usuario = new User();
@@ -80,7 +81,7 @@ class UserController extends Controller
 
     public function update(Request $request, $numero_identificacion)
     {
-        $validateDate = Validator::make($request->all(), [
+        $validateData = Validator::make($request->all(), [
             'nombre_completo' => 'required|max:50',
             'password' => 'required|min:6',
             'rol_usuario' => 'required|array',
@@ -89,12 +90,12 @@ class UserController extends Controller
             'estado' => 'required|min:1'
         ]);
 
-        if ($validateDate->fails()) {
+        if ($validateData->fails()) {
             return response()->json([
                 'isError' => true,
                 'code' => 422,
                 'message' => 'Verificar la información',
-                'result' => $validateDate->errors(),
+                'result' => $validateData->errors(),
             ], 422);
         }
 
@@ -123,6 +124,49 @@ class UserController extends Controller
             "code" => 200,
             'message' => 'Usuario actualizado exitosamente.',
             "result" => ['usuario' => $usuario],
+        ], 200);
+    }
+
+    public function changePassword(Request $request){
+        $validateData = Validator::make($request->all(), [
+            "numero_identificacion" => "required|exists:usuarios,numero_identificacion",
+            "password" => "required|min:6",
+            "new_password" => "required|min:6|confirmed",
+        ]);
+    
+        if ($validateData->fails()) {
+            return response()->json([
+                'isError' => true,
+                'code' => 422,
+                'message' => 'Verificar la información ingresada',
+                'result' => $validateData->errors(),
+            ], 422);
+        }
+    
+        // Obtener el usuario autenticado
+        $usuario = $request->user();
+    
+        // Verificar si la contraseña actual es correcta
+        if (!Hash::check($request->password, $usuario->password)) {
+            return response()->json([
+                'isError' => true,
+                'code' => 422,
+                'message' => 'La contraseña actual no es correcta',
+                "result"=>[]
+            ], 422);
+        }
+    
+        // Actualizar la contraseña
+        $usuario->password = Hash::make($request->input('new_password'));
+        $usuario->save();
+    
+        return response()->json([
+            'isError' => false,
+            'code' => 200,
+            'message' => 'Contraseña actualizada con éxito',
+            "result"=>[
+                "usuario"=>$usuario
+            ]
         ], 200);
     }
 }

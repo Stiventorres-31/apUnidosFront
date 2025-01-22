@@ -21,6 +21,7 @@ Route::middleware('auth:api')->prefix("usuario")->group(function(){
     Route::post("/", [UserController::class, 'store']);
     Route::get("/", [UserController::class, 'index']);
     Route::get("/{numero_identificacion}", [UserController::class, 'show']);
+    Route::put("/changePassword", [UserController::class, 'changePassword']);
     Route::put("/{numero_identificacion}", [UserController::class, 'update']);
 });
 
