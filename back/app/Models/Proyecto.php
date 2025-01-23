@@ -7,8 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Proyecto extends Model
 {
-    protected $primaryKey = "codigo_proyecto";
+    protected $primaryKey = 'codigo_proyecto';
+    public $incrementing = false;
+    protected $keyType = 'string';
+    
     protected $fillable =[
+
         "codigo_proyecto",
         "departamento_proyecto",
         "ciudad_municipio_proyecto",
@@ -19,13 +23,12 @@ class Proyecto extends Model
         "estado",
     ];
 
-    protected function casts():array{
-        return[
-            "fecha_inicio_proyecto"=>"date",
-            "fecha_final_proyecto"=>"date",
-            "estado"=>"string"
-        ];
-    }
+    protected $casts = [
+        "fecha_inicio_proyecto" => "date:d/m/Y",
+        "fecha_final_proyecto" => "date:d/m/Y",
+        "estado" => "string"
+    ];
+    
 
     protected $hidden = [
 

@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tipos_inmuebles', function (Blueprint $table) {
+        Schema::create('tipo_inmuebles', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre_tipo_inmueble'); 
+            $table->string('nombre_tipo_inmueble')->unique(); 
             $table->string('numero_identificacion',20); 
+
             $table->char("estado",1)->default("A");
             $table->foreign('numero_identificacion')->references("numero_identificacion")->on("usuarios");
             $table->timestamps();
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tipos_inmuebles');
+        Schema::dropIfExists('tipo_inmuebles');
     }
 };

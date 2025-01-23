@@ -25,7 +25,7 @@ return new class extends Migration
             $table->index(["referencia_material"]);
             $table->unique(["referencia_material","nombre_material"]);
             // Definir clave foránea
-            $table->foreign("numero_identificacion")->references("numero_identificacion")->on("usuarios")->onDelete('cascade');
+            $table->foreign("numero_identificacion")->references("numero_identificacion")->on("usuarios");
         
             $table->timestamps();
         });
