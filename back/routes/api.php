@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\AsignacioneController;
+use App\Http\Controllers\AsingacioneController;
+use App\Http\Controllers\InmuebleController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\MaterialeController;
+use App\Http\Controllers\PresupuestoController;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\TipoInmuebleController;
 use App\Http\Controllers\UserController;
@@ -46,5 +50,26 @@ Route::middleware('auth:api')->prefix("tipo_inmueble")->group(function(){
     Route::get("/{id}", [TipoInmuebleController::class,'show']);
     Route::post("/", [TipoInmuebleController::class,'store']);
     Route::put("/{id}", [TipoInmuebleController::class,'update']);
+});
+
+Route::middleware('auth:api')->prefix('inmueble')->group(function(){
+    Route::post("/",[InmuebleController::class,"store"]);
+    Route::delete("/{id}",[InmuebleController::class,"destroy"]);
+    Route::get("/",[InmuebleController::class,"index"]);
+    Route::get("/{id}",[InmuebleController::class,"show"]);
+});
+
+Route::middleware('auth:api')->prefix('presupuesto')->group(function(){
+    Route::post("/",[PresupuestoController::class,"store"]);
+    Route::post("/file",[PresupuestoController::class,"fileMasivo"]);
+    // Route::delete("/{id}",[PresupuestoController::class,"destroy"]);
+    // Route::get("/",[PresupuestoController::class,"index"]);
+    // Route::get("/{id}",[PresupuestoController::class,"show"]);
+    Route::delete("/",[PresupuestoController::class,"destroy"]);
+});
+
+Route::middleware('auth:api')->prefix('asignacion')->group(function(){
+    Route::post("/",[AsignacioneController::class,"store"]);
+    // Route::delete("/",[PresupuestoController::class,"destroy"]);
 });
 

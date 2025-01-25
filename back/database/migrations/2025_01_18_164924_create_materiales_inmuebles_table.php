@@ -28,6 +28,7 @@ return new class extends Migration
             $table->foreign("id_inmueble")->references("id")->on("inmuebles");
             $table->foreign("referencia_material")->references("referencia_material")->on("materiales");
             $table->foreign("codigo_proyecto")->references("codigo_proyecto")->on("proyectos");
+            $table->foreign("numero_identificacion")->references("numero_identificacion")->on(table: "usuarios");
             $table->timestamps();
         });
     }

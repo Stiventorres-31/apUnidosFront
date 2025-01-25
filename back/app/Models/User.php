@@ -77,4 +77,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(Materiale::class, "codigo_proyecto", "numero_identificacion");
     }
+    public function inmuebles(){
+        return $this->hasOne(Inmueble::class);
+    }
 }

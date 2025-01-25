@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal("costo_material");
 
             $table->primary(["numero_identificacion", "referencia_material", "id_inmueble", "codigo_proyecto"]);
-            $table->index('id');
+            $table->unique('id');
             $table->char("estado",1)->default("A");
             $table->foreign('numero_identificacion')->references("numero_identificacion")->on("usuarios");
             $table->foreign('referencia_material')->references("referencia_material")->on("materiales");

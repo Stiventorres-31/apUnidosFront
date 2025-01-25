@@ -62,7 +62,7 @@ class ProyectoController extends Controller
     }
     public function show($codigo_proyecto)
     {
-        $proyecto = Proyecto::find($codigo_proyecto);
+        $proyecto = Proyecto::with('inmuebles.presupuestos')->find($codigo_proyecto);
 
         if (!$proyecto) {
             return response()->json([
@@ -160,7 +160,7 @@ class ProyectoController extends Controller
                 'code' => 403,
                 'message' => 'Este proyecto no se puede eliminar',
                 'result' => [],
-            ], 403); // Código 403 para indicar acción prohibida
+            ], 403); 
         }
 
         $proyecto->estado = "E";

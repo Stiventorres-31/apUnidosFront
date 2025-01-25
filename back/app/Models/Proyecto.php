@@ -31,10 +31,12 @@ class Proyecto extends Model
     
 
     protected $hidden = [
-
         'updated_at',
         'created_at'
     ];
+    public function inmuebles(){
+        return $this->hasMany(Inmueble::class,"codigo_proyecto","codigo_proyecto");
+    }
     public function usuarios():BelongsTo{
         return $this->belongsTo(User::class,"numero_identificacion","numero_identificacion");
     }

@@ -27,6 +27,9 @@ class TipoInmueble extends Model
     {
         return $this->belongsTo(User::class, 'numero_identificacion', 'numero_identificacion');
     }
+    public function inmuebles(){
+        return $this->hasOne(Inmueble::class,"tipo_inmueble","id");
+    }
     public function toArray()
     {
         return [
@@ -34,7 +37,9 @@ class TipoInmueble extends Model
             'nombre_tipo_inmueble' => $this->nombre_tipo_inmueble,
             'numero_identificacion' => $this->numero_identificacion,
             'estado' => $this->estado,
-            // 'usuario' => $this->usuario ? $this->usuario->toArray() : null,
+            'usuario' => $this->usuario ? $this->usuario->toArray() : null,
         ];
+
+        
     }
 }
