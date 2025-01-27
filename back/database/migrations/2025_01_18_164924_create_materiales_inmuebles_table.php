@@ -13,19 +13,20 @@ return new class extends Migration
     {
         Schema::create('presupuestos', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->unsignedBigInteger('id');
-            $table->index('id');
+          
+           
 
-            $table->unsignedBigInteger("id_inmueble");
+            $table->string("nombre_inmueble");
             $table->string("referencia_material");
-            $table->decimal("costo_material");
+            $table->string("numero_identificacion",20);
+            $table->decimal("costo_material",10,2);
             $table->float("cantidad_material");
             $table->string("codigo_proyecto");
-            $table->char("estado",1)->default("A");
+            // $table->char("estado",1)->default("A");
 
-            $table->primary(["id_inmueble","referencia_material","codigo_proyecto"]);
+            $table->primary(["nombre_inmueble","referencia_material","codigo_proyecto"]);
 
-            $table->foreign("id_inmueble")->references("id")->on("inmuebles");
+            $table->foreign("nombre_inmueble")->references("nombre_inmueble")->on("inmuebles");
             $table->foreign("referencia_material")->references("referencia_material")->on("materiales");
             $table->foreign("codigo_proyecto")->references("codigo_proyecto")->on("proyectos");
             $table->foreign("numero_identificacion")->references("numero_identificacion")->on(table: "usuarios");

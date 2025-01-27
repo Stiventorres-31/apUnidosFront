@@ -11,21 +11,21 @@ class Presupuesto extends Model
 
     public $incrementing = false;  // La clave primaria es compuesta
 
-    protected $primaryKey = ['id_inmueble', 'referencia_material', 'codigo_proyecto'];
+    protected $primaryKey = ['nombre_inmueble', 'referencia_material', 'codigo_proyecto'];
 
     protected $fillable = [
-        'id_inmueble',
+        'nombre_inmueble',
         'referencia_material',
         'costo_material',
         'cantidad_material',
         'codigo_proyecto',
-        'estado',
+       
     ];
 
     protected $casts = [
         'costo_material' => 'decimal:2',
         'cantidad_material' => 'float',
-        'estado' => 'string',
+       
     ];
 
     protected $hidden = [
@@ -36,7 +36,7 @@ class Presupuesto extends Model
     // Relación con Inmueble
     public function inmueble(): BelongsTo
     {
-        return $this->belongsTo(Inmueble::class, 'id_inmueble', 'id');
+        return $this->belongsTo(Inmueble::class, 'nombre_inmueble', 'nombre_inmueble');
     }
 
     // Relación con Material
@@ -53,12 +53,12 @@ class Presupuesto extends Model
     public function toArray()
     {
         return [
-            'id' => $this->id,
-            'id_inmueble' => $this->id_inmueble,
+           
+            'nombre_inmueble' => $this->nombre_inmueble,
             'referencia_material' => $this->referencia_material,
             'costo_material' => $this->costo_material,
             'cantidad_material' => $this->cantidad_material,
-            'estado' => $this->estado,
+           
             "codigo_proyecto"=>$this->codigo_proyecto,
             // 'usuario' => $this->usuario ? $this->usuario->toArray() : null,
             "material"=> $this->material ? $this->material->toArray() : null,

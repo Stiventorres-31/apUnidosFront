@@ -88,7 +88,7 @@ class TipoInmuebleController extends Controller
         $validator = Validator::make($request->all(), [
             'nombre_tipo_inmueble' => 'required|string|unique:tipo_inmuebles,nombre_tipo_inmueble,' . $id,
             'numero_identificacion' => 'required|string|exists:usuarios,numero_identificacion',
-            'estado' => 'nullable|in:A,E'
+           
         ]);
 
         if ($validator->fails()) {
@@ -103,7 +103,7 @@ class TipoInmuebleController extends Controller
         $tipoInmueble->update([
             'nombre_tipo_inmueble' => $request->nombre_tipo_inmueble,
             'numero_identificacion' => $request->numero_identificacion,
-            'estado' => $request->estado ?? $tipoInmueble->estado
+            
         ]);
 
         return response()->json([

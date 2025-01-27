@@ -29,6 +29,7 @@ Route::middleware('auth:api')->prefix("usuario")->group(function(){
     Route::get("/{numero_identificacion}", [UserController::class, 'show']);
     Route::put("/changePassword", [UserController::class, 'changePassword']);
     Route::put("/{numero_identificacion}", [UserController::class, 'update']);
+    Route::delete("/", [UserController::class, 'destroy']);
 });
 
 Route::middleware('auth:api')->prefix('materiale')->group(function(){
@@ -43,6 +44,7 @@ Route::middleware('auth:api')->prefix("proyecto")->group(function(){
     Route::get("/{codigo_proyecto}", [ProyectoController::class,'show']);
     Route::post("/", [ProyectoController::class,'store']);
     Route::put("/{codigo_proyecto}", [ProyectoController::class,'update']);
+    Route::delete("/", [ProyectoController::class,'destroy']);
 });
 
 Route::middleware('auth:api')->prefix("tipo_inmueble")->group(function(){

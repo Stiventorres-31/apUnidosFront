@@ -93,7 +93,7 @@ class ProyectoController extends Controller
                 'result' => [],
             ], 404);
         }
-        if ($proyecto->estado === 'F') {
+        if ($proyecto->estado === 'F' ) {
             return response()->json([
                 'isError' => true,
                 'code' => 403,
@@ -110,7 +110,7 @@ class ProyectoController extends Controller
 
             'fecha_inicio_proyecto' => 'sometimes|date_format:d/m/Y',
             'fecha_final_proyecto' => 'sometimes|date_format:d/m/Y|after:fecha_inicio_proyecto',
-            'estado' => 'sometimes|in:A,F',
+          
         ]);
 
         if ($validator->fails()) {
@@ -131,7 +131,7 @@ class ProyectoController extends Controller
 
         $proyecto->fecha_inicio_proyecto = Carbon::createFromFormat("d/m/Y", $request->fecha_inicio_proyecto)->format("Y-m-d");
         $proyecto->fecha_final_proyecto = Carbon::createFromFormat("d/m/Y", $request->fecha_final_proyecto)->format("Y-m-d");
-        $proyecto->estado = strtoupper($request->estado);
+       
         $proyecto->save();
 
         return response()->json([
@@ -142,9 +142,12 @@ class ProyectoController extends Controller
         ], 200);
     }
 
-    public function destroy($codigo_proyecto)
+    public function destroy(Request $request)
     {
-        $proyecto = Proyecto::find($codigo_proyecto);
+        $validator= Validator::make($request->all(),[
+            "codigo_proyecto"=>"required|exists:proyectos,codigo_proyecto|min:4"
+        ]);
+        $proyecto = Proyecto::find($request->codigo_proyecto);
 
         if (!$proyecto) {
             return response()->json([
@@ -163,13 +166,12 @@ class ProyectoController extends Controller
             ], 403); 
         }
 
-        $proyecto->estado = "E";
-        $proyecto->save();
+        $proyecto->update(["estado" => "E"]);
         return response()->json([
             'isError' => false,
             'code' => 200,
-            'message' => 'Se ha actualizado con exito',
-            'result' => ["proyecto" => $proyecto]
+            'message' => 'Se ha eliminado con exito',
+            'result' => []
         ], 200);
     }
 }

@@ -34,12 +34,12 @@ class Inmueble extends Model
         return $this->belongsTo(User::class,"numero_identificacion","numero_identificacion");
     }
     public function presupuestos(){
-        return $this->hasMany(Presupuesto::class,"id_inmueble","id");
+        return $this->hasMany(Presupuesto::class,"nombre_inmueble","nombre_inmueble");
     }
     public function toArray()
     {
         return [
-            'id' => $this->id,
+          
             'nombre_inmueble' => $this->nombre_inmueble,
             'numero_identificacion' => $this->numero_identificacion,
             'codigo_proyecto' => $this->codigo_proyecto,

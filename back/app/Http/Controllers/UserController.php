@@ -87,7 +87,7 @@ class UserController extends Controller
             'rol_usuario' => 'required|array',
             "rol_usuario.id" => "required|min:1",
             "rol_usuario.name" => "required|max:20",
-            'estado' => 'required|min:1'
+
         ]);
 
         if ($validateData->fails()) {
@@ -115,7 +115,7 @@ class UserController extends Controller
         $usuario->nombre_completo = strtoupper($request->input("nombre_completo"));
         $usuario->password = bcrypt($request->input("password"));
         $usuario->rol_usuario = strtoupper($request->input("rol_usuario")["name"]);
-        $usuario->estado = strtoupper($request->input("estado"));
+
         $usuario->save();
 
 
@@ -127,13 +127,42 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function changePassword(Request $request){
+    public function destroy(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "numero_identificacion" => "required|exists:usuarios,numero_identificacion|min:6"
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'isError' => true,
+                "code" => 422,
+                'message' => 'Usuario actualizado exitosamente.',
+                "result" => $validator->errors(),
+            ];
+        }
+
+        $usuario = User::findOrFail($request->numero_identificacion);
+
+        $usuario->update([
+            "estado" => "E"
+        ]);
+        return [
+            'isError' => false,
+            "code" => 200,
+            'message' => 'Se ha eliminado el usuario',
+            "result" => [],
+        ];
+    }
+
+    public function changePassword(Request $request)
+    {
         $validateData = Validator::make($request->all(), [
             "numero_identificacion" => "required|exists:usuarios,numero_identificacion",
             "password" => "required|min:6",
             "new_password" => "required|min:6|confirmed",
         ]);
-    
+
         if ($validateData->fails()) {
             return response()->json([
                 'isError' => true,
@@ -142,30 +171,30 @@ class UserController extends Controller
                 'result' => $validateData->errors(),
             ], 422);
         }
-    
+
         // Obtener el usuario autenticado
         $usuario = $request->user();
-    
+
         // Verificar si la contraseña actual es correcta
         if (!Hash::check($request->password, $usuario->password)) {
             return response()->json([
                 'isError' => true,
                 'code' => 422,
                 'message' => 'La contraseña actual no es correcta',
-                "result"=>[]
+                "result" => []
             ], 422);
         }
-    
+
         // Actualizar la contraseña
         $usuario->password = Hash::make($request->input('new_password'));
         $usuario->save();
-    
+
         return response()->json([
             'isError' => false,
             'code' => 200,
             'message' => 'Contraseña actualizada con éxito',
-            "result"=>[
-                "usuario"=>$usuario
+            "result" => [
+                "usuario" => $usuario
             ]
         ], 200);
     }

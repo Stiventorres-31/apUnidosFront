@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("referencia_material", 10);
             $table->string("nombre_material", 255);
+            
             $table->string("numero_identificacion", 20);
             $table->decimal('costo', 10, 2);
             $table->float('cantidad');
