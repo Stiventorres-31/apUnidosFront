@@ -6,6 +6,8 @@ import { isAdminGuard } from "../core/guards/admin.guard";
 import { ProjectsComponent } from "./modules/projects/projects.component";
 import { UsersComponent } from "./modules/users/users.component";
 import { FormUserComponent } from "./modules/users/pages/form/form-user.component";
+import { TipoInmueblesComponent } from "./modules/projects/inmuebles/tipo/tipo-inmuebles.component";
+import { FormTipoInmuebleComponent } from "./modules/projects/inmuebles/tipo/form/form-tipo-inmueble.component";
 
 export const ADMIN_ROUTES: Routes = [
 
@@ -33,9 +35,9 @@ export const ADMIN_ROUTES: Routes = [
             {
                 path: 'type-property',
                 children: [
-                    //{ path: '', component: TypePropertyComponent },
-                    //{ path: 'new', component: FormTypePropertyComponent },
-                    //{ path: 'update/:id', component: FormTypePropertyComponent },
+                    { path: '', component: TipoInmueblesComponent },
+                    { path: 'new', component: FormTipoInmuebleComponent },
+                    { path: 'update/:id', component: FormTipoInmuebleComponent },
                 ]
             }
 

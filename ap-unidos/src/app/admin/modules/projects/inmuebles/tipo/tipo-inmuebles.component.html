@@ -47,8 +47,8 @@
 
             <div class="flex">
                 <div class="flex gap-2 rounded-full items-center px-4 py-3 cursor-pointer bg-blue-500 hover:bg-blue-400 text-white"
-                    [routerLink]="'/admin/users/new'">
-                    <span class="text-white">Agregar usuario</span>
+                    [routerLink]="'/admin/type-property/new'">
+                    <span class="text-white">Agregar tipo inmueble</span>
                     <i translate="no" class="material-icons text-white">add</i>
 
 
@@ -76,24 +76,17 @@
                     </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column [flexGrow]="1" [minWidth]="100" [resizeable]="false"
-                    [prop]="'numero_identificacion'" name="Documento" [sortable]="true">
+                <ngx-datatable-column [flexGrow]="2" [minWidth]="150" [resizeable]="false"
+                    [prop]="'usuario.nombre_completo'" name="Usuario" [sortable]="true">
                     <ng-template let-row="row" ngx-datatable-cell-template>
-                        <span class=" font-medium">{{row.numero_identificacion}} </span>
+                        <span class=" font-medium">{{row.usuario.nombre_completo}} </span>
                     </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column [flexGrow]="2" [minWidth]="150" [resizeable]="false" [prop]="'nombre_completo'"
-                    name="Nombre" [sortable]="true">
+                <ngx-datatable-column [flexGrow]="2" [minWidth]="150" [resizeable]="false"
+                    [prop]="'nombre_tipo_inmueble'" name="Nombre" [sortable]="true">
                     <ng-template let-row="row" ngx-datatable-cell-template>
-                        <span class=" font-medium"> {{row.nombre_completo}}</span>
-                    </ng-template>
-                </ngx-datatable-column>
-
-                <ngx-datatable-column [flexGrow]="1" [minWidth]="100" [resizeable]="false" [prop]="'rol_usuario'"
-                    name="Rol" [sortable]="true">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                        <span class=" font-medium">{{row.rol_usuario}} </span>
+                        <span class=" font-medium"> {{row.nombre_tipo_inmueble}}</span>
                     </ng-template>
                 </ngx-datatable-column>
 
@@ -114,19 +107,13 @@
                     [sortable]="true" cellClass="accion_">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                         <div class="flex gap-3 ">
-                            <div data-title="Editar usuario" (click)="update(row)"
+                            <div data-title="Editar tipo" (click)="update(row)"
                                 class="flex items-center cursor-pointer before:left-[-25px] before:top-[-35px] h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-blue-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">edit</span>
                             </div>
 
-                            <div data-title="Cambiar contraseña"
-                                class="flex items-center cursor-pointer before:left-[-50px] before:top-[-35px] h-full tool-tip relative">
-                                <span matRipple style="font-size: 16px !important;"
-                                    class="text-center text-white bg-yellow-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">lock</span>
-                            </div>
-
-                            <div data-title="Eliminar usuario"
+                            <div data-title="Eliminar tipo"
                                 class="flex items-center cursor-pointer before:left-[-30px] before:top-[-35px] h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-red-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">delete</span>
@@ -143,23 +130,23 @@
                                 class="w-full max-w-[420px]  sm:max-w-screen-sm md:max-w-[500px] lg:max-w-[900px] xl:max-w-[1000px]   md:px-5 py-4 ">
                                 <div class="flex flex-wrap w-full bg-white rounded-xl">
                                     <div class="w-full px-4 py-3">
-                                        <span class="text-2xl text-gray-700">Detalles del usuario</span>
+                                        <span class="text-2xl text-gray-700">Detalles del tipo</span>
 
                                     </div>
                                     <div class="w-full md:w-1/2 px-3 flex flex-wrap md:block">
                                         <div class="flex flex-col mt-6">
-                                            <span class="text-sm text-gray-500"> Nombre:</span>
-                                            <span>{{row.nombres}}</span>
+                                            <span class="text-sm text-gray-500"> :</span>
+                                            <span></span>
                                         </div>
                                         <div class="flex flex-col mt-6">
-                                            <span class="text-sm text-gray-500"> Apellidos:</span>
-                                            <span>{{row.apellidos ?? 'N/A'}}</span>
+                                            <span class="text-sm text-gray-500"> :</span>
+                                            <span></span>
                                         </div>
 
 
                                         <div class="flex flex-col mt-6">
-                                            <span class="text-sm text-gray-500"> Correo:</span>
-                                            <span>{{row.correo ?? 'N/A'}}</span>
+                                            <span class="text-sm text-gray-500"> :</span>
+                                            <span></span>
                                         </div>
 
 
@@ -175,12 +162,12 @@
                                     </div>
                                     <div class="w-full md:w-1/2 px-3  flex flex-wrap md:block">
                                         <div class="flex flex-col mt-6">
-                                            <span class="text-sm text-gray-500"> Teléfono:</span>
-                                            <span>{{row.telefono ?? 'N/A'}}</span>
+                                            <span class="text-sm text-gray-500"> :</span>
+                                            <span></span>
                                         </div>
                                         <div class="flex flex-col mt-6">
-                                            <span class="text-sm text-gray-500"> País:</span>
-                                            <span>{{row.pais ?? 'N/A'}}</span>
+                                            <span class="text-sm text-gray-500"> :</span>
+                                            <span></span>
                                         </div>
 
                                     </div>
