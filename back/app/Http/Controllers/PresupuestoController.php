@@ -16,14 +16,57 @@ use League\Csv\Statement;
 
 class PresupuestoController extends Controller
 {
+    // public function store(Request $request)
+    // {
+    //     $validatedData = Validator::make($request->all(), [
+    //         'nombre_inmueble'         => 'required|exists:inmuebles,nombre_inmueble',
+    //         'referencia_material' => 'required|exists:materiales,referencia_material',
+    //         'costo_material'      => 'required|numeric|min:1',
+    //         'cantidad_material'   => 'required|numeric|min:1',
+    //         'codigo_proyecto'     => 'required|exists:proyectos,codigo_proyecto',
+
+    //     ]);
+
+    //     if ($validatedData->fails()) {
+    //         return response()->json([
+    //             'isError' => true,
+    //             'code' => 422,
+    //             'message' => 'Verificar la información',
+    //             'result' => $validatedData->errors(),
+    //         ], 422);
+    //     }
+
+    //     // $presupuesto = Presupuesto::create($validatedData);
+
+    //     $requestData = $request->all();
+
+
+    //     $presupuesto = new Presupuesto();
+
+    //     $dataMaterial = Materiale::where('referencia_material', "=", $request->referencia_material)->first();
+
+
+
+    //     $presupuesto->nombre_inmueble = $request->nombre_inmueble;
+    //     $presupuesto->referencia_material = $dataMaterial->referencia_material;
+    //     $presupuesto->costo_material = $dataMaterial->costo;
+    //     $presupuesto->cantidad_material = $request->cantidad;
+    //     $presupuesto->codigo_proyecto = strtoupper($request->codigo_proyecto);
+
+    //     $presupuesto->save();
+
+    //     return response()->json([
+    //         'isError' => false,
+    //         'code' => 201,
+    //         'message' => 'Presupuesto creado exitosamente',
+    //         'result' => ['presupuesto' => $presupuesto]
+    //     ], 201);
+    // }
     public function store(Request $request)
     {
         $validatedData = Validator::make($request->all(), [
-            'nombre_inmueble'         => 'required|exists:inmuebles,nombre_inmueble',
-            'referencia_material' => 'required|exists:materiales,referencia_material',
-            'costo_material'      => 'required|numeric|min:1',
-            'cantidad_material'   => 'required|numeric|min:1',
-            'codigo_proyecto'     => 'required|exists:proyectos,codigo_proyecto',
+            'nombre_inmueble'=> 'required|exists:inmuebles,nombre_inmueble',
+            'materiales' => "required|array",
 
         ]);
 
@@ -36,30 +79,52 @@ class PresupuestoController extends Controller
             ], 422);
         }
 
+        $numero_identificacion=Auth::user()->numero_identificacion;
         // $presupuesto = Presupuesto::create($validatedData);
 
         $requestData = $request->all();
 
 
-        $presupuesto = new Presupuesto();
-
-        $dataMaterial = Materiale::where('referencia_material', "=", $request->referencia_material)->first();
+       
 
 
 
-        $presupuesto->nombre_inmueble = $request->nombre_inmueble;
-        $presupuesto->referencia_material = $dataMaterial->referencia_material;
-        $presupuesto->costo_material = $dataMaterial->costo;
-        $presupuesto->cantidad_material = $request->cantidad;
-        $presupuesto->codigo_proyecto = strtoupper($request->codigo_proyecto);
 
-        $presupuesto->save();
+        // $presupuesto->nombre_inmueble = $request->nombre_inmueble;
+        // $presupuesto->referencia_material = $dataMaterial->referencia_material;
+        // $presupuesto->costo_material = $dataMaterial->costo;
+        // $presupuesto->cantidad_material = $request->cantidad;
+        // $presupuesto->codigo_proyecto = strtoupper($request->codigo_proyecto);
+
+        // $presupuesto->save();
+
+        foreach ($request->materiales as $material) {
+            $validatedData = Validator::make($material, [
+                'referencia_material' => 'required|exists:materiales,referencia_material',
+                'costo_material'      => 'required|numeric|min:1',
+                'cantidad_material'   => 'required|numeric|min:1',
+                'codigo_proyecto'     => 'required|exists:proyectos,codigo_proyecto',
+
+            ]);
+            $dataMaterial = Materiale::where('referencia_material', "=", $material["referencia_material"])->first();
+            
+            Presupuesto::firstOrCreate([
+                "nombre_inmueble" => strtoupper($request->nombre_inmueble),
+                "codigo_proyecto" => strtoupper($material["codigo_proyecto"]),
+                "referencia_material" => $dataMaterial->referencia_material,
+                "costo_material" => $dataMaterial->costo,
+                "cantidad_material" => $material["cantidad_material"],
+                "numero_identificacion" => $numero_identificacion
+
+            ]);
+        }
+
 
         return response()->json([
             'isError' => false,
             'code' => 201,
             'message' => 'Presupuesto creado exitosamente',
-            'result' => ['presupuesto' => $presupuesto]
+            'result' => []
         ], 201);
     }
 

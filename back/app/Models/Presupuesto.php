@@ -19,6 +19,7 @@ class Presupuesto extends Model
         'costo_material',
         'cantidad_material',
         'codigo_proyecto',
+        'numero_identificacion'
        
     ];
 
