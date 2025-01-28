@@ -122,10 +122,10 @@ class MaterialeController extends Controller
         ], 200);
     }
 
-    public function delete(Request $request)
+    public function delete($referencia_material)
     {
          // Validar los datos de entrada
-    $validateData = Validator::make($request->all(), [
+    $validateData = Validator::make(["referencia_material"=>$referencia_material], [
         "referencia_material" => "required|exists:materiales,referencia_material"
     ]);
 
@@ -139,7 +139,7 @@ class MaterialeController extends Controller
     }
 
     // Buscar el material utilizando referencia como clave primaria
-    $materiale = Materiale::find($request->referencia_material);
+    $materiale = Materiale::find($referencia_material);
 
     // Verificar si el material existe (por seguridad)
     if (!$materiale) {

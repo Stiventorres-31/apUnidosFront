@@ -74,29 +74,12 @@ class PresupuestoController extends Controller
             return response()->json([
                 'isError' => true,
                 'code' => 422,
-                'message' => 'Verificar la información',
+                'message' => $validatedData->errors()->first(),
                 'result' => $validatedData->errors(),
             ], 422);
         }
 
         $numero_identificacion=Auth::user()->numero_identificacion;
-        // $presupuesto = Presupuesto::create($validatedData);
-
-        $requestData = $request->all();
-
-
-       
-
-
-
-
-        // $presupuesto->nombre_inmueble = $request->nombre_inmueble;
-        // $presupuesto->referencia_material = $dataMaterial->referencia_material;
-        // $presupuesto->costo_material = $dataMaterial->costo;
-        // $presupuesto->cantidad_material = $request->cantidad;
-        // $presupuesto->codigo_proyecto = strtoupper($request->codigo_proyecto);
-
-        // $presupuesto->save();
 
         foreach ($request->materiales as $material) {
             $validatedData = Validator::make($material, [
@@ -106,6 +89,15 @@ class PresupuestoController extends Controller
                 'codigo_proyecto'     => 'required|exists:proyectos,codigo_proyecto',
 
             ]);
+
+            if($validatedData->fails()){
+                return response()->json([
+                    'isError' => true,
+                    'code' => 422,
+                    'message' => $validatedData->errors()->first(),
+                    'result' => $validatedData->errors(),
+                ], 422);
+            }
             $dataMaterial = Materiale::where('referencia_material', "=", $material["referencia_material"])->first();
             
             Presupuesto::firstOrCreate([
@@ -142,7 +134,7 @@ class PresupuestoController extends Controller
             return response()->json([
                 'isError' => true,
                 'code' => 422,
-                'message' => 'Verificar la información',
+                'message' => $validatedData->errors()->first(),
                 'result' => $validatedData->errors(),
             ], 422);
         }
@@ -185,7 +177,7 @@ class PresupuestoController extends Controller
             return response()->json([
                 'isError' => true,
                 'code' => 422,
-                'message' => 'Verificar la información',
+                'message' => $validator->errors()->first(),
                 'result' => $validator->errors(),
             ], 422);
         }
@@ -248,7 +240,7 @@ class PresupuestoController extends Controller
                 return response()->json([
                     'isError' => true,
                     'code' => 422,
-                    'message' => 'Verificar la información que desea registrar',
+                    'message' => $validator->errors()->first(),
                     'result' => $validatorDato->errors(),
                 ], 422);
             }

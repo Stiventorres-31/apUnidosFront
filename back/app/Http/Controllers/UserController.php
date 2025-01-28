@@ -127,9 +127,9 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function destroy(Request $request)
+    public function destroy($numero_identificacion)
     {
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make(["numero_identificacion"=>$numero_identificacion], [
             "numero_identificacion" => "required|exists:usuarios,numero_identificacion|min:6"
         ]);
 
@@ -142,7 +142,7 @@ class UserController extends Controller
             ];
         }
 
-        $usuario = User::findOrFail($request->numero_identificacion);
+        $usuario = User::findOrFail($numero_identificacion);
 
         $usuario->update([
             "estado" => "E"
@@ -185,6 +185,40 @@ class UserController extends Controller
             ], 422);
         }
 
+        // Actualizar la contraseña
+        $usuario->password = Hash::make($request->input('new_password'));
+        $usuario->save();
+
+        return response()->json([
+            'isError' => false,
+            'code' => 200,
+            'message' => 'Contraseña actualizada con éxito',
+            "result" => [
+                "usuario" => $usuario
+            ]
+        ], 200);
+    }
+
+    public function changePasswordAdmin(Request $request)
+    {
+        $validateData = Validator::make($request->all(), [
+            "numero_identificacion" => "required|exists:usuarios,numero_identificacion",
+            "new_password" => "required|min:6|confirmed",
+        ]);
+
+        if ($validateData->fails()) {
+            return response()->json([
+                'isError' => true,
+                'code' => 422,
+               'message' => $validateData->errors()->first(), 
+                'result' => $validateData->errors(),
+            ], 422);
+        }
+
+        // Obtener el usuario autenticado
+        $usuario = $request->user();
+
+       
         // Actualizar la contraseña
         $usuario->password = Hash::make($request->input('new_password'));
         $usuario->save();

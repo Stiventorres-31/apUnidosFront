@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asignacione;
 use App\Models\Inmueble;
+use App\Models\Presupuesto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -67,7 +69,7 @@ class InmuebleController extends Controller
             return response()->json([
                 'isError' => true,
                 'code' => 422,
-                'message' => 'Verificar la información',
+                'message' => $validateData->errors()->first(), 
                 'result' => $validateData->errors(),
             ], 422);
         }
@@ -90,21 +92,37 @@ class InmuebleController extends Controller
 
     public function destroy($id)
     {
-        $inmueble = Inmueble::find($id);
-
-        if (!$inmueble) {
+        $validator = Validator::make(['id' => $id], [
+            'id' => 'required|exists:inmuebles,id', // Verifica que exista el ID en la tabla tipo_inmuebles
+        ]);
+    
+        if ($validator->fails()) {
             return response()->json([
                 'isError' => true,
                 'code' => 404,
-                'message' => 'El inmueble no existe',
-                'result' => [],
+                'message' => $validator->errors()->first(), // Devuelve el primer error
+                'result' => $validator->errors()
             ], 404);
         }
 
-        $inmueble->delete();
+        $inmueble = Inmueble::find($id);
+
+        $existePresupuesto = Presupuesto::where('nombre_inmueble', '=', $inmueble->nombre_inmueble)->exists();
+        $existeAsignacion = Asignacione::where('nombre_inmueble', '=', $inmueble->nombre_inmueble)->exists();
+
+        if($inmueble->estado ==="F" || $existePresupuesto || $existeAsignacion){
+            return response()->json([
+                'isError' => true,
+                'code' => 400,
+                'message' => "No se puede eliminar este inmueble. Verifica si el inmueble ya fue finalizado o tenga un presupuesto activo", // Devuelve el primer error
+                'result' => []
+            ], 400);
+        }
+
+        $inmueble->estado = "E";
 
         return response()->json([
-            'isError' => true,
+            'isError' => false,
             'code' => 200,
             'message' => 'Se ha eliminado con éxito',
             'result' => [],
