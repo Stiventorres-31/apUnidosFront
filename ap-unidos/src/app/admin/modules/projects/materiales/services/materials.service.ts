@@ -1,19 +1,20 @@
-import { Injectable } from '@angular/core';
-import { HeadersService } from '../../../../../shared/services/utilities/headers.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { EncryptionService } from '../../../../../shared/services/encryption/encryption.service';
 import { LoginService } from '../../../../../auth/services/login.service';
 import { Router } from '@angular/router';
 import { AppComponent } from '../../../../../app.component';
 import { SingletonService } from '../../../../../shared/services/singleton/singleton.service';
+import { HeadersService } from '../../../../../shared/services/utilities/headers.service';
 import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from '../../../../../../environments/environment';
-import { tipo_inmueble, tipo_inmueble_form, TipoInmuebleResponse, TipoInmueblesResponse } from '../models/inmuebles.interface';
+import { form_materials, MaterialResponse, materials, MaterialsResponse } from '../models/materials.interface';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class TipoInmueblesService {
+export class MaterialsService {
 
   constructor(
     private http: HttpClient,
@@ -25,14 +26,14 @@ export class TipoInmueblesService {
     private headersService: HeadersService) { }
 
 
-  index(): Observable<tipo_inmueble[]> {
+  index(): Observable<materials[]> {
     return this.http
-      .get<TipoInmueblesResponse>(environment.backend + `api/tipo_inmueble`, {
+      .get<MaterialsResponse>(environment.backend + `api/materiale`, {
         headers: this.headersService.getJsonHeaders(),
       })
       .pipe(
         map((rs) => {
-          return rs.result.tipo_inmueble.map((user, index) => ({
+          return rs.result.materiale.map((user, index) => ({
             ...user,
             index,
           }));
@@ -44,13 +45,13 @@ export class TipoInmueblesService {
       );
   }
 
-  search(id: string): Observable<tipo_inmueble | null> {
-    return this.http.get<TipoInmuebleResponse>(environment.backend + `api/tipo_inmueble/${id}`, {
+  search(id: string): Observable<materials | null> {
+    return this.http.get<MaterialResponse>(environment.backend + `api/materiale/${id}`, {
       headers: this.headersService.getJsonHeaders()
     })
       .pipe(
         map((rs) => {
-          return rs.result.tipo_inmueble;
+          return rs.result.materiale;
 
         }), catchError((error: HttpErrorResponse) => {
           this.LoginService.unauthorized(error)
@@ -61,9 +62,9 @@ export class TipoInmueblesService {
   }
 
 
-  store(tipo_inmueble: tipo_inmueble_form): Observable<{ isError: boolean, message: string }> {
+  store(materials: form_materials): Observable<{ isError: boolean, message: string }> {
     this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
-    return this.http.post<TipoInmuebleResponse>(environment.backend + `api/tipo_inmueble`, { ...tipo_inmueble }, { headers: this.headersService.getJsonHeaders() })
+    return this.http.post<MaterialResponse>(environment.backend + `api/materiale`, { ...materials }, { headers: this.headersService.getJsonHeaders() })
       .pipe(
         map((rs: { isError: boolean, message: string }) => {
           return rs;
@@ -80,9 +81,9 @@ export class TipoInmueblesService {
 
   }
 
-  update(tipo_inmueble: tipo_inmueble_form): Observable<{ isError: boolean, message: string }> {
+  update(materials: form_materials): Observable<{ isError: boolean, message: string }> {
     this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
-    return this.http.put<TipoInmuebleResponse>(environment.backend + `api/tipo_inmueble/${tipo_inmueble?.id}`, { ...tipo_inmueble }, { headers: this.headersService.getJsonHeaders() })
+    return this.http.put<MaterialResponse>(environment.backend + `api/materiale/${materials?.referencia_material}`, { ...materials }, { headers: this.headersService.getJsonHeaders() })
       .pipe(
         map((rs: { isError: boolean, message: string }) => {
           return rs;
@@ -101,7 +102,7 @@ export class TipoInmueblesService {
 
   delete(id: number): Observable<{ isError: boolean, message: string }> {
     this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
-    return this.http.delete<TipoInmuebleResponse>(environment.backend + `api/tipo_inmueble/${id}`, { headers: this.headersService.getJsonHeaders() })
+    return this.http.delete<MaterialResponse>(environment.backend + `api/materiale/${id}`, { headers: this.headersService.getJsonHeaders() })
       .pipe(
         map((rs: { isError: boolean, message: string }) => {
 
@@ -117,6 +118,5 @@ export class TipoInmueblesService {
         })
       )
   }
-
 
 }

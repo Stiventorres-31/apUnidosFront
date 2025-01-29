@@ -60,17 +60,17 @@
 
             <ngx-datatable class="material striped rounded-3xl" [rows]="filtros" [columnMode]="'flex'"
                 [swapColumns]="true" [rowHeight]="'auto'" [headerHeight]="55" [limit]="15" [offset]="0"
-                [footerHeight]="50">
-                <ngx-datatable-column [flexGrow]="0.4" [resizeable]="false" [minWidth]="80" [prop]="'index'" name="No."
+                [footerHeight]="50" [scrollbarH]="true">
+                <ngx-datatable-column [flexGrow]="0.4" [resizeable]="false" [minWidth]="50" [prop]="'index'" name="No."
                     [sortable]="true">
                     <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
 
                         <div class="flex items-center">
-                            <button matRipple
+                            <!-- <button matRipple
                                 class="bg-blue-500 border-2 flex justify-center items-center rounded-full py-1 px-2 text-white"
                                 (click)="showDetails(row)" style="margin-right: 5px;">
                                 +
-                            </button>
+                            </button> -->
                             <span>{{ row.index + 1}}</span>
                         </div>
                     </ng-template>
@@ -83,7 +83,7 @@
                     </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column [flexGrow]="2" [minWidth]="150" [resizeable]="false" [prop]="'nombre_completo'"
+                <ngx-datatable-column [flexGrow]="1" [minWidth]="150" [resizeable]="false" [prop]="'nombre_completo'"
                     name="Nombre" [sortable]="true">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                         <span class=" font-medium"> {{row.nombre_completo}}</span>
@@ -97,7 +97,7 @@
                     </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column [flexGrow]="1" [minWidth]="50" [resizeable]="false" [prop]="'estado'"
+                <ngx-datatable-column [flexGrow]="1" [minWidth]="80" [resizeable]="false" [prop]="'estado'"
                     name="Estado" [sortable]="true">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                         <div class="flex items-center h-full ">
@@ -110,7 +110,7 @@
                 </ngx-datatable-column>
 
 
-                <ngx-datatable-column [flexGrow]="2" [minWidth]="150" [resizeable]="false" name="Acciones"
+                <ngx-datatable-column [flexGrow]="1" [minWidth]="150" [resizeable]="false" name="Acciones"
                     [sortable]="true" cellClass="accion_">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                         <div class="flex gap-3 ">
@@ -135,63 +135,6 @@
                         </div>
                     </ng-template>
                 </ngx-datatable-column>
-
-                <ngx-datatable-row-detail [rowHeight]="450">
-                    <ng-template let-row="row" ngx-datatable-row-detail-template>
-                        <div class="row-detail-datatable">
-                            <div
-                                class="w-full max-w-[420px]  sm:max-w-screen-sm md:max-w-[500px] lg:max-w-[900px] xl:max-w-[1000px]   md:px-5 py-4 ">
-                                <div class="flex flex-wrap w-full bg-white rounded-xl">
-                                    <div class="w-full px-4 py-3">
-                                        <span class="text-2xl text-gray-700">Detalles del usuario</span>
-
-                                    </div>
-                                    <div class="w-full md:w-1/2 px-3 flex flex-wrap md:block">
-                                        <div class="flex flex-col mt-6">
-                                            <span class="text-sm text-gray-500"> Nombre:</span>
-                                            <span>{{row.nombres}}</span>
-                                        </div>
-                                        <div class="flex flex-col mt-6">
-                                            <span class="text-sm text-gray-500"> Apellidos:</span>
-                                            <span>{{row.apellidos ?? 'N/A'}}</span>
-                                        </div>
-
-
-                                        <div class="flex flex-col mt-6">
-                                            <span class="text-sm text-gray-500"> Correo:</span>
-                                            <span>{{row.correo ?? 'N/A'}}</span>
-                                        </div>
-
-
-                                        <div class="mt-5">
-
-                                            <span matRipple
-                                                class="text-center align-baseline inline-flex px-4 py-2 mr-auto items-center text-[.95rem] leading-none rounded-lg"
-                                                [class]="row.estado == '1'? ' text-primary bg-primary-light': ' text-danger bg-danger-light'">
-                                                {{row.estado == '1' ? "Activo" : "Inactivo"}}</span>
-                                        </div>
-
-
-                                    </div>
-                                    <div class="w-full md:w-1/2 px-3  flex flex-wrap md:block">
-                                        <div class="flex flex-col mt-6">
-                                            <span class="text-sm text-gray-500"> Teléfono:</span>
-                                            <span>{{row.telefono ?? 'N/A'}}</span>
-                                        </div>
-                                        <div class="flex flex-col mt-6">
-                                            <span class="text-sm text-gray-500"> País:</span>
-                                            <span>{{row.pais ?? 'N/A'}}</span>
-                                        </div>
-
-                                    </div>
-                                    <div class="w-full my-5 flex justify-end px-5">
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-template>
-                </ngx-datatable-row-detail>
             </ngx-datatable>
 
 

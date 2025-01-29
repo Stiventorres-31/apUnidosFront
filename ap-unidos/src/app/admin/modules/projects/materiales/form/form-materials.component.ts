@@ -1,27 +1,24 @@
+import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { ActivatedRoute, Router } from '@angular/router';
-
-import { NgClass } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { AppComponent } from '../../../../../../app.component';
-import { TipoInmueblesService } from '../../services/tipo-inmuebles.service';
-import { EncryptionService } from '../../../../../../shared/services/encryption/encryption.service';
-import { BreadCrumbService } from '../../../../../../shared/services/breadcrumbs/bread-crumb.service';
-import { LabelsService } from '../../../../../../shared/services/labels/labels.service';
-import { ValidationsService } from '../../../../../../shared/services/validations/validations.service';
-
+import { AppComponent } from '../../../../../app.component';
+import { MaterialsService } from '../services/materials.service';
+import { EncryptionService } from '../../../../../shared/services/encryption/encryption.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BreadCrumbService } from '../../../../../shared/services/breadcrumbs/bread-crumb.service';
+import { LabelsService } from '../../../../../shared/services/labels/labels.service';
+import { ValidationsService } from '../../../../../shared/services/validations/validations.service';
 
 @Component({
-  selector: 'app-form-tipo-inmueble',
+  selector: 'app-form-materials',
   standalone: true,
   imports: [ReactiveFormsModule, NgClass, MatProgressSpinnerModule, AngularSvgIconModule],
-  templateUrl: './form-tipo-inmueble.component.html',
-  styles: ``
+  templateUrl: './form-materials.component.html',
+  styles: ''
 })
-export class FormTipoInmuebleComponent {
+export class FormMaterialsComponent {
   public form: FormGroup;
   public inputs: { [key: string]: boolean } = {};
   public showPassword: boolean = false;
@@ -32,7 +29,7 @@ export class FormTipoInmuebleComponent {
   constructor(
     private fb: FormBuilder,
     private AppComponent: AppComponent,
-    private tipoInmueblesService: TipoInmueblesService,
+    private materialsService: MaterialsService,
     private EncryptionService: EncryptionService,
     private router: Router,
     private parametros: ActivatedRoute,
@@ -42,7 +39,13 @@ export class FormTipoInmuebleComponent {
   ) {
     this.form = this.fb.group({
       id: [''],
-      nombre_tipo_inmueble: ['', Validators.required],
+      referencia_material: ['', Validators.required],
+      nombre_material: ['', Validators.required],
+      costo: ['', Validators.required],
+      cantidad: ['', Validators.required],
+      nit_proveedor: ['', Validators.required],
+      nombre_proveedor: ['', Validators.required],
+      descripcion_proveedor: ['', Validators.required],
     });
     this.inputs = this.labels.inputs_data;
   }
@@ -53,20 +56,20 @@ export class FormTipoInmuebleComponent {
         const id = this.EncryptionService.decrypt(params['id']);
         console.log(id);
         if (!id || isNaN(parseInt(id))) {
-          this.router.navigate(['/admin/type-property']);
+          this.router.navigate(['/admin/materials']);
           return;
         }
         this.isUpdate = true;
-        this.tipoInmueblesService.search(id).subscribe((rs) => {
+        this.materialsService.search(id).subscribe((rs) => {
           if (rs) {
             this.form.patchValue(rs);
             this.isLoading = false;
 
             const breadcrumbs = [
               { label: 'Dashboard', url: '/admin/dashboard' },
-              { label: 'Tipo inmueble', url: '/admin/type-property/' },
-              { label: 'Actualizar', url: '/admin/type-property/update/' + this.EncryptionService.encrypt(`${rs.id}`) },
-              { label: rs.nombre_tipo_inmueble, url: '/admin/type-property/update/' },
+              { label: 'Materiales', url: '/admin/materials/' },
+              { label: 'Actualizar', url: '/admin/materials/update/' + this.EncryptionService.encrypt(`${rs.referencia_material}`) },
+              { label: rs.nombre_material, url: '/admin/materials/update/' },
 
             ];
             this.reset();
@@ -74,7 +77,7 @@ export class FormTipoInmuebleComponent {
             console.log(this.form.value)
 
           } else {
-            this.router.navigate(['/admin/type-property']);
+            this.router.navigate(['/admin/materials']);
             return;
           }
 
@@ -83,8 +86,8 @@ export class FormTipoInmuebleComponent {
         this.isLoading = false;
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
-          { label: 'Tipo inmueble', url: '/admin/type-property/' },
-          { label: 'Agregar', url: '/admin/type-property/new/' },
+          { label: 'Materiales', url: '/admin/materials/' },
+          { label: 'Agregar', url: '/admin/materials/new/' },
         ];
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
         this.reset();
@@ -107,12 +110,12 @@ export class FormTipoInmuebleComponent {
     }
     const form = this.form.value;
 
-    this.tipoInmueblesService.store(form).subscribe((rs) => {
+    this.materialsService.store(form).subscribe((rs) => {
       if (rs.isError) {
         this.isSending = false;
         this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
       } else {
-        this.router.navigate(['/admin/type-property']);
+        this.router.navigate(['/admin/materials']);
         this.AppComponent.alert({ summary: "Operación exitosa", detail: rs.message, severity: 'success' });
       }
     });
@@ -132,19 +135,13 @@ export class FormTipoInmuebleComponent {
     }
     const form = this.form.value;
 
-
-    const body = {
-      id: form.id,
-      nombre_tipo_inmueble: form.nombre_tipo_inmueble,
-    }
-
-    this.tipoInmueblesService.update(body).subscribe((rs) => {
+    this.materialsService.update(form).subscribe((rs) => {
       console.log(rs);
       if (rs.isError) {
         this.isSending = false;
         this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
       } else {
-        this.router.navigate(['/admin/type-property']);
+        this.router.navigate(['/admin/materials']);
         this.AppComponent.alert({
           summary: "Operación exitosa",
           detail: rs.message,

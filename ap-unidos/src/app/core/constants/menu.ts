@@ -38,6 +38,16 @@ export class Menu {
           label: 'Tipo de Inmuebles',
           route: '/admin/type-property',
         },
+        {
+          icon: 'assets/img/icons/heroicons/outline/inmuebles.svg',
+          label: 'Inmuebles',
+          route: '/admin/property',
+        },
+        {
+          icon: 'assets/img/icons/heroicons/outline/cube.svg',
+          label: 'Materiales',
+          route: '/admin/materials',
+        }
         // {
         //   icon: 'assets/img/icons/heroicons/outline/gift.svg',
         //   label: 'Gift Card',
@@ -60,21 +70,21 @@ export class Menu {
           label: 'Usuarios',
           route: '/admin/users',
         },
-        {
-          icon: 'assets/img/icons/heroicons/outline/cog.svg',
-          label: 'Settings',
-          route: '/settings',
-        },
-        {
-          icon: 'assets/img/icons/heroicons/outline/download.svg',
-          label: 'Folders',
-          route: '/folders',
-          children: [
-            { label: 'Current Files', route: '/folders/current-files' },
-            { label: 'Downloads', route: '/folders/download' },
-            { label: 'Trash', route: '/folders/trash' },
-          ],
-        },
+        // {
+        //   icon: 'assets/img/icons/heroicons/outline/cog.svg',
+        //   label: 'Settings',
+        //   route: '/settings',
+        // },
+        // {
+        //   icon: 'assets/img/icons/heroicons/outline/download.svg',
+        //   label: 'Folders',
+        //   route: '/folders',
+        //   children: [
+        //     { label: 'Current Files', route: '/folders/current-files' },
+        //     { label: 'Downloads', route: '/folders/download' },
+        //     { label: 'Trash', route: '/folders/trash' },
+        //   ],
+        // },
       ],
     },
   ];

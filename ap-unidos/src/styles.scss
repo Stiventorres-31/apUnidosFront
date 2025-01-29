@@ -240,6 +240,41 @@ $ap-unidos-theme: mat.define-light-theme((color: (primary: $ap-unidos-primary,
     border-radius: 15px !important;
 }
 
+ngx-datatable ::-webkit-scrollbar {
+    width: 6px;
+    /* Ancho de la barra vertical */
+    height: 6px;
+    /* Altura de la barra horizontal */
+}
+
+ngx-datatable ::-webkit-scrollbar-thumb {
+    background-color: rgba(100, 100, 100, 0.5);
+    /* Color del pulgar de scroll (la parte que se mueve) */
+    border-radius: 10px;
+    /* Bordes redondeados */
+}
+
+ngx-datatable ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(80, 80, 80, 0.8);
+    /* Color al pasar el mouse */
+}
+
+ngx-datatable ::-webkit-scrollbar-track {
+    background-color: rgba(200, 200, 200, 0.2);
+    /* Fondo de la pista de scroll */
+    border-radius: 10px;
+    /* Bordes redondeados para la pista */
+}
+
+ngx-datatable {
+    scrollbar-width: thin;
+    /* Hace la barra delgada en Firefox */
+    scrollbar-color: rgba(100, 100, 100, 0.5) rgba(200, 200, 200, 0.2);
+    /* Color del pulgar y pista para Firefox */
+}
+
+
+
 /**Modales**/
 .show-form {
     width: 100%;
@@ -519,6 +554,7 @@ ngx-datatable .datatable-body-cell.accion_ {
 .p-dialog.p-confirm-dialog .p-confirm-dialog-message {
     margin-left: 1rem;
     font-size: 13px;
+    width: 375px;
     color: rgb(55 65 81 / 1);
 
 }
