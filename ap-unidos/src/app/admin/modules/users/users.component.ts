@@ -19,7 +19,7 @@ export class UsersComponent {
   resizeObserver: ResizeObserver | undefined;
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   public isLoading = true;
-  public filtros: any[] = [];
+  public filtros: Usuario[] = [];
 
   constructor(private userService: UsersService, private EncryptionService: EncryptionService, private Router: Router, private BreadCrumbService: BreadCrumbService) { }
 

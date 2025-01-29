@@ -1,28 +1,29 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { EncryptionService } from '../../../../../shared/services/encryption/encryption.service';
-import { BreadCrumbService } from '../../../../../shared/services/breadcrumbs/bread-crumb.service';
 import { debounceTime, fromEvent, Subscription } from 'rxjs';
-import { TipoInmueblesService } from '../services/tipo-inmuebles.service';
-import { tipo_inmueble } from '../models/inmuebles.interface';
-import { AppComponent } from '../../../../../app.component';
+import { AppComponent } from '../../../../app.component';
+import { EncryptionService } from '../../../../shared/services/encryption/encryption.service';
+import { BreadCrumbService } from '../../../../shared/services/breadcrumbs/bread-crumb.service';
+import { MaterialsService } from './services/materials.service';
+import { materials } from './models/materials.interface';
+
 
 @Component({
-  selector: 'app-tipo-inmuebles',
+  selector: 'app-materials',
   standalone: true,
-  imports: [RouterLink, NgxDatatableModule,],
-  templateUrl: './tipo-inmuebles.component.html',
+  imports: [RouterLink, NgxDatatableModule],
+  templateUrl: './materials.component.html',
   styles: ''
 })
-export class TipoInmueblesComponent {
+export class MaterialsComponent {
   resizeSubscription: Subscription | undefined;
   resizeObserver: ResizeObserver | undefined;
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   public isLoading = true;
-  public filtros: tipo_inmueble[] = [];
+  public filtros: materials[] = [];
 
-  constructor(private tipoInmuebleService: TipoInmueblesService, private EncryptionService: EncryptionService, private Router: Router, private BreadCrumbService: BreadCrumbService, private AppComponent: AppComponent) { }
+  constructor(private materialsService: MaterialsService, private EncryptionService: EncryptionService, private Router: Router, private BreadCrumbService: BreadCrumbService, private AppComponent: AppComponent) { }
 
 
   ngOnInit() {
@@ -33,13 +34,13 @@ export class TipoInmueblesComponent {
   }
 
   index() {
-    this.tipoInmuebleService.index().subscribe(
+    this.materialsService.index().subscribe(
       (rs) => {
         console.log(rs);
         this.filtros = rs;
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
-          { label: 'Tipo inmuebles', url: '/admin/type-property' },
+          { label: 'Materiales', url: '/admin/materials' },
         ];
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
         this.isLoading = false;
@@ -55,29 +56,29 @@ export class TipoInmueblesComponent {
     }
   }
 
-  update(type: tipo_inmueble) {
-    this.Router.navigate(["/admin/type-property/update/", this.EncryptionService.encrypt(`${type.id}`)])
+  update(type: materials) {
+    this.Router.navigate(["/admin/materials/update/", this.EncryptionService.encrypt(`${type.referencia_material}`)])
   }
 
   filter(event: Event) { }
 
 
-  delete(row: tipo_inmueble) {
-    this.AppComponent.confirm({
-      header: `Confirmar eliminación`,
-      message: `¿Estás seguro/a de que deseas eliminar el tipo de inmueble ${row.nombre_tipo_inmueble} ? `,
-      styles: `warn`
-    }).then((rs) => {
-      if (rs) {
-        this.tipoInmuebleService.delete(row.id).subscribe((rx) => {
-          this.AppComponent.alert({ summary: `Operación ${rx.isError ? 'fallida' : 'exitosa'}`, detail: rx.message, severity: `${rx.isError ? 'error' : 'success'}` });
+  // delete(row: tipo_inmueble) {
+  //   this.AppComponent.confirm({
+  //     header: `Confirmar eliminación`,
+  //     message: `¿Estás seguro/a de que deseas eliminar el tipo de inmueble ${row.nombre_tipo_inmueble} ? `,
+  //     styles: `warn`
+  //   }).then((rs) => {
+  //     if (rs) {
+  //       this.materialsService.delete(row.id).subscribe((rx) => {
+  //         this.AppComponent.alert({ summary: `Operación ${rx.isError ? 'fallida' : 'exitosa'}`, detail: rx.message, severity: `${rx.isError ? 'error' : 'success'}` });
 
-          if (!rx.isError) this.index();
-        })
-      }
+  //         if (!rx.isError) this.index();
+  //       })
+  //     }
 
-    })
-  }
+  //   })
+  // }
 
   showDetails(row: any) {
     const fila = this.table._internalRows.find(u => u.id == row.id);
