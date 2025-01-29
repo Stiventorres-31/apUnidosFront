@@ -6,11 +6,14 @@ use App\Models\Asignacione;
 use App\Models\Inmueble;
 use App\Models\Presupuesto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use League\Csv\Writer;
 
 class InmuebleController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $inmueble = Inmueble::all();
 
         if (!$inmueble) {
@@ -54,7 +57,53 @@ class InmuebleController extends Controller
         ], 200);
     }
 
+    public function generateCSV($id_inmueble) {
 
+        $inmueble = Inmueble::find($id_inmueble);
+        
+        if(!$inmueble){
+            return response()->json([
+                'isError' => true,
+                'code' => 404,
+                'message' => "El inmueble no existe",
+                'result' => []
+            ], 404);
+        }
+
+        $archivoCSV = Writer::createFromString('');
+        $archivoCSV->setDelimiter(";");
+        $archivoCSV->setOutputBOM(Writer::BOM_UTF8);
+        $archivoCSV->insertOne([
+            "Código del proyecto",
+            "Nombre de inmueble",
+            "Referencia del material",
+            "Nombre del material",
+            "costo del material",
+            "Cantidad del material"
+        ]);
+
+        foreach ($inmueble->presupuestos as $presupuesto) {
+            $archivoCSV->insertOne([
+                $presupuesto["codigo_proyecto"],
+                $presupuesto["nombre_inmueble"],
+                $presupuesto["referencia_material"],
+                $presupuesto["material"]["nombre_material"],
+                $presupuesto["costo_material"],
+                $presupuesto["cantidad_material"],
+            ]);
+        }
+        // $headers = [
+        //     'Content-Type' => 'text/csv',
+        //     'Content-Disposition' => 'attachment; filename="reporte_tipo_inmuebles.csv"',
+        // ];
+        $csvContent = (string) $archivoCSV;
+        $filePath ='reports/reporte_presupuesto.csv';
+        Storage::put($filePath, $csvContent);
+        return response()->json([
+            'message' => 'El reporte se ha generado y guardado correctamente.',
+            'path' => $filePath, // Puedes devolver la ruta del archivo si es necesario
+        ], 201);
+    }
 
     public function store(Request $request)
     {
@@ -69,7 +118,7 @@ class InmuebleController extends Controller
             return response()->json([
                 'isError' => true,
                 'code' => 422,
-                'message' => $validateData->errors()->first(), 
+                'message' => $validateData->errors()->first(),
                 'result' => $validateData->errors(),
             ], 422);
         }
@@ -95,7 +144,7 @@ class InmuebleController extends Controller
         $validator = Validator::make(['id' => $id], [
             'id' => 'required|exists:inmuebles,id', // Verifica que exista el ID en la tabla tipo_inmuebles
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'isError' => true,
@@ -110,7 +159,7 @@ class InmuebleController extends Controller
         $existePresupuesto = Presupuesto::where('nombre_inmueble', '=', $inmueble->nombre_inmueble)->exists();
         $existeAsignacion = Asignacione::where('nombre_inmueble', '=', $inmueble->nombre_inmueble)->exists();
 
-        if($inmueble->estado ==="F" || $existePresupuesto || $existeAsignacion){
+        if ($inmueble->estado === "F" || $existePresupuesto || $existeAsignacion) {
             return response()->json([
                 'isError' => true,
                 'code' => 400,

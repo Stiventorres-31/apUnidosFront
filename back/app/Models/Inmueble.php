@@ -36,6 +36,9 @@ class Inmueble extends Model
     public function presupuestos(){
         return $this->hasMany(Presupuesto::class,"nombre_inmueble","nombre_inmueble");
     }
+    public function asignaciones(){
+        return $this->hasMany(Asignacione::class,"nombre_inmueble","nombre_inmueble");
+    }
     public function toArray()
     {
         return [
@@ -45,8 +48,9 @@ class Inmueble extends Model
             'codigo_proyecto' => $this->codigo_proyecto,
             'estado' => $this->estado,
             "tipo_inmueble"=>$this->tipo_inmueble,
-            'usuario' => $this->usuario ? $this->usuario->toArray() : null,
-            "presupuestos"=> $this->presupuestos ? $this->presupuestos->toArray() : null,
+            'usuario' => $this->usuario ? $this->usuario->toArray() : [],
+            "presupuestos"=> $this->presupuestos ? $this->presupuestos->toArray() : [],
+            "asignaciones"=>$this->asignaciones ? $this->asignaciones->toArray():[]
         ];
     }
 }

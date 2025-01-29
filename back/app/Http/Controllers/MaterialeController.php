@@ -21,6 +21,31 @@ class MaterialeController extends Controller
             'result' => ["materiale" => $materiale],
         ], 200);
     }
+
+    public function show($referencia_material){
+        $validator = Validator::make(["referencia_material"=>$referencia_material], [
+            "referencia_material"=>"required|exists:materiales,referencia_material"
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'isError' => true,
+                'code' => 422,
+                'message' => $validator->errors()->first(),
+                'result' => $validator->errors(),
+            ], 422);
+        }
+
+
+        $materiale = Materiale::find($referencia_material);
+        return response()->json([
+            'isError' => false,
+            'code' => 200,
+            'message' => "Se ha encontrado el material",
+            'result' => ["material"=>$materiale],
+        ], 200);
+
+
+    }
     public function store(Request $request)
     {
 
@@ -68,7 +93,7 @@ class MaterialeController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, $referencia)
+    public function update(Request $request, $referencia_material)
     {
         $validatedata = Validator::make($request->all(), [
 
@@ -91,7 +116,7 @@ class MaterialeController extends Controller
         }
 
         // Buscar el material por referencia
-        $materiale = Materiale::where('referencia_material', $referencia)->first();
+        $materiale = Materiale::where('referencia_material', $referencia_material)->first();
 
         // Verificar si el material existe
         if (!$materiale) {

@@ -5,14 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Inmueble;
 use App\Models\Materiale;
 use App\Models\Presupuesto;
-use App\Models\Proyecto;
 use App\Models\TipoInmueble;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use League\Csv\Reader;
-use League\Csv\Statement;
 
 class PresupuestoController extends Controller
 {
@@ -125,9 +123,9 @@ class PresupuestoController extends Controller
 
 
         $validatedData = Validator::make($request->all(), [
-            'nombre_inmueble'         => 'required|integer|exists:inmuebles,nombre_inmueble',
-            'referencia_material' => 'required|string|exists:materiales,referencia_material',
-            'codigo_proyecto'     => 'required|string|exists:proyectos,codigo_proyecto',
+            'nombre_inmueble'         => 'required|integer|exists:presupuestos,nombre_inmueble',
+            'referencia_material' => 'required|string|exists:presupuestos,referencia_material',
+            'codigo_proyecto'     => 'required|string|exists:presupuestos,codigo_proyecto',
         ]);
 
         if ($validatedData->fails()) {

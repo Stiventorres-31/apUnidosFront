@@ -17,10 +17,9 @@ class Asignacione extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'id',
         'numero_identificacion',
         'referencia_material',
-        'id_inmueble',
+        'nombre_inmueble',
         'codigo_proyecto',
         'cantidad_material',
         'costo_material',
@@ -45,7 +44,7 @@ class Asignacione extends Model
 
     public function inmueble()
     {
-        return $this->belongsTo(Inmueble::class, 'id_inmueble', 'id');
+        return $this->belongsTo(Inmueble::class, 'nombre_inmueble', 'nombre_inmueble');
     }
 
     public function proyecto()

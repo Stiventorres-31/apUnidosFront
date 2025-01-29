@@ -35,9 +35,11 @@ Route::middleware('auth:api')->prefix("usuario")->group(function(){
 
 Route::middleware('auth:api')->prefix('materiale')->group(function(){
     Route::get("/",[MaterialeController::class,"index"]);
+    Route::get("/{referencia_material}",[MaterialeController::class,"show"]);
     Route::post("/",[MaterialeController::class,"store"]);
-    Route::put("/{referencia}",[MaterialeController::class,"update"]);
+    Route::put("/{referencia_material}",[MaterialeController::class,"update"]);
     Route::delete("/", [MaterialeController::class,'delete']);
+    
 });
 
 Route::middleware('auth:api')->prefix("proyecto")->group(function(){
@@ -46,6 +48,7 @@ Route::middleware('auth:api')->prefix("proyecto")->group(function(){
     Route::post("/", [ProyectoController::class,'store']);
     Route::put("/{codigo_proyecto}", [ProyectoController::class,'update']);
     Route::delete("/", [ProyectoController::class,'destroy']);
+    Route::get("/report/{id}", [ProyectoController::class,"generateCSV"]);
 });
 
 Route::middleware('auth:api')->prefix("tipo_inmueble")->group(function(){
@@ -62,6 +65,7 @@ Route::middleware('auth:api')->prefix('inmueble')->group(function(){
     Route::get("/",[InmuebleController::class,"index"]);
     Route::get("/{id}",[InmuebleController::class,"show"]);
     Route::delete("/{id}", [InmuebleController::class,'destroy']);
+    Route::get("/report/{id}", [InmuebleController::class,"generateCSV"]);
 });
 
 Route::middleware('auth:api')->prefix('presupuesto')->group(function(){
@@ -75,6 +79,6 @@ Route::middleware('auth:api')->prefix('presupuesto')->group(function(){
 
 Route::middleware('auth:api')->prefix('asignacion')->group(function(){
     Route::post("/",[AsignacioneController::class,"store"]);
-    // Route::delete("/",[PresupuestoController::class,"destroy"]);
+    Route::delete("/",[AsignacioneController::class,"destroy"]);
 });
 
