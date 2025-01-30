@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Inventario;
 use App\Models\Materiale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -17,14 +18,15 @@ class MaterialeController extends Controller
         return response()->json([
             'isError' => false,
             'code' => 200,
-            'message' => 'Todos los usuario registrados',
+            'message' => 'Todos los materiales registrados',
             'result' => ["materiale" => $materiale],
         ], 200);
     }
 
-    public function show($referencia_material){
-        $validator = Validator::make(["referencia_material"=>$referencia_material], [
-            "referencia_material"=>"required|exists:materiales,referencia_material"
+    public function show($referencia_material)
+    {
+        $validator = Validator::make(["referencia_material" => $referencia_material], [
+            "referencia_material" => "required|exists:materiales,referencia_material"
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -36,18 +38,18 @@ class MaterialeController extends Controller
         }
 
 
-        $materiale = Materiale::find($referencia_material);
+        $materiale = Materiale::with("inventario")->where("referencia_material", "=", $referencia_material)->first();
         return response()->json([
             'isError' => false,
             'code' => 200,
             'message' => "Se ha encontrado el material",
-            'result' => ["material"=>$materiale],
+            'result' => ["material" => $materiale],
         ], 200);
-
-
     }
     public function store(Request $request)
     {
+
+
 
         $validatorData = Validator::make($request->all(), [
             "referencia_material" => "required|unique:materiales|max:10",
@@ -58,31 +60,38 @@ class MaterialeController extends Controller
             "nit_proveedor" => "required|min:6",
             "nombre_proveedor" => "required|min:6",
             "descripcion_proveedor" => "required|min:6",
-            "estado" => "string|size:1"
         ]);
+
 
 
         if ($validatorData->fails()) {
             return response()->json([
                 'isError' => true,
                 'code' => 422,
-                'message' => 'Verificar la información',
+                'message' => $validatorData->errors()->first(),
                 'result' => $validatorData->errors(),
             ], 422);
         }
 
         $materiale = new Materiale();
 
-        $materiale->referencia_material = $request->referencia_material;
-        $materiale->nombre_material = $request->nombre_material;
+        $materiale->referencia_material = strtoupper($request->referencia_material);
+        $materiale->nombre_material = strtoupper($request->nombre_material);
         $materiale->numero_identificacion = $request->numero_identificacion;
-        $materiale->costo = $request->costo;
-        $materiale->cantidad = $request->cantidad;
-        $materiale->nit_proveedor = $request->nit_proveedor;
-        $materiale->nombre_proveedor = $request->nombre_proveedor;
-        $materiale->descripcion_proveedor = $request->descripcion_proveedor;
-
         $materiale->save();
+
+        $inventario = new Inventario();
+
+        $inventario->referencia_material = $materiale->referencia_material;
+        $inventario->consecutivo = 1;
+        $inventario->numero_identificacion = $materiale->numero_identificacion;
+        $inventario->costo = $request->costo;
+        $inventario->cantidad = $request->cantidad;
+        $inventario->nit_proveedor = $request->nit_proveedor;
+        $inventario->nombre_proveedor = strtoupper($request->nombre_proveedor);
+        $inventario->descripcion_proveedor = strtoupper($request->descripcion_proveedor);
+
+        $inventario->save();
 
 
         return response()->json([
@@ -95,6 +104,14 @@ class MaterialeController extends Controller
 
     public function update(Request $request, $referencia_material)
     {
+
+        return response()->json([
+            'isError' => true,
+            'code' => 401,
+            'message' => "Bloqueado temporalmente",
+            'errors' => [],
+        ], 401);
+
         $validatedata = Validator::make($request->all(), [
 
 
@@ -147,45 +164,43 @@ class MaterialeController extends Controller
         ], 200);
     }
 
-    public function delete($referencia_material)
+    public function destroy($referencia_material)
     {
-         // Validar los datos de entrada
-    $validateData = Validator::make(["referencia_material"=>$referencia_material], [
-        "referencia_material" => "required|exists:materiales,referencia_material"
-    ]);
 
-    if ($validateData->fails()) {
+        $validateData = Validator::make(["referencia_material" => $referencia_material], [
+            "referencia_material" => "required|exists:materiales,referencia_material"
+        ]);
+
+        if ($validateData->fails()) {
+            return response()->json([
+                'isError' => true,
+                'code' => 422,
+                'message' => $validateData->errors()->first(),
+                'errors' => $validateData->errors(),
+            ], 422);
+        }
+
+
+        $materiale = Materiale::where("referencia_material", "=", $referencia_material)->first();
+
+        // Verificar si el material existe (por seguridad)
+        if (!$materiale) {
+            return response()->json([
+                'isError' => true,
+                'code' => 404,
+                'message' => 'Material no encontrado.',
+            ], 404);
+        }
+
+        // Actualizar el estado a "E" (Eliminado o Inactivo)
+        $materiale->estado = "E";
+        $materiale->save();
+
         return response()->json([
-            'isError' => true,
-            'code' => 422,
-            'message' => 'Verificar la información ingresada',
-            'errors' => $validateData->errors(),
-        ], 422);
-    }
-
-    // Buscar el material utilizando referencia como clave primaria
-    $materiale = Materiale::find($referencia_material);
-
-    // Verificar si el material existe (por seguridad)
-    if (!$materiale) {
-        return response()->json([
-            'isError' => true,
-            'code' => 404,
-            'message' => 'Material no encontrado.',
-        ], 404);
-    }
-
-    // Actualizar el estado a "E" (Eliminado o Inactivo)
-    $materiale->estado = "E";
-    $materiale->save();
-
-    return response()->json([
-        'isError' => false,
-        'code' => 200,
-        'message' => 'Se ha eliminado el material correctamente.',
-        'result' => [
-            "materiale"=>$materiale
-        ],
-    ], 200);
+            'isError' => false,
+            'code' => 200,
+            'message' => 'Se ha eliminado el material correctamente.',
+            'result' => []
+        ], 200);
     }
 }

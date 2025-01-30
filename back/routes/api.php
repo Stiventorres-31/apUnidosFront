@@ -3,6 +3,7 @@
 use App\Http\Controllers\AsignacioneController;
 use App\Http\Controllers\AsingacioneController;
 use App\Http\Controllers\InmuebleController;
+use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\MaterialeController;
@@ -38,7 +39,7 @@ Route::middleware('auth:api')->prefix('materiale')->group(function(){
     Route::get("/{referencia_material}",[MaterialeController::class,"show"]);
     Route::post("/",[MaterialeController::class,"store"]);
     Route::put("/{referencia_material}",[MaterialeController::class,"update"]);
-    Route::delete("/", [MaterialeController::class,'delete']);
+    Route::delete("/{referencia_material}", [MaterialeController::class,'destroy']);
     
 });
 
@@ -81,4 +82,10 @@ Route::middleware('auth:api')->prefix('asignacion')->group(function(){
     Route::post("/",[AsignacioneController::class,"store"]);
     Route::delete("/",[AsignacioneController::class,"destroy"]);
 });
+
+Route::middleware('auth:api')->prefix('inventario')->group(function(){
+    Route::post("/",[InventarioController::class,"store"]);
+    // Route::delete("/",[AsignacioneController::class,"destroy"]);
+});
+
 

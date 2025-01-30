@@ -16,18 +16,11 @@ return new class extends Migration
             $table->string("referencia_material", 10);
             $table->string("nombre_material", 255);
             
-            $table->string("numero_identificacion", 20);
-            $table->decimal('costo', 10, 2);
-            $table->float('cantidad');
-            $table->string("nit_proveedor");
-            $table->string("nombre_proveedor");
-            $table->string("descripcion_proveedor");
             $table->char("estado",1)->default("A");
-            $table->index(["referencia_material"]);
+
             $table->unique(["referencia_material","nombre_material"]);
-            // Definir clave foránea
+            $table->string("numero_identificacion", 20);
             $table->foreign("numero_identificacion")->references("numero_identificacion")->on("usuarios");
-        
             $table->timestamps();
         });
     }

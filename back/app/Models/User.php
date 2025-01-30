@@ -69,6 +69,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->getKey();
     }
 
+    public function inventario(){
+        return $this->hasMany(Inventario::class,"numero_identificacion","numero_identificacion");
+    }
+
     public function materiale(): HasOne
     {
         return $this->hasOne(Materiale::class, "referencia_material", "numero_identificacion");
