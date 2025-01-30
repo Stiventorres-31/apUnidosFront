@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inmueble;
+use App\Models\Inventario;
 use App\Models\Materiale;
 use App\Models\Presupuesto;
 use App\Models\TipoInmueble;
@@ -62,8 +63,11 @@ class PresupuestoController extends Controller
     // }
     public function store(Request $request)
     {
+
+
         $validatedData = Validator::make($request->all(), [
-            'nombre_inmueble'=> 'required|exists:inmuebles,nombre_inmueble',
+            'nombre_inmueble' => 'required|exists:inmuebles,nombre_inmueble',
+            'codigo_proyecto' => 'required|exists:proyectos,codigo_proyecto',
             'materiales' => "required|array",
 
         ]);
@@ -77,18 +81,18 @@ class PresupuestoController extends Controller
             ], 422);
         }
 
-        $numero_identificacion=Auth::user()->numero_identificacion;
+        $numero_identificacion = Auth::user()->numero_identificacion;
+        $templatePresupuesto = [];
 
         foreach ($request->materiales as $material) {
             $validatedData = Validator::make($material, [
                 'referencia_material' => 'required|exists:materiales,referencia_material',
                 'costo_material'      => 'required|numeric|min:1',
+                'consecutivo' => "required|numeric|exists:inventarios,consecutivo",
                 'cantidad_material'   => 'required|numeric|min:1',
-                'codigo_proyecto'     => 'required|exists:proyectos,codigo_proyecto',
-
             ]);
 
-            if($validatedData->fails()){
+            if ($validatedData->fails()) {
                 return response()->json([
                     'isError' => true,
                     'code' => 422,
@@ -96,19 +100,39 @@ class PresupuestoController extends Controller
                     'result' => $validatedData->errors(),
                 ], 422);
             }
-            $dataMaterial = Materiale::where('referencia_material', "=", $material["referencia_material"])->first();
-            
-            Presupuesto::firstOrCreate([
-                "nombre_inmueble" => strtoupper($request->nombre_inmueble),
-                "codigo_proyecto" => strtoupper($material["codigo_proyecto"]),
-                "referencia_material" => $dataMaterial->referencia_material,
-                "costo_material" => $dataMaterial->costo,
-                "cantidad_material" => $material["cantidad_material"],
-                "numero_identificacion" => $numero_identificacion
 
-            ]);
+            $dataMaterial = Materiale::where('referencia_material', "=", strtoupper($material["referencia_material"]))->first();
+
+            
+
+            if ($dataMaterial->estado !== "A" || !$dataMaterial) {
+                return response()->json([
+                    'isError' => true,
+                    'code' => 422,
+                    'message' => "Este material no existe",
+                    'result' => [],
+                ], 422);
+            }
+
+            $inventario = Inventario::where("referencia_material", "=", $dataMaterial->referencia_material)
+                ->where("consecutivo", "=", $material["consecutivo"])->first();
+                
+
+            $templatePresupuesto[] = [
+                "nombre_inmueble" => strtoupper($request->nombre_inmueble),
+                "codigo_proyecto" => strtoupper($request->codigo_proyecto),
+                "referencia_material" => $dataMaterial->referencia_material,
+                "consecutivo" => $inventario->consecutivo,
+                "costo_material" => $inventario->costo,
+                "cantidad_material" => $inventario->cantidad,
+                "subtotal" => ($inventario->costo * $inventario->cantidad),
+
+                "numero_identificacion" => $numero_identificacion
+            ];
         }
 
+        // return response()->json($templatePresupuesto);
+        Presupuesto::insert($templatePresupuesto);
 
         return response()->json([
             'isError' => false,

@@ -19,13 +19,16 @@ class Presupuesto extends Model
         'costo_material',
         'cantidad_material',
         'codigo_proyecto',
-        'numero_identificacion'
+        'numero_identificacion',
+        'subtotal',
+        'consecutivo'
        
     ];
 
     protected $casts = [
         'costo_material' => 'decimal:2',
         'cantidad_material' => 'float',
+        'subtotal'=>'decimal:2'
        
     ];
 
@@ -59,7 +62,7 @@ class Presupuesto extends Model
             'referencia_material' => $this->referencia_material,
             'costo_material' => $this->costo_material,
             'cantidad_material' => $this->cantidad_material,
-           
+            'subtotal'=>$this->subtotal,
             "codigo_proyecto"=>$this->codigo_proyecto,
             // 'usuario' => $this->usuario ? $this->usuario->toArray() : null,
             "material"=> $this->material ? $this->material->toArray() : null,

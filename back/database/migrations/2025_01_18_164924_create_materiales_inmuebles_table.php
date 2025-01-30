@@ -19,12 +19,15 @@ return new class extends Migration
             $table->string("nombre_inmueble");
             $table->string("referencia_material");
             $table->string("numero_identificacion",20);
+            
             $table->decimal("costo_material",10,2);
+            $table->decimal("subtotal",10,2);
             $table->float("cantidad_material");
             $table->string("codigo_proyecto");
+            $table->bigInteger("consecutivo");
             // $table->char("estado",1)->default("A");
 
-            $table->primary(["nombre_inmueble","referencia_material","codigo_proyecto"]);
+            $table->primary(["nombre_inmueble","referencia_material","codigo_proyecto","consecutivo"]);
 
             $table->foreign("nombre_inmueble")->references("nombre_inmueble")->on("inmuebles");
             $table->foreign("referencia_material")->references("referencia_material")->on("materiales");

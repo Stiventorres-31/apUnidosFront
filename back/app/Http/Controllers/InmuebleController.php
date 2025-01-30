@@ -6,6 +6,7 @@ use App\Models\Asignacione;
 use App\Models\Inmueble;
 use App\Models\Presupuesto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use League\Csv\Writer;
@@ -107,12 +108,13 @@ class InmuebleController extends Controller
 
     public function store(Request $request)
     {
+
         $validateData = Validator::make($request->all(), [
             "tipo_inmueble" => "required|exists:tipo_inmuebles,id",
             "codigo_proyecto" => "required|exists:proyectos,codigo_proyecto",
-            "nombre_inmueble" => "required|unique:inmuebles,nombre_inmueble|max:255",
-            'numero_identificacion' => 'required|string|exists:usuarios,numero_identificacion|max:20',
+            "nombre_inmueble" => "required|unique:inmuebles,nombre_inmueble|max:255"
         ]);
+
 
         if ($validateData->fails()) {
             return response()->json([
@@ -128,7 +130,7 @@ class InmuebleController extends Controller
         $inmueble->nombre_inmueble = strtoupper($request->nombre_inmueble);
         $inmueble->tipo_inmueble = strtoupper($request->tipo_inmueble);
         $inmueble->codigo_proyecto = strtoupper($request->codigo_proyecto);
-        $inmueble->numero_identificacion = strtoupper($request->numero_identificacion);
+        $inmueble->numero_identificacion = Auth::user()->numero_identificacion;
         $inmueble->save();
 
         return response()->json([
