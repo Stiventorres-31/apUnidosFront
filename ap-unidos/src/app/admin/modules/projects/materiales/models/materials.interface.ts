@@ -29,4 +29,4 @@ export interface dd {
 }
 
 export type MaterialsResponse = ApiResponse<{ materiale: materials[] }>;
-export type MaterialResponse = ApiResponse<{ materiale: materials }>;
+export type MaterialResponse = ApiResponse<{ material: materials }>;

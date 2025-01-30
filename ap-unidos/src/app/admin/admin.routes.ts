@@ -10,6 +10,7 @@ import { TipoInmueblesComponent } from "./modules/projects/inmuebles/tipo/tipo-i
 import { FormTipoInmuebleComponent } from "./modules/projects/inmuebles/tipo/form/form-tipo-inmueble.component";
 import { MaterialsComponent } from "./modules/projects/materiales/materials.component";
 import { FormMaterialsComponent } from "./modules/projects/materiales/form/form-materials.component";
+import { InmueblesComponent } from "./modules/projects/inmuebles/inmuebles.component";
 
 export const ADMIN_ROUTES: Routes = [
 
@@ -38,6 +39,14 @@ export const ADMIN_ROUTES: Routes = [
                 path: 'type-property',
                 children: [
                     { path: '', component: TipoInmueblesComponent },
+                    { path: 'new', component: FormTipoInmuebleComponent },
+                    { path: 'update/:id', component: FormTipoInmuebleComponent },
+                ]
+            },
+            {
+                path: 'property',
+                children: [
+                    { path: '', component: InmueblesComponent },
                     { path: 'new', component: FormTipoInmuebleComponent },
                     { path: 'update/:id', component: FormTipoInmuebleComponent },
                 ]

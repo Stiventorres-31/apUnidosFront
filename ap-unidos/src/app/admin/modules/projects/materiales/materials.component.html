@@ -93,7 +93,7 @@
                 <ngx-datatable-column [flexGrow]="1" [minWidth]="100" [resizeable]="false" [prop]="'costo'" name="Costo"
                     [sortable]="true">
                     <ng-template let-row="row" ngx-datatable-cell-template>
-                        <span class=" font-medium">{{row.costo}} </span>
+                        <span class=" font-medium">{{pipeMoney(row.costo)}} </span>
                     </ng-template>
                 </ngx-datatable-column>
 
@@ -141,11 +141,11 @@
                             </div>
 
 
-                            <!-- <div data-title="Eliminar tipo" (click)="delete(row)"
+                            <div data-title="Eliminar tipo" (click)="delete(row)"
                                 class="flex items-center cursor-pointer before:left-[-30px] before:top-[-35px] h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-red-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">delete</span>
-                            </div> -->
+                            </div>
 
 
 

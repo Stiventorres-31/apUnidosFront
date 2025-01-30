@@ -7,6 +7,7 @@ import { EncryptionService } from '../../../../shared/services/encryption/encryp
 import { BreadCrumbService } from '../../../../shared/services/breadcrumbs/bread-crumb.service';
 import { MaterialsService } from './services/materials.service';
 import { materials } from './models/materials.interface';
+import { ValidationsService } from '../../../../shared/services/validations/validations.service';
 
 
 @Component({
@@ -23,7 +24,7 @@ export class MaterialsComponent {
   public isLoading = true;
   public filtros: materials[] = [];
 
-  constructor(private materialsService: MaterialsService, private EncryptionService: EncryptionService, private Router: Router, private BreadCrumbService: BreadCrumbService, private AppComponent: AppComponent) { }
+  constructor(private materialsService: MaterialsService, private EncryptionService: EncryptionService, private Router: Router, private BreadCrumbService: BreadCrumbService, private AppComponent: AppComponent, private ValidationsService: ValidationsService) { }
 
 
   ngOnInit() {
@@ -63,22 +64,41 @@ export class MaterialsComponent {
   filter(event: Event) { }
 
 
-  // delete(row: tipo_inmueble) {
-  //   this.AppComponent.confirm({
-  //     header: `Confirmar eliminación`,
-  //     message: `¿Estás seguro/a de que deseas eliminar el tipo de inmueble ${row.nombre_tipo_inmueble} ? `,
-  //     styles: `warn`
-  //   }).then((rs) => {
-  //     if (rs) {
-  //       this.materialsService.delete(row.id).subscribe((rx) => {
-  //         this.AppComponent.alert({ summary: `Operación ${rx.isError ? 'fallida' : 'exitosa'}`, detail: rx.message, severity: `${rx.isError ? 'error' : 'success'}` });
+  delete(row: materials) {
+    this.AppComponent.confirm({
+      header: `Confirmar eliminación`,
+      message: `¿Estás seguro/a de que deseas eliminar el material ${row.nombre_material} ? `,
+      styles: `warn`
+    }).then((rs) => {
+      if (rs) {
+        this.materialsService.delete(row.referencia_material).subscribe((rx) => {
+          this.AppComponent.alert({ summary: `Operación ${rx.isError ? 'fallida' : 'exitosa'}`, detail: rx.message, severity: `${rx.isError ? 'error' : 'success'}` });
 
-  //         if (!rx.isError) this.index();
-  //       })
-  //     }
+          if (!rx.isError) this.index();
+        })
+      }
 
-  //   })
-  // }
+    })
+  }
+
+  parseDecimal(value: string | number): number {
+    if (typeof value === 'string') {
+      value = value.replace(/\./g, '').replace(/,/g, '.');
+      return parseFloat(value);
+    }
+    return value;
+  }
+
+  pipeMoney(valor: string): string {
+
+    let money: string | number = Math.round(Number(valor)) + "";
+    money = money.replace(/[^0-9$.,]+/g, ' ')
+
+    money = this.parseDecimal(money)
+    money = money.toLocaleString('de-DE');
+    return '$' + money;
+
+  }
 
   showDetails(row: any) {
     const fila = this.table._internalRows.find(u => u.id == row.id);

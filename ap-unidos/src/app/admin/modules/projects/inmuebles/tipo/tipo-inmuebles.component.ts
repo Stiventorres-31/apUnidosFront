@@ -11,7 +11,7 @@ import { AppComponent } from '../../../../../app.component';
 @Component({
   selector: 'app-tipo-inmuebles',
   standalone: true,
-  imports: [RouterLink, NgxDatatableModule,],
+  imports: [RouterLink, NgxDatatableModule],
   templateUrl: './tipo-inmuebles.component.html',
   styles: ''
 })

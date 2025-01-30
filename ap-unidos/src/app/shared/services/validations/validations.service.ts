@@ -55,16 +55,37 @@ export class ValidationsService {
   }
 
 
-  validation_money(valor: string): string {
+  format_moneda(precio: string | number | null | undefined, sig: boolean = true): string {
+    // Validar si precio es null, undefined, o un valor inválido
+    if (precio == null || precio === '') {
+      return sig ? '$0' : '0';
+    }
 
-    let money: string | number = valor + "";
+    // Convertir a número
+    const precioNumerico = typeof precio === 'string'
+      ? parseFloat(precio.replace(/[^0-9.-]+/g, ''))
+      : precio;
 
-    money = money.replace(/[^0-9$.,]+/g, ' ')
-    money = this.parseDecimal(money)
-    money = money.toLocaleString('de-DE');
-    return money;
+    // Validar si la conversión dio un número válido
+    if (isNaN(precioNumerico) || precioNumerico == null) {
+      return sig ? '$0' : '0';
+    }
 
+    if (sig) {
+      return precioNumerico.toLocaleString('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      });
+    } else {
+      return new Intl.NumberFormat('es-CO', {
+        useGrouping: true,
+        minimumFractionDigits: 0,
+      }).format(precioNumerico);
+    }
   }
+
 
   parseDecimal(value: string | number) {
     if (typeof value === 'string') {

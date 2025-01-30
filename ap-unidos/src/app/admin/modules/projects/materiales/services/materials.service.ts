@@ -51,7 +51,7 @@ export class MaterialsService {
     })
       .pipe(
         map((rs) => {
-          return rs.result.materiale;
+          return rs.result.material;
 
         }), catchError((error: HttpErrorResponse) => {
           this.LoginService.unauthorized(error)
@@ -100,9 +100,12 @@ export class MaterialsService {
 
   }
 
-  delete(id: number): Observable<{ isError: boolean, message: string }> {
+  delete(id: string): Observable<{ isError: boolean, message: string }> {
     this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
-    return this.http.delete<MaterialResponse>(environment.backend + `api/materiale/${id}`, { headers: this.headersService.getJsonHeaders() })
+    return this.http.delete<MaterialResponse>(environment.backend + `api/materiale/`, {
+      body: { referencia_material: id },
+      headers: this.headersService.getJsonHeaders()
+    })
       .pipe(
         map((rs: { isError: boolean, message: string }) => {
 

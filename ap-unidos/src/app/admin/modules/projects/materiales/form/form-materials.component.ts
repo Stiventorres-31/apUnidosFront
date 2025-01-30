@@ -45,7 +45,7 @@ export class FormMaterialsComponent {
       cantidad: ['', Validators.required],
       nit_proveedor: ['', Validators.required],
       nombre_proveedor: ['', Validators.required],
-      descripcion_proveedor: ['', Validators.required],
+      descripcion_proveedor: ['', [Validators.required, Validators.minLength(6)]],
     });
     this.inputs = this.labels.inputs_data;
   }
@@ -55,14 +55,21 @@ export class FormMaterialsComponent {
       if (params['id']) {
         const id = this.EncryptionService.decrypt(params['id']);
         console.log(id);
-        if (!id || isNaN(parseInt(id))) {
+        if (!id) {
           this.router.navigate(['/admin/materials']);
           return;
         }
         this.isUpdate = true;
         this.materialsService.search(id).subscribe((rs) => {
+          console.log(rs)
           if (rs) {
-            this.form.patchValue(rs);
+            this.form.patchValue(rs, { emitEvent: true });
+
+            let costo = Math.round(Number(rs.costo));
+            this.form.patchValue({
+              costo: this.ValidationsService.format_moneda(costo || 0, false)
+            }, { emitEvent: true });
+
             this.isLoading = false;
 
             const breadcrumbs = [
@@ -77,7 +84,7 @@ export class FormMaterialsComponent {
             console.log(this.form.value)
 
           } else {
-            this.router.navigate(['/admin/materials']);
+            //this.router.navigate(['/admin/materials']);
             return;
           }
 
@@ -109,6 +116,7 @@ export class FormMaterialsComponent {
       return;
     }
     const form = this.form.value;
+    form.costo = this.parseMoneda(form.costo);
 
     this.materialsService.store(form).subscribe((rs) => {
       if (rs.isError) {
@@ -134,6 +142,7 @@ export class FormMaterialsComponent {
       return;
     }
     const form = this.form.value;
+    form.costo = this.parseMoneda(form.costo);
 
     this.materialsService.update(form).subscribe((rs) => {
       console.log(rs);
@@ -157,6 +166,20 @@ export class FormMaterialsComponent {
     input.value = this.ValidationsService.numeric(input.value);
 
   }
+
+  moneda(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/[^0-9]/g, '');
+    input.value = this.ValidationsService.format_moneda(value, false);
+
+  }
+
+  private parseMoneda(value: string | number | null | undefined): number {
+    if (value == null) return 0; // Si es null o undefined, devolver 0
+    return Number(value.toString().replace(/[^0-9]/g, '') || 0);
+  }
+
+
 
   ngOnDestroy(): void {
     this.BreadCrumbService.setBreadcrumbs([]);
