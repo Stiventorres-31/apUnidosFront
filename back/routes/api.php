@@ -40,6 +40,7 @@ Route::middleware('auth:api')->prefix('materiale')->group(function(){
     Route::post("/",[MaterialeController::class,"store"]);
     Route::put("/{referencia_material}",[MaterialeController::class,"update"]);
     Route::delete("/{referencia_material}", [MaterialeController::class,'destroy']);
+    Route::post("/lote",[MaterialeController::class,"storeInventario"]);
     
 });
 

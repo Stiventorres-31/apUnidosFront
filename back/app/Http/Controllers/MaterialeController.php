@@ -6,6 +6,7 @@ use App\Models\Asignacione;
 use App\Models\Inventario;
 use App\Models\Materiale;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -40,9 +41,9 @@ class MaterialeController extends Controller
 
 
         $materiale = Materiale::with("inventario")
-        ->where("referencia_material", "=", $referencia_material)
-        ->where("estado","=","A")
-        ->first();
+            ->where("referencia_material", "=", $referencia_material)
+            ->where("estado", "=", "A")
+            ->first();
 
         if (!$materiale) {
             return response()->json([
@@ -52,7 +53,7 @@ class MaterialeController extends Controller
                 'result' => [],
             ], 404);
         }
-        
+
         return response()->json([
             'isError' => false,
             'code' => 200,
@@ -157,7 +158,7 @@ class MaterialeController extends Controller
         // Actualizar los datos del material
         $materiale->update([
             'costo' => $request->costo,
-            'cantidad' => $request->cantidad, 
+            'cantidad' => $request->cantidad,
         ]);
 
         return response()->json([
@@ -171,7 +172,7 @@ class MaterialeController extends Controller
     public function destroy($referencia_material)
     {
 
-        
+
         $validateData = Validator::make(["referencia_material" => $referencia_material], [
             "referencia_material" => "required|exists:materiales,referencia_material"
         ]);
@@ -186,14 +187,14 @@ class MaterialeController extends Controller
         }
 
 
-        $asignacion=Asignacione::where("referencia_material","=",$referencia_material)->first();
+        $asignacion = Asignacione::where("referencia_material", "=", $referencia_material)->first();
 
-        if($asignacion){
+        if ($asignacion) {
             return response()->json([
                 'isError' => true,
                 'code' => 401,
                 'message' => "No se puede eliminar este material",
-                'errors' =>[],
+                'errors' => [],
             ], 401);
         }
 
@@ -210,5 +211,46 @@ class MaterialeController extends Controller
             'message' => 'Se ha eliminado el material correctamente.',
             'result' => []
         ], 200);
+    }
+
+    public function storeInventario(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "referencia_material" => "required|exists:materiales,referencia_material",
+            "costo" => "required|numeric",
+            "cantidad" => "required|numeric",
+            "nit_proveedor" => "required",
+            "nombre_proveedor" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "isError" => true,
+                "code" => 422,
+                "message" => $validator->errors()->first(),
+                "result" => $validator->errors()->toArray()
+            ],422);
+        }
+        
+        $consecutivo = Inventario::where("referencia_material", "=", $request->referencia_material)
+            ->max("consecutivo");
+
+        $inventario=  new Inventario();
+        $inventario->referencia_material = strtoupper($request->referencia_material);
+        $inventario->costo = $request->costo;
+        $inventario->consecutivo = $consecutivo + 1;
+        $inventario->cantidad = $request->cantidad;
+        $inventario->nit_proveedor = $request->nit_proveedor;
+        $inventario->nombre_proveedor = strtoupper($request->nombre_proveedor);
+        $inventario->descripcion_proveedor = "Fer";
+        $inventario->numero_identificacion = Auth::user()->numero_identificacion;
+        $inventario->save();
+
+        return response()->json([
+            "isError" => false,
+            "code" => 201,
+            "message" =>"Se ha registrado con exito",
+            "result" => $inventario
+        ],201);
     }
 }
