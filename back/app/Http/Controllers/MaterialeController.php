@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asignacione;
 use App\Models\Inventario;
 use App\Models\Materiale;
 use Illuminate\Http\Request;
@@ -38,7 +39,10 @@ class MaterialeController extends Controller
         }
 
 
-        $materiale = Materiale::with("inventario")->where("referencia_material", "=", $referencia_material)->first();
+        $materiale = Materiale::with("inventario")
+        ->where("referencia_material", "=", $referencia_material)
+        ->first();
+        
         return response()->json([
             'isError' => false,
             'code' => 200,
@@ -105,23 +109,18 @@ class MaterialeController extends Controller
     public function update(Request $request, $referencia_material)
     {
 
-        return response()->json([
-            'isError' => true,
-            'code' => 401,
-            'message' => "Bloqueado temporalmente",
-            'errors' => [],
-        ], 401);
+        // return response()->json([
+        //     'isError' => true,
+        //     'code' => 401,
+        //     'message' => "Bloqueado temporalmente",
+        //     'errors' => [],
+        // ], 401);
 
         $validatedata = Validator::make($request->all(), [
-
-
-
             "costo" => "required|regex:/^\d{1,10}(\.\d{1,2})?$/",
-            "cantidad" => "required|numeric|min:0",
-            "nit_proveedor" => "required|min:6",
-            "nombre_proveedor" => "required|min:6",
-            "descripcion_proveedor" => "required|min:6",
+            "cantidad" => "required|numeric|min:0"
         ]);
+
         // Si la validación falla, devolver una respuesta de error 422
         if ($validatedata->fails()) {
             return response()->json([
@@ -147,13 +146,8 @@ class MaterialeController extends Controller
 
         // Actualizar los datos del material
         $materiale->update([
-
-
             'costo' => $request->costo,
-            'cantidad' => $request->cantidad,
-            'nit_proveedor' => $request->nit_proveedor,
-            'nombre_proveedor' => $request->nombre_proveedor,
-            'descripcion_proveedor' => $request->descripcion_proveedor,
+            'cantidad' => $request->cantidad, 
         ]);
 
         return response()->json([
@@ -167,6 +161,7 @@ class MaterialeController extends Controller
     public function destroy($referencia_material)
     {
 
+        
         $validateData = Validator::make(["referencia_material" => $referencia_material], [
             "referencia_material" => "required|exists:materiales,referencia_material"
         ]);
@@ -181,16 +176,19 @@ class MaterialeController extends Controller
         }
 
 
-        $materiale = Materiale::where("referencia_material", "=", $referencia_material)->first();
+        $asignacion=Asignacione::where("referencia_material","=",$referencia_material)->first();
 
-        // Verificar si el material existe (por seguridad)
-        if (!$materiale) {
+        if($asignacion){
             return response()->json([
                 'isError' => true,
-                'code' => 404,
-                'message' => 'Material no encontrado.',
-            ], 404);
+                'code' => 401,
+                'message' => "No se puede eliminar este material",
+                'errors' =>[],
+            ], 401);
         }
+
+        $materiale = Materiale::where("referencia_material", "=", $referencia_material)->first();
+
 
         // Actualizar el estado a "E" (Eliminado o Inactivo)
         $materiale->estado = "E";

@@ -25,6 +25,7 @@ class Materiale extends Model
             "estado"=>"string"
         ];
     }
+    
     public function usuarios():BelongsTo{
         return $this->belongsTo(User::class,"numero_identificacion","numero_identificacion");
     }

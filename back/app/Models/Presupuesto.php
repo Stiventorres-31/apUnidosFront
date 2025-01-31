@@ -11,7 +11,7 @@ class Presupuesto extends Model
 
     public $incrementing = false;  // La clave primaria es compuesta
 
-    protected $primaryKey = ['nombre_inmueble', 'referencia_material', 'codigo_proyecto'];
+    protected $primaryKey = ['nombre_inmueble', 'referencia_material', 'codigo_proyecto','consecutivo'];
 
     protected $fillable = [
         'nombre_inmueble',
