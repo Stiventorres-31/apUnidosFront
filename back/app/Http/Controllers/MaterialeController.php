@@ -41,7 +41,17 @@ class MaterialeController extends Controller
 
         $materiale = Materiale::with("inventario")
         ->where("referencia_material", "=", $referencia_material)
+        ->where("estado","=","A")
         ->first();
+
+        if (!$materiale) {
+            return response()->json([
+                'isError' => true,
+                'code' => 404,
+                'message' => "No se ha encontrado el material",
+                'result' => [],
+            ], 404);
+        }
         
         return response()->json([
             'isError' => false,
