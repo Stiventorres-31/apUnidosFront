@@ -7,6 +7,7 @@ use App\Models\Inventario;
 use App\Models\Materiale;
 use App\Models\Presupuesto;
 use App\Models\TipoInmueble;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -91,6 +92,7 @@ class PresupuestoController extends Controller
                 'consecutivo' => "required|numeric|exists:inventarios,consecutivo",
                 'cantidad_material'   => 'required|numeric|min:1',
             ]);
+           
 
             if ($validatedData->fails()) {
                 return response()->json([
@@ -101,7 +103,30 @@ class PresupuestoController extends Controller
                 ], 422);
             }
 
-            $dataMaterial = Materiale::where('referencia_material', "=", strtoupper($material["referencia_material"]))->first();
+            $exisitencia = Presupuesto::where('referencia_material', $material["referencia_material"])
+            ->where("consecutivo","=",$material["consecutivo"])
+            ->where("codigo_proyecto","=",$request->codigo_proyecto)
+            ->where("nombre_inmueble","=",$request->nombre_inmueble)
+            ->first();
+
+            // return response()->json([
+            //     'isError' => true,
+            //     'code' => 400,
+            //     'message' => "Ya existe este material ". $material["referencia_material"] . " con lote ". $material["consecutivo"] ." en el presupuesto",
+            //     'result' => $material,
+            // ], 400);
+
+            if($exisitencia){
+                return response()->json([
+                    'isError' => true,
+                    'code' => 400,
+                    'message' => "Ya existe este material ". $material["referencia_material"] . " con lote ". $material["consecutivo"] ." en el presupuesto",
+                    'result' => [],
+                ], 400);
+            }
+
+            $dataMaterial = Materiale::where('referencia_material', "=", strtoupper($material["referencia_material"]))
+            ->first();
 
             
 
@@ -124,10 +149,12 @@ class PresupuestoController extends Controller
                 "referencia_material" => $dataMaterial->referencia_material,
                 "consecutivo" => $inventario->consecutivo,
                 "costo_material" => $inventario->costo,
-                "cantidad_material" => $inventario->cantidad,
+                "cantidad_material" => $material["cantidad_material"],
                 "subtotal" => ($inventario->costo * $inventario->cantidad),
 
-                "numero_identificacion" => $numero_identificacion
+                "numero_identificacion" => $numero_identificacion,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ];
         }
 
