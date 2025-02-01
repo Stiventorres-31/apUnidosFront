@@ -92,7 +92,7 @@ class PresupuestoController extends Controller
                 'consecutivo' => "required|numeric|exists:inventarios,consecutivo",
                 'cantidad_material'   => 'required|numeric|min:1',
             ]);
-
+           
 
             if ($validatedData->fails()) {
                 return response()->json([
@@ -104,10 +104,10 @@ class PresupuestoController extends Controller
             }
 
             $exisitencia = Presupuesto::where('referencia_material', $material["referencia_material"])
-                ->where("consecutivo", "=", $material["consecutivo"])
-                ->where("codigo_proyecto", "=", $request->codigo_proyecto)
-                ->where("nombre_inmueble", "=", $request->nombre_inmueble)
-                ->first();
+            ->where("consecutivo","=",$material["consecutivo"])
+            ->where("codigo_proyecto","=",$request->codigo_proyecto)
+            ->where("nombre_inmueble","=",$request->nombre_inmueble)
+            ->first();
 
             // return response()->json([
             //     'isError' => true,
@@ -116,19 +116,19 @@ class PresupuestoController extends Controller
             //     'result' => $material,
             // ], 400);
 
-            if ($exisitencia) {
+            if($exisitencia){
                 return response()->json([
                     'isError' => true,
                     'code' => 400,
-                    'message' => "Ya existe este material " . $material["referencia_material"] . " con lote " . $material["consecutivo"] . " en el presupuesto",
+                    'message' => "Ya existe este material ". $material["referencia_material"] . " con lote ". $material["consecutivo"] ." en el presupuesto",
                     'result' => [],
                 ], 400);
             }
 
             $dataMaterial = Materiale::where('referencia_material', "=", strtoupper($material["referencia_material"]))
-                ->first();
+            ->first();
 
-
+            
 
             if ($dataMaterial->estado !== "A" || !$dataMaterial) {
                 return response()->json([
@@ -141,7 +141,7 @@ class PresupuestoController extends Controller
 
             $inventario = Inventario::where("referencia_material", "=", $dataMaterial->referencia_material)
                 ->where("consecutivo", "=", $material["consecutivo"])->first();
-
+                
 
             $templatePresupuesto[] = [
                 "nombre_inmueble" => strtoupper($request->nombre_inmueble),
@@ -236,10 +236,8 @@ class PresupuestoController extends Controller
             "nombre_inmueble",
             "tipo_inmueble",
             "referencia_material",
-            "consecutivo",
-
+            "costo_material",
             "cantidad_material",
-
             "codigo_proyecto"
         ];
 
@@ -282,7 +280,6 @@ class PresupuestoController extends Controller
                         }
                     }
                 ],
-                "consecutivo" => "required|numeric",
                 "referencia_material" => "required|exists:materiales,referencia_material",
                 "costo_material" => "nullable",
                 "cantidad_material" => "required|numeric",
@@ -297,18 +294,12 @@ class PresupuestoController extends Controller
                 ], 422);
             }
 
-            $tipo_inmueble = TipoInmueble::where("nombre_tipo_inmueble", "=", strtoupper($value["tipo_inmueble"]))->first();
             $material = Materiale::where("referencia_material", "=", $value["referencia_material"])->first();
+            $tipo_inmueble = TipoInmueble::where("nombre_tipo_inmueble", "=", strtoupper($value["tipo_inmueble"]))->first();
 
-
-            $inventario = Inventario::where("referencia_material", "=", $material->referencia_material)
-                ->where("consecutivo", "=", (int) $value["consecutivo"])->first();
-
-        return response()->json($inventario);
             $inmueble = Inmueble::firstOrCreate([
                 "nombre_inmueble" => strtoupper($value["nombre_inmueble"]),
                 "codigo_proyecto" => strtoupper($value["codigo_proyecto"]),
-
                 "tipo_inmueble" => (int) $tipo_inmueble->id,
                 "numero_identificacion" => Auth::user()->numero_identificacion,
             ]);
@@ -319,7 +310,6 @@ class PresupuestoController extends Controller
             $exists = Presupuesto::where('nombre_inmueble', '=', $inmueble->nombre_inmueble)
                 ->where('referencia_material', '=',  $material->referencia_material)
                 ->where('codigo_proyecto', '=',  strtoupper($value["codigo_proyecto"]))
-                ->where('consecutivo', '=',  $inventario->consecutivo)
                 ->exists();
 
             if (!$exists) {
@@ -327,10 +317,8 @@ class PresupuestoController extends Controller
 
                     "nombre_inmueble" => $inmueble->nombre_inmueble,
                     "referencia_material" => $material->referencia_material,
-                    "costo_material" => $inventario->costo,
+                    "costo_material" => $material->costo,
                     "cantidad_material" => $value["cantidad_material"],
-                    "subtotal" => number_format($material->costo * $value["cantidad_material"], 2),
-                    "consecutivo" => $inventario->consecutivo,
                     "codigo_proyecto" => strtoupper($value["codigo_proyecto"]),
                     "numero_identificacion" => auth::user()->numero_identificacion
                 ];
