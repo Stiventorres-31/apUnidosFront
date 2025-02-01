@@ -216,7 +216,7 @@ class MaterialeController extends Controller
     public function storeInventario(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "referencia_material" => "required|exists:materiales,referencia_material",
+            "referencia_material" => "required|string|exists:materiales,referencia_material",
             "costo" => "required|numeric",
             "cantidad" => "required|numeric",
             "nit_proveedor" => "required",
@@ -229,16 +229,24 @@ class MaterialeController extends Controller
                 "code" => 422,
                 "message" => $validator->errors()->first(),
                 "result" => $validator->errors()->toArray()
-            ],422);
+            ], 422);
         }
-        
-        $consecutivo = Inventario::where("referencia_material", "=", $request->referencia_material)
-            ->max("consecutivo");
 
-        $inventario=  new Inventario();
+        if (!is_string($request->referencia_material)) {
+            return response()->json([
+                "isError" => true,
+                "code" => 422,
+                "message" => "El campo referencia_material no es válido.",
+            ], 422);
+        }
+        $consecutivo = Inventario::where("referencia_material", "=", $request->referencia_material)
+            ->max("consecutivo") ?? 0;
+
+        $inventario =  new Inventario();
         $inventario->referencia_material = strtoupper($request->referencia_material);
-        $inventario->costo = $request->costo;
+        // return response()->json($request->referencia_material);
         $inventario->consecutivo = $consecutivo + 1;
+        $inventario->costo = (float) $request->costo;
         $inventario->cantidad = $request->cantidad;
         $inventario->nit_proveedor = $request->nit_proveedor;
         $inventario->nombre_proveedor = strtoupper($request->nombre_proveedor);
@@ -249,8 +257,8 @@ class MaterialeController extends Controller
         return response()->json([
             "isError" => false,
             "code" => 201,
-            "message" =>"Se ha registrado con exito",
+            "message" => "Se ha registrado con exito",
             "result" => $inventario
-        ],201);
+        ], 201);
     }
 }
