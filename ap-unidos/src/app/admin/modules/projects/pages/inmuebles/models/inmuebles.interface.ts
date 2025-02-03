@@ -1,4 +1,4 @@
-import { ApiResponse, Usuario } from '../../../../../shared/models/users/users.interface';
+import { ApiResponse, Usuario } from '../../../../../../shared/models/users/users.interface';
 
 export interface tipo_inmueble {
     id: number;
@@ -15,6 +15,7 @@ export interface inmueble {
     tipo_inmueble: number;
     estado: string;
 }
+
 
 export interface tipo_inmueble_form {
     id: number;

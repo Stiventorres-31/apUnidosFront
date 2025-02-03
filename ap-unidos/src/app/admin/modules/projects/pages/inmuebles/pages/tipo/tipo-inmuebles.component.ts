@@ -1,12 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { EncryptionService } from '../../../../../shared/services/encryption/encryption.service';
-import { BreadCrumbService } from '../../../../../shared/services/breadcrumbs/bread-crumb.service';
+import { EncryptionService } from '../../../../../../../shared/services/encryption/encryption.service';
+import { BreadCrumbService } from '../../../../../../../shared/services/breadcrumbs/bread-crumb.service';
 import { debounceTime, fromEvent, Subscription } from 'rxjs';
-import { TipoInmueblesService } from '../services/tipo-inmuebles.service';
-import { tipo_inmueble } from '../models/inmuebles.interface';
-import { AppComponent } from '../../../../../app.component';
+import { TipoInmueblesService } from '../../services/tipo-inmuebles.service';
+import { tipo_inmueble } from '../../models/inmuebles.interface';
+import { AppComponent } from '../../../../../../../app.component';
 
 @Component({
   selector: 'app-tipo-inmuebles',

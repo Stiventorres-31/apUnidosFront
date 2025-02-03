@@ -1,27 +1,24 @@
+import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { ActivatedRoute, Router } from '@angular/router';
-
-import { NgClass } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { AppComponent } from '../../../../../../app.component';
-import { TipoInmueblesService } from '../../services/tipo-inmuebles.service';
-import { EncryptionService } from '../../../../../../shared/services/encryption/encryption.service';
-import { BreadCrumbService } from '../../../../../../shared/services/breadcrumbs/bread-crumb.service';
-import { LabelsService } from '../../../../../../shared/services/labels/labels.service';
-import { ValidationsService } from '../../../../../../shared/services/validations/validations.service';
-
+import { AppComponent } from '../../../../../app.component';
+import { ProjectService } from '../../../../../shared/services/project/project.service';
+import { EncryptionService } from '../../../../../shared/services/encryption/encryption.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BreadCrumbService } from '../../../../../shared/services/breadcrumbs/bread-crumb.service';
+import { LabelsService } from '../../../../../shared/services/labels/labels.service';
+import { ValidationsService } from '../../../../../shared/services/validations/validations.service';
 
 @Component({
-  selector: 'app-form-tipo-inmueble',
+  selector: 'app-form-projects',
   standalone: true,
   imports: [ReactiveFormsModule, NgClass, MatProgressSpinnerModule, AngularSvgIconModule],
-  templateUrl: './form-tipo-inmueble.component.html',
-  styles: ``
+  templateUrl: './form-projects.component.html',
+  styles: ''
 })
-export class FormTipoInmuebleComponent {
+export class FormProjectsComponent {
   public form: FormGroup;
   public inputs: { [key: string]: boolean } = {};
   public showPassword: boolean = false;
@@ -32,7 +29,7 @@ export class FormTipoInmuebleComponent {
   constructor(
     private fb: FormBuilder,
     private AppComponent: AppComponent,
-    private tipoInmueblesService: TipoInmueblesService,
+    private ProjectService: ProjectService,
     private EncryptionService: EncryptionService,
     private router: Router,
     private parametros: ActivatedRoute,
@@ -42,7 +39,12 @@ export class FormTipoInmuebleComponent {
   ) {
     this.form = this.fb.group({
       id: [''],
-      nombre_tipo_inmueble: ['', Validators.required],
+      codigo_proyecto: ['', Validators.required],
+      departamento_proyecto: ['', Validators.required],
+      ciudad_municipio_proyecto: ['', Validators.required],
+      direccion_proyecto: ['', Validators.required],
+      fecha_inicio_proyecto: ['', Validators.required],
+      fecha_final_proyecto: ['', Validators.required],
     });
     this.inputs = this.labels.inputs_data;
   }
@@ -52,21 +54,21 @@ export class FormTipoInmuebleComponent {
       if (params['id']) {
         const id = this.EncryptionService.decrypt(params['id']);
         console.log(id);
-        if (!id || isNaN(parseInt(id))) {
-          this.router.navigate(['/admin/type-property']);
+        if (!id) {
+          this.router.navigate(['/admin/projects']);
           return;
         }
         this.isUpdate = true;
-        this.tipoInmueblesService.search(id).subscribe((rs) => {
+        this.ProjectService.search(id).subscribe((rs) => {
           if (rs) {
             this.form.patchValue(rs);
             this.isLoading = false;
 
             const breadcrumbs = [
               { label: 'Dashboard', url: '/admin/dashboard' },
-              { label: 'Tipo inmueble', url: '/admin/type-property/' },
-              { label: 'Actualizar', url: '/admin/type-property/update/' + this.EncryptionService.encrypt(`${rs.id}`) },
-              { label: rs.nombre_tipo_inmueble, url: '/admin/type-property/update/' },
+              { label: 'Proyecto', url: '/admin/projects/' },
+              { label: 'Actualizar', url: '/admin/projects/update/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
+              { label: rs.codigo_proyecto, url: '/admin/projects/update/' },
 
             ];
             this.reset();
@@ -74,7 +76,7 @@ export class FormTipoInmuebleComponent {
             console.log(this.form.value)
 
           } else {
-            this.router.navigate(['/admin/type-property']);
+            this.router.navigate(['/admin/projects']);
             return;
           }
 
@@ -83,8 +85,8 @@ export class FormTipoInmuebleComponent {
         this.isLoading = false;
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
-          { label: 'Tipo inmueble', url: '/admin/type-property/' },
-          { label: 'Agregar', url: '/admin/type-property/new/' },
+          { label: 'Proyectos', url: '/admin/projects/' },
+          { label: 'Agregar', url: '/admin/projects/new/' },
         ];
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
         this.reset();
@@ -107,12 +109,12 @@ export class FormTipoInmuebleComponent {
     }
     const form = this.form.value;
 
-    this.tipoInmueblesService.store(form).subscribe((rs) => {
+    this.ProjectService.store(form).subscribe((rs) => {
       if (rs.isError) {
         this.isSending = false;
         this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
       } else {
-        this.router.navigate(['/admin/type-property']);
+        this.router.navigate(['/admin/projects']);
         this.AppComponent.alert({ summary: "Operación exitosa", detail: rs.message, severity: 'success' });
       }
     });
@@ -124,7 +126,7 @@ export class FormTipoInmuebleComponent {
     if (!this.form.valid) {
       this.AppComponent.alert({
         summary: "Formulario invalido",
-        detail: "Por favor, Asegurese que la información del usuario es valida.",
+        detail: "Por favor, Asegurese que la información del proyecto es valida.",
         severity: 'warn'
       })
       this.isSending = false;
@@ -132,19 +134,13 @@ export class FormTipoInmuebleComponent {
     }
     const form = this.form.value;
 
-
-    const body = {
-      id: form.id,
-      nombre_tipo_inmueble: form.nombre_tipo_inmueble,
-    }
-
-    this.tipoInmueblesService.update(body).subscribe((rs) => {
+    this.ProjectService.update(form).subscribe((rs) => {
       console.log(rs);
       if (rs.isError) {
         this.isSending = false;
         this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
       } else {
-        this.router.navigate(['/admin/type-property']);
+        this.router.navigate(['/admin/projects']);
         this.AppComponent.alert({
           summary: "Operación exitosa",
           detail: rs.message,
@@ -178,5 +174,4 @@ export class FormTipoInmuebleComponent {
       this.inputs[key] = !!this.form.get(key)?.value;
     });
   }
-
 }

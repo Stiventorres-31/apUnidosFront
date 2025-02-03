@@ -6,11 +6,13 @@ import { isAdminGuard } from "../core/guards/admin.guard";
 import { ProjectsComponent } from "./modules/projects/projects.component";
 import { UsersComponent } from "./modules/users/users.component";
 import { FormUserComponent } from "./modules/users/pages/form/form-user.component";
-import { TipoInmueblesComponent } from "./modules/projects/inmuebles/tipo/tipo-inmuebles.component";
-import { FormTipoInmuebleComponent } from "./modules/projects/inmuebles/tipo/form/form-tipo-inmueble.component";
-import { MaterialsComponent } from "./modules/projects/materiales/materials.component";
-import { FormMaterialsComponent } from "./modules/projects/materiales/form/form-materials.component";
-import { InmueblesComponent } from "./modules/projects/inmuebles/inmuebles.component";
+import { TipoInmueblesComponent } from "./modules/projects/pages/inmuebles/pages/tipo/tipo-inmuebles.component";
+import { FormTipoInmuebleComponent } from "./modules/projects/pages/inmuebles/pages/tipo/form/form-tipo-inmueble.component";
+import { MaterialsComponent } from "./modules/projects/pages/materiales/materials.component";
+import { FormMaterialsComponent } from "./modules/projects/pages/materiales/form/form-materials.component";
+import { InmueblesComponent } from "./modules/projects/pages/inmuebles/inmuebles.component";
+import { FormProjectsComponent } from "./modules/projects/pages/form/form-projects.component";
+import { FormInmueblesComponent } from "./modules/projects/pages/inmuebles/pages/form/form-inmuebles.component";
 
 export const ADMIN_ROUTES: Routes = [
 
@@ -25,7 +27,14 @@ export const ADMIN_ROUTES: Routes = [
                 pathMatch: 'full'
             },
             { path: 'dashboard', component: DashboardComponent },
-            { path: 'projects', component: ProjectsComponent },
+            {
+                path: 'projects',
+                children: [
+                    { path: '', component: ProjectsComponent },
+                    { path: 'update/:id', component: FormProjectsComponent },
+                    { path: 'new', component: FormProjectsComponent },
+                ]
+            },
             {
                 path: 'users',
                 children: [
@@ -47,8 +56,8 @@ export const ADMIN_ROUTES: Routes = [
                 path: 'property',
                 children: [
                     { path: '', component: InmueblesComponent },
-                    { path: 'new', component: FormTipoInmuebleComponent },
-                    { path: 'update/:id', component: FormTipoInmuebleComponent },
+                    { path: 'new', component: FormInmueblesComponent },
+                    { path: 'update/:id', component: FormInmueblesComponent },
                 ]
             },
             {

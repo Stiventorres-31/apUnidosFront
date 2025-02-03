@@ -47,8 +47,8 @@
 
             <div class="flex">
                 <div class="flex gap-2 rounded-full items-center px-4 py-3 cursor-pointer bg-blue-500 hover:bg-blue-400 text-white"
-                    [routerLink]="'/admin/type-property/new'">
-                    <span class="text-white">Agregar tipo inmueble</span>
+                    [routerLink]="'/admin/property/new'">
+                    <span class="text-white">Agregar inmueble</span>
                     <i translate="no" class="material-icons text-white">add</i>
 
 
@@ -58,30 +58,39 @@
 
         <div class="my-5 px-5">
 
-            <ngx-datatable class="material striped rounded-3xl" [rows]="filtros" [columnMode]="'flex'"
+            <ngx-datatable class="material striped rounded-3xl" [rows]="filtros" [columnMode]="'force'"
                 [swapColumns]="true" [rowHeight]="'auto'" [headerHeight]="55" [limit]="15" [offset]="0"
-                [footerHeight]="50">
+                [footerHeight]="50" [scrollbarH]="true">
                 <ngx-datatable-column [flexGrow]="0.4" [resizeable]="false" [minWidth]="80" [prop]="'index'" name="No."
                     [sortable]="true">
                     <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
 
                         <div class="flex items-center">
-                            <button matRipple
+                            <!-- <button matRipple
                                 class="bg-blue-500 border-2 flex justify-center items-center rounded-full py-1 px-2 text-white"
                                 (click)="showDetails(row)" style="margin-right: 5px;">
                                 +
-                            </button>
+                            </button> -->
                             <span>{{ row.index + 1}}</span>
                         </div>
                     </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column [flexGrow]="2" [minWidth]="150" [resizeable]="false"
-                    [prop]="'nombre_tipo_inmueble'" name="Nombre" [sortable]="true">
+                <ngx-datatable-column [flexGrow]="2" [minWidth]="150" [resizeable]="false" [prop]="'nombre_inmueble'"
+                    name="Nombre" [sortable]="true">
                     <ng-template let-row="row" ngx-datatable-cell-template>
-                        <span class=" font-medium"> {{row.nombre_tipo_inmueble}}</span>
+                        <span class=" font-medium"> {{row.nombre_inmueble}}</span>
                     </ng-template>
                 </ngx-datatable-column>
+
+                <ngx-datatable-column [flexGrow]="2" [minWidth]="150" [resizeable]="false" [prop]="'codigo_proyecto'"
+                    name="Código Proyecto" [sortable]="true">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span class=" font-medium"> {{row.codigo_proyecto}}</span>
+                    </ng-template>
+                </ngx-datatable-column>
+
+
 
                 <ngx-datatable-column [flexGrow]="1" [minWidth]="50" [resizeable]="false" [prop]="'estado'"
                     name="Estado" [sortable]="true">
@@ -107,14 +116,14 @@
                     [sortable]="true" cellClass="accion_">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                         <div class="flex gap-3 ">
-                            <div data-title="Editar tipo" (click)="update(row)"
+                            <div data-title="Editar" (click)="update(row)"
                                 class="flex items-center cursor-pointer before:left-[-25px] before:top-[-35px] h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-blue-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">edit</span>
                             </div>
 
 
-                            <div data-title="Eliminar tipo" (click)="delete(row)"
+                            <div data-title="Eliminar" (click)="delete(row)"
                                 class="flex items-center cursor-pointer before:left-[-30px] before:top-[-35px] h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-red-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">delete</span>

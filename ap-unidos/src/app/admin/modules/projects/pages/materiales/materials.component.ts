@@ -2,12 +2,12 @@ import { Component, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { debounceTime, fromEvent, Subscription } from 'rxjs';
-import { AppComponent } from '../../../../app.component';
-import { EncryptionService } from '../../../../shared/services/encryption/encryption.service';
-import { BreadCrumbService } from '../../../../shared/services/breadcrumbs/bread-crumb.service';
+import { AppComponent } from '../../../../../app.component';
+import { EncryptionService } from '../../../../../shared/services/encryption/encryption.service';
+import { BreadCrumbService } from '../../../../../shared/services/breadcrumbs/bread-crumb.service';
 import { MaterialsService } from './services/materials.service';
 import { materials } from './models/materials.interface';
-import { ValidationsService } from '../../../../shared/services/validations/validations.service';
+import { ValidationsService } from '../../../../../shared/services/validations/validations.service';
 
 
 @Component({

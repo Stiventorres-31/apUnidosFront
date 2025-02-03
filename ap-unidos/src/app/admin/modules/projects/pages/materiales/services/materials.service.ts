@@ -1,13 +1,13 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EncryptionService } from '../../../../../shared/services/encryption/encryption.service';
-import { LoginService } from '../../../../../auth/services/login.service';
+import { EncryptionService } from '../../../../../../shared/services/encryption/encryption.service';
+import { LoginService } from '../../../../../../auth/services/login.service';
 import { Router } from '@angular/router';
-import { AppComponent } from '../../../../../app.component';
-import { SingletonService } from '../../../../../shared/services/singleton/singleton.service';
-import { HeadersService } from '../../../../../shared/services/utilities/headers.service';
+import { AppComponent } from '../../../../../../app.component';
+import { SingletonService } from '../../../../../../shared/services/singleton/singleton.service';
+import { HeadersService } from '../../../../../../shared/services/utilities/headers.service';
 import { catchError, map, Observable, of } from 'rxjs';
-import { environment } from '../../../../../../environments/environment';
+import { environment } from '../../../../../../../environments/environment';
 import { form_materials, MaterialResponse, materials, MaterialsResponse } from '../models/materials.interface';
 
 
@@ -33,8 +33,8 @@ export class MaterialsService {
       })
       .pipe(
         map((rs) => {
-          return rs.result.materiale.map((user, index) => ({
-            ...user,
+          return rs.result.materiale.map((material: materials, index: number) => ({
+            ...material,
             index,
           }));
         }),

@@ -3,9 +3,9 @@ import { Router, RouterLink } from '@angular/router';
 import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { debounceTime, fromEvent, Subscription } from 'rxjs';
 import { InmueblesService } from './services/inmuebles.service';
-import { EncryptionService } from '../../../../shared/services/encryption/encryption.service';
-import { BreadCrumbService } from '../../../../shared/services/breadcrumbs/bread-crumb.service';
-import { AppComponent } from '../../../../app.component';
+import { EncryptionService } from '../../../../../shared/services/encryption/encryption.service';
+import { BreadCrumbService } from '../../../../../shared/services/breadcrumbs/bread-crumb.service';
+import { AppComponent } from '../../../../../app.component';
 import { inmueble } from './models/inmuebles.interface';
 
 @Component({
@@ -40,12 +40,12 @@ export class InmueblesComponent {
         this.filtros = rs;
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
-          { label: 'Tipo inmuebles', url: '/admin/type-property' },
+          { label: 'Inmuebles', url: '/admin/property' },
         ];
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
         this.isLoading = false;
-      }
-    )
+      })
+    this.isLoading = false;
   }
 
   ngAfterViewInit() {
@@ -57,7 +57,8 @@ export class InmueblesComponent {
   }
 
   update(type: inmueble) {
-    this.Router.navigate(["/admin/type-property/update/", this.EncryptionService.encrypt(`${type.id}`)])
+    console.log(type);
+    this.Router.navigate(["/admin/property/update/", this.EncryptionService.encrypt(`${type.id}`)])
   }
 
   filter(event: Event) { }
@@ -66,7 +67,7 @@ export class InmueblesComponent {
   delete(row: inmueble) {
     this.AppComponent.confirm({
       header: `Confirmar eliminación`,
-      message: `¿Estás seguro/a de que deseas eliminar el tipo de inmueble ${row.nombre_inmueble} ? `,
+      message: `¿Estás seguro/a de que deseas eliminar el inmueble ${row.nombre_inmueble} ? `,
       styles: `warn`
     }).then((rs) => {
       if (rs) {

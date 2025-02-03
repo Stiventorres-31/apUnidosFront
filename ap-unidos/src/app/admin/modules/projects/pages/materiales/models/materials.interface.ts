@@ -1,14 +1,14 @@
-import { ApiResponse, Usuario } from '../../../../../shared/models/users/users.interface';
+import { ApiResponse, Usuario } from '../../../../../../shared/models/users/users.interface';
 
 export interface materials {
     id: number;
     referencia_material: string;
     nombre_material: string;
     numero_identificacion: string;
-    costo: string;
-    cantidad: number;
-    nit_proveedor: string;
-    descripcion_proveedor: string;
+    //costo: string;
+    // cantidad: number;
+    // nit_proveedor: string;
+    // descripcion_proveedor: string;
     estado: string;
     //Usuario: Usuario;
 }
