@@ -24,7 +24,7 @@ return new class extends Migration
             $table->decimal("subtotal",10,2);
             $table->float("cantidad_material");
             $table->string("codigo_proyecto");
-            $table->bigInteger("consecutivo",20);
+            $table->unsignedBigInteger("consecutivo",false);
             // $table->char("estado",1)->default("A");
 
             $table->primary(["nombre_inmueble","referencia_material","codigo_proyecto","consecutivo"]);
