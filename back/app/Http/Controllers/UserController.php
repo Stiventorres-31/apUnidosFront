@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseHelper;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -14,12 +15,9 @@ class UserController extends Controller
     {
         $user = User::all();
 
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => 'Todos los usuario registrados',
-            'result' => ["usuarios" => $user],
-        ], 200);
+        return ResponseHelper::success(200,"Todos los usuario registrados",["usuarios" => $user]);
+
+        
     }
 
     public function show($numero_identificacion)
@@ -27,19 +25,17 @@ class UserController extends Controller
         try {
             $usuario = User::findOrFail($numero_identificacion);
 
-            return response()->json([
-                'isError' => false,
-                'code' => 200,
-                'message' => __('Usuario encontrado'),
-                'result' => ['usuario' => $usuario],
-            ]);
+       
+            return ResponseHelper::success(200,"Usuario encontrado",["usuario" => $usuario]);
+
         } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'isError' => true,
-                'code' => 404,
-                'message' => __('El usuario no existe'),
-                'result' => [],
-            ], 404);
+            // return response()->json([
+            //     'isError' => true,
+            //     'code' => 404,
+            //     'message' => __('El usuario no existe'),
+            //     'result' => [],
+            // ], 404);
+            return ResponseHelper::error(404,"El usuario no existe",[]);
         }
     }
 
@@ -55,12 +51,8 @@ class UserController extends Controller
             "rol_usuario.name" => "required|max:20"
         ]);
         if ($validateData->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-                'message' => 'Verificar la información',
-                'result' => $validateData->errors(),
-            ], 422);
+          
+            return ResponseHelper::error(422,$validateData->errors()->first(),$validateData->errors());
         }
         $usuario = new User();
         $usuario->numero_identificacion = $request->numero_identificacion;
@@ -71,12 +63,8 @@ class UserController extends Controller
 
         $usuario->save();
         //    $usuario = User::created($request->all());
-        return response()->json([
-            'isError' => false,
-            "code" => 201,
-            'message' => 'Usuario creado exitosamente.',
-            "result" => ['usuario' => $usuario],
-        ], 201);
+      
+        return ResponseHelper::success(201,"Usuario creado exitosamente.",['usuario' => $usuario]);
     }
 
     public function update(Request $request, $numero_identificacion)
@@ -91,40 +79,22 @@ class UserController extends Controller
         ]);
 
         if ($validateData->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-                'message' => 'Verificar la información',
-                'result' => $validateData->errors(),
-            ], 422);
+            return ResponseHelper::error(422,$validateData->errors()->first(),$validateData->errors());
         }
 
         $usuario = User::findOrFail($numero_identificacion);
         if (!$usuario) {
-            return response()->json([
-                'isError' => true,
-                'code' => 400,
-                'message' => 'El usuario no existe',
-                'result' => [],
-            ], 404);
+          
+            return ResponseHelper::error(404,"El usuario no existe",[]);
         }
-
-
-
 
         $usuario->nombre_completo = strtoupper($request->input("nombre_completo"));
         $usuario->password = bcrypt($request->input("password"));
         $usuario->rol_usuario = strtoupper($request->input("rol_usuario")["name"]);
 
         $usuario->save();
-
-
-        return response()->json([
-            'isError' => false,
-            "code" => 200,
-            'message' => 'Usuario actualizado exitosamente.',
-            "result" => ['usuario' => $usuario],
-        ], 200);
+        
+        return ResponseHelper::success(200,"Usuario ha actualizado exitosamente.",["usuario" => $usuario]);
     }
 
     public function destroy($numero_identificacion)
@@ -134,25 +104,22 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return [
-                'isError' => true,
-                "code" => 422,
-                'message' => 'Usuario actualizado exitosamente.',
-                "result" => $validator->errors(),
-            ];
+           
+
+            return ResponseHelper::error(422,$validator->errors()->first(),$validator->errors());
         }
 
         $usuario = User::findOrFail($numero_identificacion);
 
+        if(!$usuario){
+            return ResponseHelper::error(404,"El usuario no existe",[]);   
+        }
         $usuario->update([
             "estado" => "E"
         ]);
-        return [
-            'isError' => false,
-            "code" => 200,
-            'message' => 'Se ha eliminado el usuario',
-            "result" => [],
-        ];
+
+        return ResponseHelper::success(200,"Se ha eliminado el usuario",[]);
+       
     }
 
     public function changePassword(Request $request)
@@ -164,12 +131,8 @@ class UserController extends Controller
         ]);
 
         if ($validateData->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-                'message' => 'Verificar la información ingresada',
-                'result' => $validateData->errors(),
-            ], 422);
+       
+            return ResponseHelper::error(422, $validateData->errors()->first(), $validateData->errors());
         }
 
         // Obtener el usuario autenticado
@@ -177,26 +140,18 @@ class UserController extends Controller
 
         // Verificar si la contraseña actual es correcta
         if (!Hash::check($request->password, $usuario->password)) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-                'message' => 'La contraseña actual no es correcta',
-                "result" => []
-            ], 422);
+         
+
+            return ResponseHelper::error(400,"La contraseña actual no es correcta",[]);
         }
 
         // Actualizar la contraseña
         $usuario->password = Hash::make($request->input('new_password'));
         $usuario->save();
 
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => 'Contraseña actualizada con éxito',
-            "result" => [
-                "usuario" => $usuario
-            ]
-        ], 200);
+
+
+        return ResponseHelper::success(200,"Contraseña actualizada con éxito",["usuario" => $usuario]);
     }
 
     public function changePasswordAdmin(Request $request)
@@ -207,29 +162,15 @@ class UserController extends Controller
         ]);
 
         if ($validateData->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-               'message' => $validateData->errors()->first(), 
-                'result' => $validateData->errors(),
-            ], 422);
+            return ResponseHelper::error(422,$validateData->errors()->first(),$validateData->errors());
         }
 
-        // Obtener el usuario autenticado
         $usuario = $request->user();
-
-       
-        // Actualizar la contraseña
         $usuario->password = Hash::make($request->input('new_password'));
         $usuario->save();
 
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => 'Contraseña actualizada con éxito',
-            "result" => [
-                "usuario" => $usuario
-            ]
-        ], 200);
+     
+        return ResponseHelper::success(200,"Contraseña actualizada con éxito",[]);
+        
     }
 }

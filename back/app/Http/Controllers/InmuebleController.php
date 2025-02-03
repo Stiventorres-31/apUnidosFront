@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseHelper;
 use App\Models\Asignacione;
 use App\Models\Inmueble;
 use App\Models\Presupuesto;
@@ -16,60 +17,38 @@ class InmuebleController extends Controller
     public function index()
     {
         $inmueble = Inmueble::all();
-
-        if (!$inmueble) {
-            return response()->json([
-                'isError' => true,
-                'code' => 404,
-                'message' => 'No hay inmueble registrado',
-                'result' => [],
-            ], 404);
-        }
-
-
-
-        return response()->json([
-            'isError' => true,
-            'code' => 200,
-            'message' => 'Todos los inmuebles',
-            'result' => ["inmueble" => $inmueble],
-        ], 200);
+        return ResponseHelper::success(201, "Todos los inmuebles", ["inmueble" => $inmueble]);
     }
     public function show($id)
     {
+        $validator = Validator::make(["id", $id], [
+            "id" => "required|exists:inmuebles,id",
+        ]);
+
+        if ($validator->fails()) {
+            return ResponseHelper::error(422, $validator->errors()->first(), $validator->errors());
+        }
+
         $inmueble = Inmueble::find($id);
 
-        if (!$inmueble) {
-            return response()->json([
-                'isError' => true,
-                'code' => 404,
-                'message' => 'El inmueble no encontrado',
-                'result' => [],
-            ], 404);
-        }
-
-
-
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => 'Se ha encontrado el inmueble',
-            'result' => ["inmueble" => $inmueble],
-        ], 200);
+        return ResponseHelper::success(200, "Se ha encontrado el inmueble", ["inmueble" => $inmueble]);
     }
 
-    public function generateCSV($id_inmueble) {
+    public function generateCSV($id)
+    {
 
-        $inmueble = Inmueble::find($id_inmueble);
-        
-        if(!$inmueble){
-            return response()->json([
-                'isError' => true,
-                'code' => 404,
-                'message' => "El inmueble no existe",
-                'result' => []
-            ], 404);
+        $validator = Validator::make(["id" => $id], [
+            "id" => "required|exists:inmuebles,id",
+        ]);
+
+        if ($validator->fails()) {
+            return ResponseHelper::error(422, $validator->errors()->first(), $validator->errors());
         }
+
+
+
+        $inmueble = Inmueble::find($id);
+
 
         $archivoCSV = Writer::createFromString('');
         $archivoCSV->setDelimiter(";");
@@ -98,12 +77,10 @@ class InmuebleController extends Controller
         //     'Content-Disposition' => 'attachment; filename="reporte_tipo_inmuebles.csv"',
         // ];
         $csvContent = (string) $archivoCSV;
-        $filePath ='reports/reporte_presupuesto.csv';
+        $filePath = 'reports/reporte_presupuesto.csv';
         Storage::put($filePath, $csvContent);
-        return response()->json([
-            'message' => 'El reporte se ha generado y guardado correctamente.',
-            'path' => $filePath, // Puedes devolver la ruta del archivo si es necesario
-        ], 201);
+
+        return ResponseHelper::success(201, "Se ha generado con exito", ["inmueble" => $filePath]);
     }
 
     public function store(Request $request)
@@ -117,12 +94,7 @@ class InmuebleController extends Controller
 
 
         if ($validateData->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-                'message' => $validateData->errors()->first(),
-                'result' => $validateData->errors(),
-            ], 422);
+            return ResponseHelper::error(422, $validateData->errors()->first(), $validateData->errors());
         }
 
         $inmueble = new Inmueble();
@@ -133,12 +105,7 @@ class InmuebleController extends Controller
         $inmueble->numero_identificacion = Auth::user()->numero_identificacion;
         $inmueble->save();
 
-        return response()->json([
-            'isError' => false,
-            'code' => 201,
-            'message' => 'Se ha creado con exito',
-            'result' => ["inmueble" => $inmueble],
-        ], 201);
+        return ResponseHelper::success(201, "Tipo de inmueble creado con éxito", ["inmueble" => $inmueble]);
     }
 
     public function destroy($id)
@@ -148,12 +115,7 @@ class InmuebleController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 404,
-                'message' => $validator->errors()->first(), // Devuelve el primer error
-                'result' => $validator->errors()
-            ], 404);
+            return ResponseHelper::error(422,$validator->errors()->first(),$validator->errors());
         }
 
         $inmueble = Inmueble::find($id);
@@ -162,22 +124,14 @@ class InmuebleController extends Controller
         $existeAsignacion = Asignacione::where('nombre_inmueble', '=', $inmueble->nombre_inmueble)->exists();
 
         if ($inmueble->estado === "F" || $existePresupuesto || $existeAsignacion) {
-            return response()->json([
-                'isError' => true,
-                'code' => 400,
-                'message' => "No se puede eliminar este inmueble. Verifica si el inmueble ya fue finalizado o tenga un presupuesto activo", // Devuelve el primer error
-                'result' => []
-            ], 400);
+          
+
+            return ResponseHelper::error(400,"No se puede eliminar este inmueble. Verifica si el inmueble ya fue finalizado o tenga un presupuesto activo");
         }
 
         $inmueble->estado = "E";
 
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => 'Se ha eliminado con éxito',
-            'result' => [],
-        ], 200);
+        return ResponseHelper::success(200,"Se ha eliminado con exito");
     }
 
     // public function update(Request $request, $id){

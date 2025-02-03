@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseHelper;
 use App\Models\Asignacione;
 use App\Models\Inventario;
 use App\Models\Materiale;
@@ -17,12 +18,8 @@ class MaterialeController extends Controller
     {
         $materiale = Materiale::all();
 
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => 'Todos los materiales registrados',
-            'result' => ["materiale" => $materiale],
-        ], 200);
+
+        return ResponseHelper::success(200,"Todos los materiales registrados",["materiale"=>$materiale]);
     }
 
     public function show($referencia_material)
@@ -31,12 +28,9 @@ class MaterialeController extends Controller
             "referencia_material" => "required|exists:materiales,referencia_material"
         ]);
         if ($validator->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-                'message' => $validator->errors()->first(),
-                'result' => $validator->errors(),
-            ], 422);
+         
+
+            return ResponseHelper::error(422,$validator->errors()->first(),$validator->errors());
         }
 
 
@@ -46,20 +40,12 @@ class MaterialeController extends Controller
             ->first();
 
         if (!$materiale) {
-            return response()->json([
-                'isError' => true,
-                'code' => 404,
-                'message' => "No se ha encontrado el material",
-                'result' => [],
-            ], 404);
+            
+            return ResponseHelper::error(404,"No se ha encontrado material",[]);
         }
 
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => "Se ha encontrado el material",
-            'result' => ["material" => $materiale],
-        ], 200);
+
+        return ResponseHelper::success(200,"Se ha encontrado el material",["material" => $materiale]);
     }
     public function store(Request $request)
     {
@@ -79,12 +65,9 @@ class MaterialeController extends Controller
 
 
         if ($validatorData->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-                'message' => $validatorData->errors()->first(),
-                'result' => $validatorData->errors(),
-            ], 422);
+          
+
+            return ResponseHelper::error(422,$validatorData->errors()->first(),$validatorData->errors());
         }
 
         $materiale = new Materiale();
@@ -108,12 +91,7 @@ class MaterialeController extends Controller
         $inventario->save();
 
 
-        return response()->json([
-            'isError' => false,
-            "code" => 201,
-            'message' => 'Material creado exitosamente.',
-            "result" => ['materiale' => $materiale],
-        ], 201);
+        return ResponseHelper::success(201,"Material creado exitosamente",['materiale' => $materiale]);
     }
 
     public function update(Request $request, $referencia_material)
@@ -126,12 +104,9 @@ class MaterialeController extends Controller
 
         // Si la validación falla, devolver una respuesta de error 422
         if ($validatedata->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-                'message' => 'Verificar la información ingresada',
-                'errors' => $validatedata->errors(),
-            ], 422);
+          
+
+            return ResponseHelper::error(422,$validatedata->errors()->first(),$validatedata->errors());
         }
 
         // Buscar el material por referencia
@@ -139,12 +114,8 @@ class MaterialeController extends Controller
 
         // Verificar si el material existe
         if (!$materiale) {
-            return response()->json([
-                'isError' => true,
-                'code' => 404,
-                'message' => 'Material no encontrado',
-                'result' => [],
-            ], 404);
+         
+            return ResponseHelper::error(404,"Material no encontrado");
         }
 
         // Actualizar los datos del material
@@ -153,12 +124,7 @@ class MaterialeController extends Controller
             'cantidad' => trim($request->cantidad),
         ]);
 
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => 'Material actualizado exitosamente.',
-            'result' => ['materiale' => $materiale],
-        ], 200);
+        return ResponseHelper::success(200,"Material actualizado exitosamente", ['materiale' => $materiale]);
     }
 
     public function destroy($referencia_material)
@@ -170,24 +136,17 @@ class MaterialeController extends Controller
         ]);
 
         if ($validateData->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-                'message' => $validateData->errors()->first(),
-                'errors' => $validateData->errors(),
-            ], 422);
+            
+
+            return ResponseHelper::error(422,$validateData->errors()->first(),$validateData->errors());
         }
 
 
         $asignacion = Asignacione::where("referencia_material", "=", $referencia_material)->first();
 
         if ($asignacion) {
-            return response()->json([
-                'isError' => true,
-                'code' => 401,
-                'message' => "No se puede eliminar este material",
-                'errors' => [],
-            ], 401);
+            
+            return ResponseHelper::error(401,"No se puede eliminar este material");
         }
 
         $materiale = Materiale::where("referencia_material", "=", $referencia_material)->first();
@@ -197,12 +156,8 @@ class MaterialeController extends Controller
         $materiale->estado = "E";
         $materiale->save();
 
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => 'Se ha eliminado el material correctamente.',
-            'result' => []
-        ], 200);
+      
+        return ResponseHelper::success(200,"e ha eliminado el material correctamente");
     }
 
     public function storeInventario(Request $request)
@@ -216,21 +171,16 @@ class MaterialeController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                "isError" => true,
-                "code" => 422,
-                "message" => $validator->errors()->first(),
-                "result" => $validator->errors()->toArray()
-            ], 422);
+            
+
+            return ResponseHelper::error(422,$validator->errors()->first(),$validator->errors());
         }
 
         if (!is_string($request->referencia_material)) {
-            return response()->json([
-                "isError" => true,
-                "code" => 422,
-                "message" => "El campo referencia_material no es válido.",
-                "result" => []
-            ], 422);
+          
+
+            return ResponseHelper::error(422,"El campo referencia_material no es válido");
+
         }
         $consecutivo = Inventario::where("referencia_material", "=", $request->referencia_material)
             ->max("consecutivo") ?? 0;
@@ -247,11 +197,8 @@ class MaterialeController extends Controller
         $inventario->numero_identificacion = Auth::user()->numero_identificacion;
         $inventario->save();
 
-        return response()->json([
-            "isError" => false,
-            "code" => 201,
-            "message" => "Se ha registrado con exito",
-            "result" => ["inventario" => $inventario]
-        ], 201);
+
+        return ResponseHelper::success(200,"Se ha registrado con exito",["inventario" => $inventario]);
+
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseHelper;
 use App\Models\TipoInmueble;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,13 +13,7 @@ class TipoInmuebleController extends Controller
     public function index()
     {
         $tiposInmuebles = TipoInmueble::all();
-
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => 'Todos los tipos de inmuebles registrados',
-            'result' => ["tipo_inmueble" => $tiposInmuebles]
-        ], 200);
+        return ResponseHelper::success(200,"Todos los tipos de inmuebles registrados",["tipo_inmueble" => $tiposInmuebles]);
     }
 
     public function store(Request $request)
@@ -31,12 +26,9 @@ class TipoInmuebleController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-                'message' => $validator->errors()->first(),
-                'result' => $validator->errors()
-            ], 422);
+         
+
+            return ResponseHelper::error(422,$validator->errors()->first(),$validator->errors());
         }
 
         $tipoInmueble = new TipoInmueble();
@@ -45,73 +37,48 @@ class TipoInmuebleController extends Controller
         $tipoInmueble->estado = "A";
         $tipoInmueble->save();
 
-        return response()->json([
-            'isError' => false,
-            'code' => 201,
-            'message' => 'Tipo de inmueble creado con éxito',
-            'result' => ["tipo_inmueble" => $tipoInmueble]
-        ], 201);
+        return ResponseHelper::success(201,"Tipo de inmueble creado con éxito",["tipo_inmueble" => $tipoInmueble]);
     }
 
     public function show($id)
     {
-        $tipoInmueble = TipoInmueble::find($id);
+        
 
-        if (!$tipoInmueble) {
-            return response()->json([
-                'isError' => true,
-                'code' => 404,
-                'message' => 'Tipo de inmueble no encontrado',
-                'result' => null
-            ], 404);
+        $validator = Validator::make(['id' => $id], [
+            'id' => 'required|exists:tipo_inmuebles,id', // Verifica que exista el ID en la tabla tipo_inmuebles
+        ]);
+    
+        if ($validator->fails()) {
+            return ResponseHelper::error(422,$validator->errors()->first(),$validator->errors());
         }
 
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => 'Tipo de inmueble encontrado',
-            'result' => ["tipo_inmueble" => $tipoInmueble]
-        ], 200);
+        $tipoInmueble = TipoInmueble::find($id);
+        return ResponseHelper::success(200,"Tipo de inmueble encontrado",["tipo_inmueble" => $tipoInmueble]);
     }
     public function update(Request $request, $id)
     {
-        $tipoInmueble = TipoInmueble::find($id);
-
-        if (!$tipoInmueble) {
-            return response()->json([
-                'isError' => true,
-                'code' => 404,
-                'message' => 'Tipo de inmueble no encontrado',
-                'result' => null
-            ], 404);
-        }
 
         $validator = Validator::make($request->all(), [
+            "id"=>"required|exists:tipo_inmuebles,id",
             'nombre_tipo_inmueble' => 'required|string|unique:tipo_inmuebles,nombre_tipo_inmueble,' . $id,
 
         ]);
-
+        
         if ($validator->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-                'message' => $validator->errors()->first(),
-                'result' => $validator->errors()
-            ], 422);
+            return ResponseHelper::error(422,$validator->errors()->first(),$validator->errors());
         }
+    
+        $tipoInmueble = TipoInmueble::find($id);
 
         $tipoInmueble->update([
             'nombre_tipo_inmueble' => $request->nombre_tipo_inmueble,
-            'numero_identificacion' => auth::user()->numero_identificacion
+            // 'numero_identificacion' => auth::user()->numero_identificacion
 
         ]);
 
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => 'Tipo de inmueble actualizado exitosamente',
-            'result' => ["tipo_inmueble" => $tipoInmueble]
-        ], 200);
+      
+        return ResponseHelper::success(201,"Tipo de inmueble actualizado exitosamente",["tipo_inmueble" => $tipoInmueble]);
+
     }
 
     public function destroy($id)
@@ -122,12 +89,7 @@ class TipoInmuebleController extends Controller
         ]);
     
         if ($validator->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 404,
-                'message' => $validator->errors()->first(), // Devuelve el primer error
-                'result' => $validator->errors()
-            ], 404);
+            return ResponseHelper::error(422,$validator->errors()->first(),$validator->errors());
         }
 
 
@@ -135,11 +97,9 @@ class TipoInmuebleController extends Controller
 
         $tipo_inmueble->estado = "E";
         $tipo_inmueble->save();
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => "Se ha eliminado con exito",
-            'result' => []
-        ], 200);
+      
+
+        return ResponseHelper::success(200,"Se ha eliminado con exito");
+
     }
 }

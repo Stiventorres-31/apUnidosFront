@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseHelper;
 use App\Models\Asignacione;
 use App\Models\Materiale;
 use App\Models\Presupuesto;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -19,15 +21,10 @@ class AsignacioneController extends Controller
         ]);
 
         if ($validatedData->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-                'message' => $validatedData->errors()->first(),
-                'result' => $validatedData->errors(),
-            ], 422);
+            return ResponseHelper::error(422,$validatedData->errors()->first(),$validatedData->errors());
         }
 
-
+        $templateAsingacion=[];
         foreach ($request->materiales as $material) {
             $validatedData = Validator::make($material, [
                 'referencia_material'  => 'required|string|max:10|exists:materiales,referencia_material',
@@ -37,12 +34,7 @@ class AsignacioneController extends Controller
             ]);
 
             if ($validatedData->fails()) {
-                return response()->json([
-                    'isError' => true,
-                    'code' => 422,
-                    'message' => $validatedData->errors()->first(),
-                    'result' => $validatedData->errors(),
-                ], 422);
+                return ResponseHelper::error(422,$validatedData->errors()->first(),$validatedData->errors());
             }
             // Obtener datos del material
             $dataMaterial = Materiale::where('referencia_material', $request->referencia_material)->first();
@@ -64,42 +56,43 @@ class AsignacioneController extends Controller
             ])->first();
 
             if (!$dataPresupuesto) {
-                return response()->json([
-                    'isError' => true,
-                    'code' => 404,
-                    'message' => 'Presupuesto no encontrado',
-                    'result' => ["asignacion" => $material]
-                ], 404);
+                return ResponseHelper::error(404,"Asingación no encontrada",["asignacion" => $material]);
+               
             }
             // Validar stock de material disponible
             if ($dataMaterial->cantidad < $material["cantidad_material"]) {
-                return response()->json([
-                    'isError' => true,
-                    'code' => 401,
-                    'message' => 'No está disponible la cantidad que requieres',
-                    'result' => ["asignacion" => $material]
-                ], 401);
+              
+                return ResponseHelper::error(401,"No está disponible la cantidad que requieres",["asignacion" => $material]);
             }
+
 
             // Validar si la cantidad sobrepasa el presupuesto
             if ($dataPresupuesto->cantidad_material < $material["cantidad_material"]) {
-                return response()->json([
-                    'isError' => true,
-                    'code' => 401,
-                    'message' => 'La cantidad sobrepasa el presupuesto',
-                    'result' => ["asignacion" => $material]
-                ], 401);
+               
+
+                return ResponseHelper::error(401,"La cantidad sobrepasa el presupuesto",["asignacion" => $material]);
             }
-            Asignacione::firstOrCreate([
+            $templateAsingacion[] = [
                 "nombre_inmueble" => strtoupper($request->nombre_inmueble),
                 "codigo_proyecto" => strtoupper($material["codigo_proyecto"]),
                 "referencia_material" => $dataMaterial->referencia_material,
                 "costo_material" => $dataMaterial->costo,
                 "cantidad_material" => $material["cantidad_material"],
                 "numero_identificacion" => Auth::user()->numero_identificacion,
-                "estado" => "A"
+                "estado" => "A",
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ];
+            // Asignacione::firstOrCreate([
+            //     "nombre_inmueble" => strtoupper($request->nombre_inmueble),
+            //     "codigo_proyecto" => strtoupper($material["codigo_proyecto"]),
+            //     "referencia_material" => $dataMaterial->referencia_material,
+            //     "costo_material" => $dataMaterial->costo,
+            //     "cantidad_material" => $material["cantidad_material"],
+            //     "numero_identificacion" => Auth::user()->numero_identificacion,
+            //     "estado" => "A"
 
-            ]);
+            // ]);
         }
 
 
@@ -121,12 +114,8 @@ class AsignacioneController extends Controller
         // $dataMaterial->cantidad = $dataMaterial->cantidad - $request->cantidad_material;
         // $dataMaterial->save();
 
-        return response()->json([
-            'isError'  => false,
-            'code'     => 201,
-            'message'  => 'Asignación creada exitosamente',
-            'result'   => []
-        ], 201);
+        Asignacione::insert($templateAsingacion);
+        return ResponseHelper::success(201,"Se ha registrado con exito");
     }
 
     public function destroy(Request $request)
@@ -138,12 +127,7 @@ class AsignacioneController extends Controller
         ]);
 
         if ($validatedData->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-                'message' => $validatedData->errors()->first(),
-                'result' => $validatedData->errors(),
-            ], 422);
+            return ResponseHelper::error(422,$validatedData->errors()->first(),$validatedData->errors());
         }
 
         $dataAsignacion = Asignacione::where([
@@ -160,11 +144,6 @@ class AsignacioneController extends Controller
         $material->cantidad += $dataAsignacion->cantidad_material;
         $material->save();
 
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => "Se ha eliminado con éxito",
-            'result' => [],
-        ], 200);
+        return ResponseHelper::success(200,"Se ha eliminado con exito");
     }
 }

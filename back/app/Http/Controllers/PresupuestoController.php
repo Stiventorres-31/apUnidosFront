@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseHelper;
 use App\Models\Inmueble;
 use App\Models\Inventario;
 use App\Models\Materiale;
@@ -74,12 +75,7 @@ class PresupuestoController extends Controller
         ]);
 
         if ($validatedData->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-                'message' => $validatedData->errors()->first(),
-                'result' => $validatedData->errors(),
-            ], 422);
+            return ResponseHelper::error(422, $validatedData->errors()->first(), $validatedData->errors());
         }
 
         $numero_identificacion = Auth::user()->numero_identificacion;
@@ -92,22 +88,17 @@ class PresupuestoController extends Controller
                 'consecutivo' => "required|numeric|exists:inventarios,consecutivo",
                 'cantidad_material'   => 'required|numeric|min:1',
             ]);
-           
+
 
             if ($validatedData->fails()) {
-                return response()->json([
-                    'isError' => true,
-                    'code' => 422,
-                    'message' => $validatedData->errors()->first(),
-                    'result' => $validatedData->errors(),
-                ], 422);
+                return ResponseHelper::error(422, $validatedData->errors()->first(), $validatedData->errors());
             }
 
             $exisitencia = Presupuesto::where('referencia_material', $material["referencia_material"])
-            ->where("consecutivo","=",$material["consecutivo"])
-            ->where("codigo_proyecto","=",$request->codigo_proyecto)
-            ->where("nombre_inmueble","=",$request->nombre_inmueble)
-            ->first();
+                ->where("consecutivo", "=", $material["consecutivo"])
+                ->where("codigo_proyecto", "=", $request->codigo_proyecto)
+                ->where("nombre_inmueble", "=", $request->nombre_inmueble)
+                ->first();
 
             // return response()->json([
             //     'isError' => true,
@@ -116,32 +107,25 @@ class PresupuestoController extends Controller
             //     'result' => $material,
             // ], 400);
 
-            if($exisitencia){
-                return response()->json([
-                    'isError' => true,
-                    'code' => 400,
-                    'message' => "Ya existe este material ". $material["referencia_material"] . " con lote ". $material["consecutivo"] ." en el presupuesto",
-                    'result' => [],
-                ], 400);
+            if ($exisitencia) {
+
+
+                return ResponseHelper::error(400, "Ya existe este material " . $material["referencia_material"] . " con lote " . $material["consecutivo"] . " en el presupuesto");
             }
 
             $dataMaterial = Materiale::where('referencia_material', "=", strtoupper($material["referencia_material"]))
-            ->first();
+                ->first();
 
-            
+
 
             if ($dataMaterial->estado !== "A" || !$dataMaterial) {
-                return response()->json([
-                    'isError' => true,
-                    'code' => 422,
-                    'message' => "Este material no existe",
-                    'result' => [],
-                ], 422);
+
+                return ResponseHelper::error(404, "Este material no existe con código = > " . $material->referencia_material);
             }
 
             $inventario = Inventario::where("referencia_material", "=", $dataMaterial->referencia_material)
                 ->where("consecutivo", "=", $material["consecutivo"])->first();
-                
+
 
             $templatePresupuesto[] = [
                 "nombre_inmueble" => strtoupper($request->nombre_inmueble),
@@ -161,12 +145,7 @@ class PresupuestoController extends Controller
         // return response()->json($templatePresupuesto);
         Presupuesto::insert($templatePresupuesto);
 
-        return response()->json([
-            'isError' => false,
-            'code' => 201,
-            'message' => 'Presupuesto creado exitosamente',
-            'result' => []
-        ], 201);
+        return ResponseHelper::success(201, "Se ha creado con exito");
     }
 
     public function destroy(Request $request)
@@ -180,12 +159,7 @@ class PresupuestoController extends Controller
         ]);
 
         if ($validatedData->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-                'message' => $validatedData->errors()->first(),
-                'result' => $validatedData->errors(),
-            ], 422);
+            return ResponseHelper::error(422,$validatedData->errors()->first(),$validatedData->errors());
         }
 
         $presupuesto = Presupuesto::where([
@@ -195,12 +169,7 @@ class PresupuestoController extends Controller
         ])->delete();
 
         if (!$presupuesto) {
-            return response()->json([
-                'isError' => true,
-                'code' => 404,
-                'message' => 'Presupuesto no encontrado',
-                'result' => [],
-            ], 404);
+            return ResponseHelper::error(404,"Presupuesto no encontrado");
         }
 
 
@@ -208,12 +177,7 @@ class PresupuestoController extends Controller
 
 
 
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => 'Presupuesto eliminado exitosamente',
-            'result' => []
-        ], 200);
+        return ResponseHelper::success(200,"Se ha eliminado con exito");
     }
 
     public function fileMasivo(Request $request)
@@ -223,12 +187,7 @@ class PresupuestoController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-                'message' => $validator->errors()->first(),
-                'result' => $validator->errors(),
-            ], 422);
+            return ResponseHelper::error(422,$validator->errors()->first(),$validator->errors());
         }
 
 
@@ -253,12 +212,8 @@ class PresupuestoController extends Controller
 
 
         if ($archivoCabecera !== $cabecera) {
-            return response()->json([
-                'isError' => true,
-                'code' => 400,
-                'message' => 'El archivo no tiene la estructura requerida',
-                'result' => [],
-            ], 400);
+            return ResponseHelper::error(400,"El archivo no tiene la estructura requerida");
+          
         }
 
         $archivoDatos = $archivoCSV->getRecords();
@@ -286,12 +241,7 @@ class PresupuestoController extends Controller
                 "codigo_proyecto" => "required|exists:proyectos,codigo_proyecto"
             ]);
             if ($validatorDato->fails()) {
-                return response()->json([
-                    'isError' => true,
-                    'code' => 422,
-                    'message' => $validator->errors()->first(),
-                    'result' => $validatorDato->errors(),
-                ], 422);
+                return ResponseHelper::error(422,$validator->errors()->first(),$validator->errors());
             }
 
             $material = Materiale::where("referencia_material", "=", $value["referencia_material"])->first();
@@ -327,11 +277,6 @@ class PresupuestoController extends Controller
 
         Presupuesto::insert($datosPresupuestos);
 
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => 'Se ha finalizado el cargue',
-            'result' => ["presupuesto" => $datosPresupuestos],
-        ], 200);
+        return ResponseHelper::success(200,"Se ha cargado correctamente");
     }
 }

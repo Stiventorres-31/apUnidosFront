@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseHelper;
 use App\Models\Proyecto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -16,12 +17,9 @@ class ProyectoController extends Controller
     {
         $proyectos = Proyecto::all();
 
-        return response()->json([
-            'isError' => true,
-            "code"=>200,
-            'message' => 'Lista de proyectos obtenida con éxito',
-            'result' => ["proyecto" => $proyectos]
-        ], 200);
+
+
+        return ResponseHelper::success(200, "Listado de proyectos", ["proyecto" => $proyectos]);
     }
     public function store(Request $request)
     {
@@ -36,12 +34,7 @@ class ProyectoController extends Controller
         ]);
 
         if ($validateData->fails()) {
-            return response()->json([
-                'isError' => true,
-                'code' => 422,
-                'message' =>  $validateData->errors()->first(),
-                'result' => $validateData->errors(),
-            ], 422);
+            return ResponseHelper::error(422, $validateData->errors()->first(), $validateData->errors());
         }
 
         $proyecto = new Proyecto();
@@ -57,55 +50,31 @@ class ProyectoController extends Controller
         $proyecto->estado = "A";
         $proyecto->save();
 
-        return response()->json([
-            'isError' => false,
-            'code' => 201,
-            'message' => 'Se ha creado con exito',
-            'result' => [
-                "proyecto" => $proyecto
-            ]
-        ], 201);
+        return ResponseHelper::error(201, "Se ha creado con exito", ["proyecto" => $proyecto]);
     }
     public function show($codigo_proyecto)
     {
         $proyecto = Proyecto::with('inmuebles.presupuestos')->find($codigo_proyecto);
 
         if (!$proyecto) {
-            return response()->json([
-                'isError' => true,
-                'code' => 404,
-                'message' => 'Proyecto no encontrado',
-                'result' => [],
-            ], 404);
+
+            return ResponseHelper::error(404, "Proyecto no encontrado");
         }
 
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => 'Proyecto obtenido',
-            'result' => ["proyecto" => $proyecto],
-        ], 200);
+        return ResponseHelper::success(200, "Proyecto obtenido", ["proyecto" => $proyecto]);
     }
 
     public function update(Request $request, $codigo_proyecto)
     {
-        $proyecto = Proyecto::find($codigo_proyecto);
+        $proyecto = Proyecto::find(strtoupper(trim($codigo_proyecto)));
 
         if (!$proyecto) {
-            return response()->json([
-                'isError' => true,
-                'code' => 404,
-                'message' => 'Proyecto no encontrado',
-                'result' => [],
-            ], 404);
+
+            return ResponseHelper::error(404, "Proyecto no encontrado");
         }
         if ($proyecto->estado === 'F') {
-            return response()->json([
-                'isError' => true,
-                'code' => 403,
-                'message' => 'Este proyecto no se puede actualizar',
-                'result' => [],
-            ], 403); // Código 403 para indicar acción prohibida
+            // Código 403 para indicar acción prohibida
+            return ResponseHelper::error(403, "Este proyecto no se puede actualizar");
         }
 
         $validator = Validator::make($request->all(), [
@@ -114,38 +83,27 @@ class ProyectoController extends Controller
             'ciudad_municipio_proyecto' => 'sometimes|min:6',
             'direccion_proyecto' => 'sometimes|min:6',
 
-            'fecha_inicio_proyecto' => 'sometimes|date_format:d/m/Y',
-            'fecha_final_proyecto' => 'sometimes|date_format:d/m/Y|after:fecha_inicio_proyecto',
+            'fecha_inicio_proyecto' => 'sometimes|date_format:Y-m-d',
+            'fecha_final_proyecto' => 'sometimes|date_format:Y-m-d|after:fecha_inicio_proyecto',
 
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-
-                'isError' => true,
-                'code' => 403,
-                'message' => 'Este proyecto no se puede actualizar',
-                'result' => $validator->errors()
-            ], 403);
+            return ResponseHelper::success(422, $validator->errors()->first(), $validator->errors());
         }
-
-
 
         $proyecto->departamento_proyecto = strtoupper($request->departamento_proyecto);
         $proyecto->ciudad_municipio_proyecto = strtoupper($request->ciudad_municipio_proyecto);
         $proyecto->direccion_proyecto = strtoupper($request->direccion_proyecto);
 
-        $proyecto->fecha_inicio_proyecto = Carbon::createFromFormat("d/m/Y", $request->fecha_inicio_proyecto)->format("Y-m-d");
-        $proyecto->fecha_final_proyecto = Carbon::createFromFormat("d/m/Y", $request->fecha_final_proyecto)->format("Y-m-d");
+        // $proyecto->fecha_inicio_proyecto = Carbon::createFromFormat("d/m/Y", $request->fecha_inicio_proyecto)->format("Y-m-d");
+        // $proyecto->fecha_final_proyecto = Carbon::createFromFormat("d/m/Y", $request->fecha_final_proyecto)->format("Y-m-d");
 
+        $proyecto->fecha_inicio_proyecto = $request->fecha_inicio_proyecto;
+        $proyecto->fecha_final_proyecto = $request->fecha_inicio_proyecto;
         $proyecto->save();
 
-        return response()->json([
-            'isError' => true,
-            'code' => 200,
-            'message' => 'Se ha actualizado con exto',
-            'result' => ["proyecto" => $proyecto]
-        ], 200);
+        return ResponseHelper::error(200, "Se ha actualizado con exto", ["proyecto" => $proyecto]);
     }
 
     public function generateCSV($codigo_proyecto)
@@ -154,20 +112,17 @@ class ProyectoController extends Controller
         $proyecto = Proyecto::with(['inmuebles.presupuestos', "inmuebles.asignaciones"])->find($codigo_proyecto);
 
         if (!$proyecto) {
-            return response()->json([
-                'isError' => true,
-                'code' => 404,
-                'message' => "El proyecto no existe",
-                'result' => []
-            ], 404);
+
+
+            return ResponseHelper::error(404, "El proyecto no existe");
         }
 
-        return response()->json(
-            [
-                "presupuesto" => count($proyecto->inmuebles[1]->presupuestos),
-                "proyecto" =>    $proyecto
-            ]
-        );
+        // return response()->json(
+        //     [
+        //         "presupuesto" => count($proyecto->inmuebles[1]->presupuestos),
+        //         "proyecto" =>    $proyecto
+        //     ]
+        // );
 
         $archivoCSV = Writer::createFromString("");
         $archivoCSV->setDelimiter(";");
@@ -201,10 +156,10 @@ class ProyectoController extends Controller
         $csvContent = (string) $archivoCSV;
         $filePath = 'reports/reporte_presupuesto.csv';
         Storage::put($filePath, $csvContent);
-        return response()->json([
-            'message' => 'El reporte se ha generado y guardado correctamente.',
-            'path' => $filePath, // Puedes devolver la ruta del archivo si es necesario
-        ], 201);
+
+        return ResponseHelper::success(201, "El reporte se ha generado y guardado correctamente", ["proyecto" => $filePath]);
+
+     
     }
 
     public function destroy(Request $request)
@@ -212,31 +167,28 @@ class ProyectoController extends Controller
         $validator = Validator::make($request->all(), [
             "codigo_proyecto" => "required|exists:proyectos,codigo_proyecto|min:4"
         ]);
+        if ($validator->fails()) {
+          
+
+            return ResponseHelper::error(422,$validator->errors()->first(),$validator->errors());
+
+        }
         $proyecto = Proyecto::find($request->codigo_proyecto);
 
-        if (!$proyecto) {
-            return response()->json([
-                'isError' => true,
-                'code' => 404,
-                'message' => 'Proyecto no encontrado',
-                'result' => [],
-            ], 404);
-        }
+        // if (!$proyecto) {
+        //     return response()->json([
+        //         'isError' => true,
+        //         'code' => 404,
+        //         'message' => 'Proyecto no encontrado',
+        //         'result' => [],
+        //     ], 404);
+        // }
         if ($proyecto->estado === 'F') {
-            return response()->json([
-                'isError' => true,
-                'code' => 403,
-                'message' => 'Este proyecto no se puede eliminar',
-                'result' => [],
-            ], 403);
+            return ResponseHelper::error(403,"Este proyecto no se puede eliminar");
         }
 
         $proyecto->update(["estado" => "E"]);
-        return response()->json([
-            'isError' => false,
-            'code' => 200,
-            'message' => 'Se ha eliminado con exito',
-            'result' => []
-        ], 200);
+
+        return ResponseHelper::success(200,"Se ha eliminado con exito");
     }
 }
