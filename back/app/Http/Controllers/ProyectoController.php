@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Proyecto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use League\Csv\Writer;
@@ -16,9 +17,10 @@ class ProyectoController extends Controller
         $proyectos = Proyecto::all();
 
         return response()->json([
-            'success' => true,
+            'isError' => true,
+            "code"=>200,
             'message' => 'Lista de proyectos obtenida con éxito',
-            'data' => $proyectos
+            'result' => ["proyecto" => $proyectos]
         ], 200);
     }
     public function store(Request $request)
@@ -28,16 +30,16 @@ class ProyectoController extends Controller
             "departamento_proyecto" => "required|min:6",
             "ciudad_municipio_proyecto" => "required|min:6",
             "direccion_proyecto" => "required|min:6",
-            "numero_identificacion" => "required|exists:usuarios,numero_identificacion",
-            "fecha_inicio_proyecto" => "required|date_format:d/m/Y",
-            "fecha_final_proyecto" => "required|date_format:d/m/Y|after:fecha_inicio_proyecto"
+
+            "fecha_inicio_proyecto" => "required|date_format:Y-m-d",
+            "fecha_final_proyecto" => "required|date_format:Y-m-d|after:fecha_inicio_proyecto"
         ]);
 
         if ($validateData->fails()) {
             return response()->json([
                 'isError' => true,
                 'code' => 422,
-                'message' => 'Verificar la información',
+                'message' =>  $validateData->errors()->first(),
                 'result' => $validateData->errors(),
             ], 422);
         }
@@ -47,9 +49,11 @@ class ProyectoController extends Controller
         $proyecto->departamento_proyecto = strtoupper($request->departamento_proyecto);
         $proyecto->ciudad_municipio_proyecto = strtoupper($request->ciudad_municipio_proyecto);
         $proyecto->direccion_proyecto = strtoupper($request->direccion_proyecto);
-        $proyecto->numero_identificacion = strtoupper($request->numero_identificacion);
-        $proyecto->fecha_inicio_proyecto = Carbon::createFromFormat("d/m/Y", $request->fecha_inicio_proyecto)->format("Y-m-d");
-        $proyecto->fecha_final_proyecto = Carbon::createFromFormat("d/m/Y", $request->fecha_final_proyecto)->format("Y-m-d");
+        $proyecto->numero_identificacion = Auth::user()->numero_identificacion;
+        $proyecto->fecha_inicio_proyecto = $request->fecha_inicio_proyecto;
+        $proyecto->fecha_final_proyecto = $request->fecha_final_proyecto;
+        // $proyecto->fecha_inicio_proyecto = Carbon::parse("d/m/Y", $request->fecha_inicio_proyecto)->format("Y-m-d");
+        // $proyecto->fecha_final_proyecto = Carbon::parse("d/m/Y", $request->fecha_final_proyecto)->format("Y-m-d");
         $proyecto->estado = "A";
         $proyecto->save();
 

@@ -69,7 +69,6 @@ class MaterialeController extends Controller
         $validatorData = Validator::make($request->all(), [
             "referencia_material" => "required|unique:materiales|max:10",
             "nombre_material" => "required|unique:materiales|min:6",
-            "numero_identificacion" => "required|exists:usuarios,numero_identificacion|max:20|min:6",
             "costo" => "required|regex:/^\d{1,10}(\.\d{1,2})?$/",
             "cantidad" => "required|numeric|min:0",
             "nit_proveedor" => "required|min:6",
@@ -90,21 +89,21 @@ class MaterialeController extends Controller
 
         $materiale = new Materiale();
 
-        $materiale->referencia_material = strtoupper($request->referencia_material);
-        $materiale->nombre_material = strtoupper($request->nombre_material);
-        $materiale->numero_identificacion = $request->numero_identificacion;
+        $materiale->referencia_material = strtoupper(trim($request->referencia_material));
+        $materiale->nombre_material = strtoupper(trim($request->nombre_material));
+        $materiale->numero_identificacion = Auth::user()->numero_identificacion;
         $materiale->save();
 
         $inventario = new Inventario();
 
-        $inventario->referencia_material = $materiale->referencia_material;
+        $inventario->referencia_material = strtoupper(trim($materiale->referencia_material));
         $inventario->consecutivo = 1;
-        $inventario->numero_identificacion = $materiale->numero_identificacion;
-        $inventario->costo = $request->costo;
-        $inventario->cantidad = $request->cantidad;
-        $inventario->nit_proveedor = $request->nit_proveedor;
-        $inventario->nombre_proveedor = strtoupper($request->nombre_proveedor);
-        $inventario->descripcion_proveedor = strtoupper($request->descripcion_proveedor);
+        $inventario->numero_identificacion = Auth::user()->numero_identificacion;
+        $inventario->costo = trim($request->costo);
+        $inventario->cantidad = trim($request->cantidad);
+        $inventario->nit_proveedor = trim($request->nit_proveedor);
+        $inventario->nombre_proveedor = strtoupper(trim($request->nombre_proveedor));
+        $inventario->descripcion_proveedor = strtoupper(trim($request->descripcion_proveedor));
 
         $inventario->save();
 
@@ -119,13 +118,6 @@ class MaterialeController extends Controller
 
     public function update(Request $request, $referencia_material)
     {
-
-        // return response()->json([
-        //     'isError' => true,
-        //     'code' => 401,
-        //     'message' => "Bloqueado temporalmente",
-        //     'errors' => [],
-        // ], 401);
 
         $validatedata = Validator::make($request->all(), [
             "costo" => "required|regex:/^\d{1,10}(\.\d{1,2})?$/",
@@ -143,7 +135,7 @@ class MaterialeController extends Controller
         }
 
         // Buscar el material por referencia
-        $materiale = Materiale::where('referencia_material', $referencia_material)->first();
+        $materiale = Materiale::where('referencia_material', trim($referencia_material))->first();
 
         // Verificar si el material existe
         if (!$materiale) {
@@ -157,8 +149,8 @@ class MaterialeController extends Controller
 
         // Actualizar los datos del material
         $materiale->update([
-            'costo' => $request->costo,
-            'cantidad' => $request->cantidad,
+            'costo' => trim($request->costo),
+            'cantidad' => trim($request->cantidad),
         ]);
 
         return response()->json([
@@ -237,19 +229,20 @@ class MaterialeController extends Controller
                 "isError" => true,
                 "code" => 422,
                 "message" => "El campo referencia_material no es válido.",
+                "result" => []
             ], 422);
         }
         $consecutivo = Inventario::where("referencia_material", "=", $request->referencia_material)
             ->max("consecutivo") ?? 0;
 
         $inventario =  new Inventario();
-        $inventario->referencia_material = strtoupper($request->referencia_material);
+        $inventario->referencia_material = strtoupper(trim($request->referencia_material));
         // return response()->json($request->referencia_material);
         $inventario->consecutivo = $consecutivo + 1;
-        $inventario->costo = (float) $request->costo;
-        $inventario->cantidad = $request->cantidad;
-        $inventario->nit_proveedor = $request->nit_proveedor;
-        $inventario->nombre_proveedor = strtoupper($request->nombre_proveedor);
+        $inventario->costo = (float) trim($request->costo);
+        $inventario->cantidad = trim($request->cantidad);
+        $inventario->nit_proveedor = trim($request->nit_proveedor);
+        $inventario->nombre_proveedor = strtoupper(trim($request->nombre_proveedor));
         $inventario->descripcion_proveedor = "Fer";
         $inventario->numero_identificacion = Auth::user()->numero_identificacion;
         $inventario->save();
@@ -258,7 +251,7 @@ class MaterialeController extends Controller
             "isError" => false,
             "code" => 201,
             "message" => "Se ha registrado con exito",
-            "result" => $inventario
+            "result" => ["inventario" => $inventario]
         ], 201);
     }
 }
