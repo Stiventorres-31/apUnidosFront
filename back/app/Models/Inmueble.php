@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Inmueble extends Model
 {
     protected $fillable = [
+        "id",
         'nombre_inmueble',
         'estado',
         'codigo_proyecto',
@@ -42,6 +43,7 @@ class Inmueble extends Model
     public function toArray()
     {
         return [
+            'id'=>$this->id,
           
             'nombre_inmueble' => $this->nombre_inmueble,
             'numero_identificacion' => $this->numero_identificacion,
