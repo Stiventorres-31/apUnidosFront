@@ -437,10 +437,16 @@ ngx-datatable .datatable-body-cell.accion_ {
 }
 
 /**Tooltip**/
+
+
 .tool-tip::before {
     content: attr(data-title) !important;
     position: absolute;
     top: -30px;
+    left: 50%;
+    /* Lo posiciona en el centro horizontalmente */
+    transform: translateX(-50%);
+    /* Lo centra completamente */
     background-color: var(--color-hovered);
     color: white;
     padding: 5px;

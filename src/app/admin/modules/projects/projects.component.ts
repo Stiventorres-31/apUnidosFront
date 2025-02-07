@@ -8,11 +8,12 @@ import { BreadCrumbService } from '../../../shared/services/breadcrumbs/bread-cr
 import { AppComponent } from '../../../app.component';
 import { projects } from '../../../shared/models/projects/projects.interface';
 import { ProjectService } from '../../../shared/services/project/project.service';
+import { CardProjectsComponent } from './card/card-projects.component';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [NgxDatatableModule, RouterLink],
+  imports: [NgxDatatableModule, RouterLink, CardProjectsComponent],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss'
 })
@@ -21,6 +22,7 @@ export class ProjectsComponent {
   resizeObserver: ResizeObserver | undefined;
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   public isLoading = true;
+  public isSearching = false;
   public filtros: projects[] = [];
 
   constructor(private ProjectService: ProjectService, private EncryptionService: EncryptionService, private Router: Router, private BreadCrumbService: BreadCrumbService, private AppComponent: AppComponent
@@ -46,7 +48,7 @@ export class ProjectsComponent {
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
         this.isLoading = false;
       })
-    this.isLoading = false;
+
   }
 
   ngAfterViewInit() {
@@ -57,29 +59,12 @@ export class ProjectsComponent {
     }
   }
 
-  update(type: projects) {
-    this.Router.navigate(["/admin/projects/update/", this.EncryptionService.encrypt(`${type.codigo_proyecto}`)])
-  }
+
 
   filter(event: Event) { }
 
 
-  delete(row: projects) {
-    this.AppComponent.confirm({
-      header: `Confirmar eliminación`,
-      message: `¿Estás seguro/a de que deseas eliminar el proyecto con código ${row.codigo_proyecto} ? `,
-      styles: `warn`
-    }).then((rs) => {
-      if (rs) {
-        this.ProjectService.delete(row.codigo_proyecto).subscribe((rx) => {
-          this.AppComponent.alert({ summary: `Operación ${rx.isError ? 'fallida' : 'exitosa'}`, detail: rx.message, severity: `${rx.isError ? 'error' : 'success'}` });
 
-          if (!rx.isError) this.index();
-        })
-      }
-
-    })
-  }
 
   showDetails(row: any) {
     const fila = this.table._internalRows.find(u => u.id == row.id);

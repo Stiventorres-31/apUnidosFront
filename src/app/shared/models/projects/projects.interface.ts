@@ -9,6 +9,7 @@ export interface projects {
     numero_identificacion: string;
     fecha_inicio_proyecto: string;
     fecha_final_proyecto: string;
+    total_presupuesto?: string;
     estado: string;
 }
 
