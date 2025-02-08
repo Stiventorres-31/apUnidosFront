@@ -29,6 +29,10 @@ export class CardProjectsComponent {
     this.Router.navigate(["/admin/projects/update/", this.EncryptionService.encrypt(`${this.project.codigo_proyecto}`)])
   }
 
+  budget() {
+    this.Router.navigate(["/admin/projects/budget/", this.EncryptionService.encrypt(`${this.project.codigo_proyecto}`)])
+  }
+
   delete() {
     this.AppComponent.confirm({
       header: `Confirmar eliminación`,

@@ -1,0 +1,98 @@
+<div class="w-full ">
+    @if(isLoading){
+
+    <div class="w-full rounded-xl skeleton-medium h-full pb-5">
+        <div class="w-full flex justify-center mt-5 ">
+            <div class="skeleton w-2/4 h-11 rounded-full mt-5"></div>
+
+
+        </div>
+        <div class="w-full flex justify-between gap-2 px-5 mt-20">
+            <div class="w-auto relative"></div>
+            <div class=" w-56 skeleton rounded-full h-10"></div>
+        </div>
+
+
+        <div class="w-full flex flex-wrap  my-5 px-5">
+            <div class="w-full h-12 rounded-3xl skeleton animate-skeleton-1000 mt-4"></div>
+            <div class="w-full h-12 rounded-3xl skeleton animate-skeleton-1000 mt-4"></div>
+            <div class="w-full h-12 rounded-3xl skeleton animate-skeleton-1000 mt-4"></div>
+            <div class="w-full h-12 rounded-3xl skeleton animate-skeleton-1000 mt-4"></div>
+            <div class="w-full h-12 rounded-3xl skeleton animate-skeleton-1000 mt-4"></div>
+            <div class="w-full h-12 rounded-3xl skeleton animate-skeleton-1000 mt-4"></div>
+
+        </div>
+    </div>
+
+    }@else {
+
+    <div class="w-full bg-white h-full rounded-xl py-5">
+        <div class="my-5 px-5">
+
+            <div class="container mx-auto p-4">
+                <div class="bg-white shadow-md rounded-lg p-4 mb-6">
+                    <h2 class="text-2xl font-bold text-blue-600 mb-2">
+                        {{ projects.codigo_proyecto }} - {{ projects.departamento_proyecto }}
+                    </h2>
+                    <p class="text-gray-700">
+                        <strong>Ciudad:</strong> {{ projects.ciudad_municipio_proyecto }}<br>
+                        <strong>Dirección:</strong> {{ projects.direccion_proyecto }}<br>
+                        <strong>Estado:</strong> {{ projects.estado }}
+                    </p>
+
+                    <!-- Listado de Inmuebles -->
+                    <div class="mt-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Inmuebles</h3>
+
+                        @if (projects.inmuebles && projects.inmuebles.length > 0) {
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
+                            @for (pro of projects.inmuebles; track $index) {
+                            <ng-container>
+                                <div class="border p-4 rounded-lg bg-gray-100 shadow">
+                                    <h4 class="font-semibold text-blue-500 mb-1">{{ pro.nombre_inmueble }}</h4>
+                                    <p class="text-sm"><strong>Estado:</strong> {{ pro.estado }}</p>
+                                    <p class="text-sm"><strong>Tipo:</strong> {{ pro.tipo_inmueble }}</p>
+                                    <p class="text-sm"><strong>Total Presupuesto:</strong> {{ pro.total_presupuesto }}
+                                    </p>
+
+                                    <!-- Presupuestos del inmueble -->
+                                    @if (pro.presupuestos.length > 0) {
+                                    <div class="mt-3">
+                                        <h5 class="text-sm font-medium text-gray-600">Presupuestos:</h5>
+                                        <ul class="list-disc pl-5 text-sm text-gray-700">
+                                            @for ( presu of pro.presupuestos; track $index) {
+                                            <li>
+                                                <strong>{{ presu.referencia_material }}:</strong>
+                                                {{ presu.costo_material }}
+                                                ({{ presu.cantidad_material }} unidades)
+                                            </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                    } @else {
+                                    <p class="text-gray-500 mt-2">No hay presupuestos registrados.</p>
+                                    }
+                                </div>
+                            </ng-container>
+                            }
+                        </div>
+                        } @else {
+                        <p class="text-gray-500 mt-2">No hay inmuebles registrados.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+    </div>
+
+
+
+    }
+
+</div>

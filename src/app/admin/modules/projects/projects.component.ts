@@ -9,11 +9,14 @@ import { AppComponent } from '../../../app.component';
 import { projects } from '../../../shared/models/projects/projects.interface';
 import { ProjectService } from '../../../shared/services/project/project.service';
 import { CardProjectsComponent } from './card/card-projects.component';
+import { environment } from '../../../../environments/environment';
+import { pagination_interface } from '../../../shared/models/pagination/pagination.interface';
+import { PaginationTableComponent } from '../../../shared/components/pagination/pagination-table.component';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [NgxDatatableModule, RouterLink, CardProjectsComponent],
+  imports: [NgxDatatableModule, RouterLink, CardProjectsComponent, PaginationTableComponent],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss'
 })
@@ -23,7 +26,10 @@ export class ProjectsComponent {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   public isLoading = true;
   public isSearching = false;
-  public filtros: projects[] = [];
+  public filtros!: pagination_interface;
+  public projects_data: projects[] = [];
+
+  public typeOrigin: number = 0; //0  = index, 1 = input busqueda
 
   constructor(private ProjectService: ProjectService, private EncryptionService: EncryptionService, private Router: Router, private BreadCrumbService: BreadCrumbService, private AppComponent: AppComponent
   ) { }
@@ -36,11 +42,12 @@ export class ProjectsComponent {
       .subscribe(() => this.recalculateTable());
   }
 
-  index() {
-    this.ProjectService.index().subscribe(
+  index(endpoint: string = `${environment.backend}api/proyecto?page=1`) {
+    this.ProjectService.index(endpoint).subscribe(
       (rs) => {
         console.log(rs);
-        this.filtros = rs;
+        this.projects_data = rs.result.proyectos.data ?? [];
+        this.filtros = rs.result.proyectos;
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Proyectos', url: '/admin/projects' },
@@ -50,6 +57,8 @@ export class ProjectsComponent {
       })
 
   }
+
+
 
   ngAfterViewInit() {
     const mainContent = document.getElementById('main-content');

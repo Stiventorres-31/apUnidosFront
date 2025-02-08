@@ -45,7 +45,7 @@ export class InmueblesComponent {
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
         this.isLoading = false;
       })
-    this.isLoading = false;
+
   }
 
   ngAfterViewInit() {

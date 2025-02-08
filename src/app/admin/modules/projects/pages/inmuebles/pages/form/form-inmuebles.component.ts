@@ -12,7 +12,7 @@ import { BreadCrumbService } from '../../../../../../../shared/services/breadcru
 import { ValidationsService } from '../../../../../../../shared/services/validations/validations.service';
 import { ProjectService } from '../../../../../../../shared/services/project/project.service';
 import { TipoInmueblesService } from '../../services/tipo-inmuebles.service';
-import { projects } from '../../../../../../../shared/models/projects/projects.interface';
+import { projects, selectProjects } from '../../../../../../../shared/models/projects/projects.interface';
 import { tipo_inmueble } from '../../models/inmuebles.interface';
 
 @Component({
@@ -29,7 +29,7 @@ export class FormInmueblesComponent {
   public isLoading: boolean = true;
   public isSending: boolean = false;
   public isUpdate: boolean = false;
-  public projectList: projects[] = [];
+  public projectList: selectProjects[] = [];
   public tipoInmueblesList: tipo_inmueble[] = [];
 
   constructor(
@@ -103,7 +103,7 @@ export class FormInmueblesComponent {
   }
 
   index() {
-    this.ProjectService.index().subscribe(
+    this.ProjectService.projects().subscribe(
       (rs) => {
         this.projectList = rs;
       });

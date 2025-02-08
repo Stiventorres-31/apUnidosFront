@@ -13,6 +13,7 @@ import { FormMaterialsComponent } from "./modules/projects/pages/materiales/form
 import { InmueblesComponent } from "./modules/projects/pages/inmuebles/inmuebles.component";
 import { FormProjectsComponent } from "./modules/projects/pages/form/form-projects.component";
 import { FormInmueblesComponent } from "./modules/projects/pages/inmuebles/pages/form/form-inmuebles.component";
+import { BudgetsProjectsComponent } from "./modules/projects/pages/presupuestos/budgets-projects.component";
 
 export const ADMIN_ROUTES: Routes = [
 
@@ -32,6 +33,7 @@ export const ADMIN_ROUTES: Routes = [
                 children: [
                     { path: '', component: ProjectsComponent },
                     { path: 'update/:id', component: FormProjectsComponent },
+                    { path: 'budget/:id', component: BudgetsProjectsComponent },
                     { path: 'new', component: FormProjectsComponent },
                 ]
             },

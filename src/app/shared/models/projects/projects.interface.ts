@@ -1,3 +1,4 @@
+import { pagination_interface } from "../pagination/pagination.interface";
 import { ApiResponse } from "../users/users.interface";
 
 export interface projects {
@@ -9,6 +10,7 @@ export interface projects {
     numero_identificacion: string;
     fecha_inicio_proyecto: string;
     fecha_final_proyecto: string;
+    inmuebles?: any[];
     total_presupuesto?: string;
     estado: string;
 }
@@ -23,5 +25,11 @@ export interface projectsForm {
     fecha_final_proyecto: string;
 }
 
+export interface selectProjects {
+    id: string;
+    codigo_proyecto: string;
+}
+
 export type ProjectResponse = ApiResponse<{ proyecto: projects }>;
-export type ProjectsResponse = ApiResponse<{ proyectos: projects[] }>;
+export type ProjectsResponse = ApiResponse<{ proyectos: pagination_interface }>;
+export type ProjectSelectsResponse = ApiResponse<selectProjects[]>;

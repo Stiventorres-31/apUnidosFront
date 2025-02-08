@@ -166,7 +166,7 @@
 
             @if(!isSearching){
             <ng-container>
-                @for(project of filtros; track $index){
+                @for(project of projects_data; track $index){
                 <card-projects [project]="project" (onload)="index()"></card-projects>
                 }
             </ng-container>
@@ -175,6 +175,15 @@
             <card-projects></card-projects>
             <card-projects></card-projects>
             }
+
+
+            <div class="mt-8 w-full">
+                @if (filtros) {
+                @if (typeOrigin == 0) {
+                <pagination-table [datos]="filtros" (newLink)="index($event)"></pagination-table>
+                }
+                }
+            </div>
 
 
 

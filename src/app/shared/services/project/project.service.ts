@@ -8,7 +8,8 @@ import { LoginService } from '../../../auth/services/login.service';
 import { Router } from '@angular/router';
 import { SingletonService } from '../singleton/singleton.service';
 import { HeadersService } from '../utilities/headers.service';
-import { ProjectResponse, projects, projectsForm, ProjectsResponse } from '../../models/projects/projects.interface';
+import { ProjectResponse, projects, ProjectSelectsResponse, projectsForm, ProjectsResponse, selectProjects } from '../../models/projects/projects.interface';
+import { pagination_interface } from '../../models/pagination/pagination.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -25,13 +26,28 @@ export class ProjectService {
     private headersService: HeadersService
   ) { }
 
-  index(): Observable<projects[]> {
-    return this.http.get<ProjectsResponse>(environment.backend + `api/proyecto`, { headers: this.headersService.getJsonHeaders() })
+  // index(): Observable<projects[]> {
+  //   return this.http.get<ProjectsResponse>(environment.backend + `api/proyecto`, { headers: this.headersService.getJsonHeaders() })
+  //     .pipe(
+  //       map((rs) => {
+  //         return rs.result.proyectos.map((project, index) => ({
+  //           ...project,
+  //           index,
+  //         }));
+  //       }), catchError((error: HttpErrorResponse) => {
+  //         this.LoginService.unauthorized(error)
+  //         return [];
+  //       })
+  //     )
+
+  // }
+
+  projects(): Observable<selectProjects[]> {
+    return this.http.get<ProjectSelectsResponse>(environment.backend + `api/proyecto/select`, { headers: this.headersService.getJsonHeaders() })
       .pipe(
         map((rs) => {
-          return rs.result.proyectos.map((project, index) => ({
-            ...project,
-            index,
+          return rs.result.map((project, index) => ({
+            ...project
           }));
         }), catchError((error: HttpErrorResponse) => {
           this.LoginService.unauthorized(error)
@@ -41,8 +57,41 @@ export class ProjectService {
 
   }
 
+  index(link: string = ""): Observable<ProjectsResponse> {
+    return this.http.get<ProjectsResponse>(link, { headers: this.headersService.getJsonHeaders() })
+      .pipe(
+        map((response: ProjectsResponse) => {
+          return response;
+
+        }),
+        catchError((error) => {
+          if (error.status == 401) {
+            this.LoginService.unauthorized(error)
+
+          }
+          return of({} as ProjectsResponse);
+        })
+      );
+  }
+
   search(id: string): Observable<projects | null> {
     return this.http.get<ProjectResponse>(environment.backend + `api/proyecto/${id}`, {
+      headers: this.headersService.getJsonHeaders()
+    })
+      .pipe(
+        map((rs) => {
+          return rs.result.proyecto;
+
+        }), catchError((error: HttpErrorResponse) => {
+          this.LoginService.unauthorized(error)
+          return of(null);
+        })
+      )
+
+  }
+
+  budget(id: string): Observable<projects | null> {
+    return this.http.get<ProjectResponse>(environment.backend + `api/proyecto/presupuesto/${id}`, {
       headers: this.headersService.getJsonHeaders()
     })
       .pipe(
