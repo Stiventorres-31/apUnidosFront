@@ -86,14 +86,14 @@
                     <div class="w-full flex flex-wrap md:flex-nowrap gap-0 justify-between md:gap-4 px-5">
                         <div class="w-full">
                             <div class="mt-6 input-container  ">
-                                <label for="nombre_inmueble"
-                                    [ngClass]="{'label-float-active': inputs['nombre_inmueble'], 'label-float-inactive': !inputs['nombre_inmueble'] || inputs['nombre_inmueble'] == null }"
-                                    class="label-flotante label-float-active required">Nombre</label>
-                                <input (input)="labelBlur('nombre_inmueble', $event);" autocomplete="false"
-                                    (focus)="labelFocus('nombre_inmueble')"
-                                    (blur)="labelBlur('nombre_inmueble', $event)" type="text"
-                                    class="form-control input-control  " id="nombre_inmueble"
-                                    formControlName="nombre_inmueble" required>
+                                <label for="cantidad_inmueble"
+                                    [ngClass]="{'label-float-active': inputs['cantidad_inmueble'], 'label-float-inactive': !inputs['cantidad_inmueble'] || inputs['cantidad_inmueble'] == null }"
+                                    class="label-flotante label-float-active required">Cantidad</label>
+                                <input (input)="labelBlur('cantidad_inmueble', $event);" autocomplete="false"
+                                    (focus)="labelFocus('cantidad_inmueble')"
+                                    (blur)="labelBlur('cantidad_inmueble', $event)" type="number"
+                                    class="form-control input-control  " id="cantidad_inmueble"
+                                    formControlName="cantidad_inmueble" required>
 
                             </div>
                         </div>

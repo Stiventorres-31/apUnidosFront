@@ -6,6 +6,7 @@ import { debounceTime, fromEvent, Subscription } from 'rxjs';
 import { BreadCrumbService } from '../../../shared/services/breadcrumbs/bread-crumb.service';
 import { Usuario } from '../../../shared/models/users/users.interface';
 import { EncryptionService } from '../../../shared/services/encryption/encryption.service';
+import { AppComponent } from '../../../app.component';
 
 @Component({
   selector: 'app-users',
@@ -21,7 +22,7 @@ export class UsersComponent {
   public isLoading = true;
   public filtros: Usuario[] = [];
 
-  constructor(private userService: UsersService, private EncryptionService: EncryptionService, private Router: Router, private BreadCrumbService: BreadCrumbService) { }
+  constructor(private userService: UsersService, private EncryptionService: EncryptionService, private Router: Router, private BreadCrumbService: BreadCrumbService, private AppComponent: AppComponent) { }
 
 
   ngOnInit() {
@@ -59,6 +60,23 @@ export class UsersComponent {
 
   update(usuario: Usuario) {
     this.Router.navigate(["/admin/users/update/", this.EncryptionService.encrypt(`${usuario.numero_identificacion}`)])
+  }
+
+  delete(usuario: Usuario) {
+    this.AppComponent.confirm({
+      header: `Confirmar eliminación`,
+      message: `¿Estás seguro/a de que deseas eliminar el usuario ${usuario.nombre_completo} ? `,
+      styles: `warn`
+    }).then((rs) => {
+      if (rs) {
+        this.userService.delete(`${usuario.numero_identificacion}`).subscribe((rx) => {
+          this.AppComponent.alert({ summary: `Operación ${rx.isError ? 'fallida' : 'exitosa'}`, detail: rx.message, severity: `${rx.isError ? 'error' : 'success'}` });
+
+          if (!rx.isError) this.index();
+        })
+      }
+
+    })
   }
 
   showDetails(row: any) {

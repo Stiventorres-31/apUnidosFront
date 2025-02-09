@@ -43,9 +43,16 @@ export class ProjectsComponent {
   }
 
   index(endpoint: string = `${environment.backend}api/proyecto?page=1`) {
+    this.isSearching = true;
+    if (environment.production) {
+      const url = new URL(endpoint);
+      if (url.protocol === 'http:') {
+        endpoint = endpoint.replace('http:', 'https:');
+      }
+    }
+
     this.ProjectService.index(endpoint).subscribe(
       (rs) => {
-        console.log(rs);
         this.projects_data = rs.result.proyectos.data ?? [];
         this.filtros = rs.result.proyectos;
         const breadcrumbs = [
@@ -54,6 +61,7 @@ export class ProjectsComponent {
         ];
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
         this.isLoading = false;
+        this.isSearching = false;
       })
 
   }

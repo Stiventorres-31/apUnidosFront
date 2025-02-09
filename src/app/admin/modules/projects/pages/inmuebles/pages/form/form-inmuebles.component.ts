@@ -47,8 +47,8 @@ export class FormInmueblesComponent {
   ) {
     this.form = this.fb.group({
       id: [''],
-      nombre_inmueble: ['', Validators.required],
       codigo_proyecto: ['', Validators.required],
+      cantidad_inmueble: [1, Validators.required],
       tipo_inmueble: ['', Validators.required],
     });
     this.inputs = this.labels.inputs_data;

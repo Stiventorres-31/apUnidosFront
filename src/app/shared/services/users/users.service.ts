@@ -98,4 +98,27 @@ export class UsersService {
 
   }
 
+  delete(id: string): Observable<{ isError: boolean, message: string }> {
+    this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
+    return this.http.delete<UsuarioResponse>(environment.backend + `api/usuario`, {
+      body: { numero_identificacion: id },
+      headers: this.headersService.getJsonHeaders()
+    })
+      .pipe(
+        map((rs: { isError: boolean, message: string }) => {
+
+          return rs;
+
+        }), catchError((error: HttpErrorResponse) => {
+          this.LoginService.unauthorized(error)
+          if (error.status == 422) {
+            return of({ isError: false, message: error.error.message });
+          }
+
+          return of({ isError: false, message: "No se puedo realizar la operación, por favor intenta mas tarde" });
+        })
+      )
+  }
+
+
 }

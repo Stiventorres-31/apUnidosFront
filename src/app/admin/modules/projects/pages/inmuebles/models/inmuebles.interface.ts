@@ -12,9 +12,10 @@ export interface inmueble {
     id: number;
     nombre_inmueble: string;
     codigo_proyecto: string;
-    tipo_inmueble: number;
+    tipo_inmueble: tipo_inmueble;
     estado: string;
 }
+
 
 
 export interface tipo_inmueble_form {

@@ -71,15 +71,15 @@
                                 (click)="showDetails(row)" style="margin-right: 5px;">
                                 +
                             </button> -->
-                            <span>{{ row.index + 1}}</span>
+                            <span>{{ row.id}}</span>
                         </div>
                     </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column [flexGrow]="2" [minWidth]="150" [resizeable]="false" [prop]="'nombre_inmueble'"
-                    name="Nombre" [sortable]="true">
+                <ngx-datatable-column [flexGrow]="2" [minWidth]="150" [resizeable]="false"
+                    [prop]="'nombre_tipo_inmueble'" name="Tipo" [sortable]="true">
                     <ng-template let-row="row" ngx-datatable-cell-template>
-                        <span class=" font-medium"> {{row.nombre_inmueble}}</span>
+                        <span class=" font-medium"> {{row.tipo_inmueble.nombre_tipo_inmueble}}</span>
                     </ng-template>
                 </ngx-datatable-column>
 
@@ -116,11 +116,11 @@
                     [sortable]="true" cellClass="accion_">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                         <div class="flex gap-3 ">
-                            <div data-title="Editar" (click)="update(row)"
+                            <!-- <div data-title="Editar" (click)="update(row)"
                                 class="flex items-center cursor-pointer before:top-[-35px] h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-blue-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">edit</span>
-                            </div>
+                            </div> -->
 
 
                             <div data-title="Eliminar" (click)="delete(row)"
