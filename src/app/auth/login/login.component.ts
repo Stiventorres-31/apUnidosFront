@@ -60,7 +60,7 @@ export class LoginComponent {
     this.loginService.login(this.form.value).subscribe(rs => {
       if (!rs.isError) {
         const rol = this.encryptionService.loadData('role');
-        const redirectUrl = rol == "SUPER ADMIN" ? "/admin/dashboard" : "/dashboard";
+        const redirectUrl = rol == "SUPER ADMIN" || rol == "ADMINISTRADOR" ? "/admin/dashboard" : "/dashboard";
         this.router.navigate([redirectUrl]);
       }
       this.isSending = false;

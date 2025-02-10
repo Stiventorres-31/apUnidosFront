@@ -62,6 +62,10 @@ export class UsersComponent {
     this.Router.navigate(["/admin/users/update/", this.EncryptionService.encrypt(`${usuario.numero_identificacion}`)])
   }
 
+  password(usuario: Usuario) {
+    this.Router.navigate(["/admin/users/change-password/", this.EncryptionService.encrypt(`${usuario.numero_identificacion}`)])
+  }
+
   delete(usuario: Usuario) {
     this.AppComponent.confirm({
       header: `Confirmar eliminación`,

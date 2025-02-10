@@ -14,6 +14,12 @@ export interface UsuarioForm {
     password_confirmation?: string;
 }
 
+export interface UsuarioPassword {
+    numero_identificacion: number;
+    new_password: string;
+    new_password_confirmation: string;
+}
+
 export interface Rol {
     id: number;
     name: string;

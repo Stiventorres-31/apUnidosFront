@@ -26,6 +26,7 @@ export class FormUserComponent {
   public isLoading: boolean = true;
   public isSending: boolean = false;
   public isUpdate: boolean = false;
+  public isUpdatePassword: boolean = false;
 
   public roles: { id: number, name: string }[] = [
     { id: 1, name: 'SUPER ADMIN' },
@@ -65,36 +66,21 @@ export class FormUserComponent {
           return;
         }
         this.isUpdate = true;
-        this.UserService.search(id).subscribe((rs) => {
-          if (rs) {
-            this.form.patchValue(rs);
-            this.isLoading = false;
+        this.index(id);
 
-            this.form.get("password")?.setValidators([]);
-            this.form.get("password_confirmation")?.setValidators([]);
+      }
+      else if (params['user']) {
+        const id = this.EncryptionService.decrypt(params['user']);
+        console.log(id);
+        if (!id || isNaN(parseInt(id))) {
+          this.router.navigate(['/admin/users']);
+          return;
+        }
 
-
-            this.form.get("password")?.updateValueAndValidity();
-            this.form.get("password_confirmation")?.updateValueAndValidity();
-
-            const breadcrumbs = [
-              { label: 'Dashboard', url: '/admin/dashboard' },
-              { label: 'usuarios', url: '/admin/users/' },
-              { label: 'Actualizar', url: '/admin/users/update/' + this.EncryptionService.encrypt(`${rs.numero_identificacion}`) },
-              { label: rs.nombre_completo, url: '/admin/users/update/' },
-
-            ];
-            this.reset();
-            this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
-            console.log(this.form.value)
-
-          } else {
-            this.router.navigate(['/admin/users']);
-            return;
-          }
-
-        });
-      } else {
+        this.isUpdatePassword = true;
+        this.index(id, false);
+      }
+      else {
         this.isLoading = false;
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
@@ -107,6 +93,60 @@ export class FormUserComponent {
     });
 
 
+  }
+
+  index(id: string, type: boolean = true): void {
+    let breadcrumbs: any = [];
+    this.UserService.search(id).subscribe((rs) => {
+      if (rs) {
+        this.isLoading = false;
+        if (type) {
+          this.form.patchValue(rs);
+
+          this.form.get("password")?.setValidators([]);
+          this.form.get("password_confirmation")?.setValidators([]);
+
+          this.form.get("password")?.updateValueAndValidity();
+          this.form.get("password_confirmation")?.updateValueAndValidity();
+
+          breadcrumbs = [
+            { label: 'Dashboard', url: '/admin/dashboard' },
+            { label: 'usuarios', url: '/admin/users/' },
+            { label: 'Actualizar', url: '/admin/users/update/' + this.EncryptionService.encrypt(`${rs.numero_identificacion}`) },
+            { label: rs.nombre_completo, url: '/admin/users/update/' },
+
+          ];
+          this.reset();
+        } else {
+          this.form.patchValue(
+            {
+              numero_identificacion: rs.numero_identificacion,
+            }
+          );
+          this.form.get("nombre_completo")?.setValidators([]);
+          this.form.get("rol_usuario")?.setValidators([]);
+
+          this.form.get("nombre_completo")?.updateValueAndValidity();
+          this.form.get("rol_usuario")?.updateValueAndValidity();
+
+          breadcrumbs = [
+            { label: 'Dashboard', url: '/admin/dashboard' },
+            { label: 'usuarios', url: '/admin/users/' },
+            { label: 'Actualizar password', url: '/admin/users/change-password/' + this.EncryptionService.encrypt(`${rs.numero_identificacion}`) },
+            { label: rs.nombre_completo, url: '/admin/users/change-password/' },
+
+          ];
+        }
+
+        this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
+        console.log(this.form.value)
+
+      } else {
+        this.router.navigate(['/admin/users']);
+        return;
+      }
+
+    });
   }
 
   store() {
@@ -193,6 +233,44 @@ export class FormUserComponent {
 
   }
 
+  password() {
+    this.isSending = true;
+    if (!this.form.valid) {
+      this.AppComponent.alert({
+        summary: "Formulario invalido",
+        detail: "Por favor, Asegurese que la información del usuario es valida.",
+        severity: 'warn'
+      })
+      this.isSending = false;
+      return;
+    }
+    const form = this.form.value;
+    if (!(form.password === form.password_confirmation)) {
+      this.AppComponent.alert({
+        summary: "Contraseñas no coinciden",
+        detail: "Por favor, verifique que las contraseñas coincidan.",
+        severity: 'error'
+      })
+      this.isSending = false;
+      return;
+    }
+    const body = {
+      numero_identificacion: this.form.get('numero_identificacion')?.value,
+      new_password: this.form.get('password')?.value,
+      new_password_confirmation: this.form.get('password_confirmation')?.value,
+    }
+
+    this.UserService.updatePassword(body).subscribe((rs) => {
+      if (rs.isError) {
+        this.isSending = false;
+        this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
+      } else {
+        this.router.navigate(['/admin/users']);
+        this.AppComponent.alert({ summary: "Operación exitosa", detail: rs.message, severity: 'success' });
+      }
+    });
+
+  }
   numeric(event: Event): void {
     const input = event.target as HTMLInputElement;
     input.value = this.ValidationsService.numeric(input.value);

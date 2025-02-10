@@ -61,20 +61,21 @@
             <ngx-datatable class="material striped rounded-3xl" [rows]="filtros" [columnMode]="'force'"
                 [swapColumns]="true" [rowHeight]="'auto'" [headerHeight]="55" [limit]="15" [offset]="0"
                 [footerHeight]="50" [scrollbarH]="true">
-                <ngx-datatable-column [flexGrow]="0.4" [resizeable]="false" [minWidth]="50" [prop]="'index'" name="No."
+
+                <!-- <ngx-datatable-column [flexGrow]="0.4" [resizeable]="false" [minWidth]="30" [prop]="'index'" name="No."
                     [sortable]="true">
                     <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
 
                         <div class="flex items-center">
-                            <!-- <button matRipple
+                            <button matRipple
                                 class="bg-blue-500 border-2 flex justify-center items-center rounded-full py-1 px-2 text-white"
                                 (click)="showDetails(row)" style="margin-right: 5px;">
                                 +
-                            </button> -->
+                            </button>
                             <span>{{ row.index + 1}}</span>
                         </div>
                     </ng-template>
-                </ngx-datatable-column>
+                </ngx-datatable-column> -->
 
                 <ngx-datatable-column [flexGrow]="1" [minWidth]="100" [resizeable]="false"
                     [prop]="'numero_identificacion'" name="Documento" [sortable]="true">
@@ -83,21 +84,21 @@
                     </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column [flexGrow]="1" [minWidth]="150" [resizeable]="false" [prop]="'nombre_completo'"
+                <ngx-datatable-column [flexGrow]="1" [minWidth]="120" [resizeable]="false" [prop]="'nombre_completo'"
                     name="Nombre" [sortable]="true">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                         <span class=" font-medium"> {{row.nombre_completo}}</span>
                     </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column [flexGrow]="1" [minWidth]="100" [resizeable]="false" [prop]="'rol_usuario'"
+                <ngx-datatable-column [flexGrow]="1" [minWidth]="80" [resizeable]="false" [prop]="'rol_usuario'"
                     name="Rol" [sortable]="true">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                         <span class=" font-medium">{{row.rol_usuario}} </span>
                     </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column [flexGrow]="1" [minWidth]="80" [resizeable]="false" [prop]="'estado'"
+                <!-- <ngx-datatable-column [flexGrow]="1" [minWidth]="50" [resizeable]="false" [prop]="'estado'"
                     name="Estado" [sortable]="true">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                         <div class="flex items-center h-full ">
@@ -107,27 +108,27 @@
                                 {{row.estado == 'A' ? "A" : "E"}}</span>
                         </div>
                     </ng-template>
-                </ngx-datatable-column>
+                </ngx-datatable-column> -->
 
 
-                <ngx-datatable-column [flexGrow]="1" [minWidth]="150" [resizeable]="false" name="Acciones"
+                <ngx-datatable-column [flexGrow]="1" [minWidth]="130" [resizeable]="false" name="Acciones"
                     [sortable]="true" cellClass="accion_">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                         <div class="flex gap-3 ">
                             <div data-title="Editar usuario" (click)="update(row)"
-                                class="flex items-center cursor-pointer before:left-[-25px] before:top-[-35px] h-full tool-tip relative">
+                                class="flex items-center cursor-pointer before:top-[-35px] h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-blue-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">edit</span>
                             </div>
 
-                            <div data-title="Cambiar contraseña"
-                                class="flex items-center cursor-pointer before:left-[-50px] before:top-[-35px] h-full tool-tip relative">
+                            <div data-title="Cambiar contraseña" (click)="password(row)"
+                                class="flex items-center cursor-pointer before:top-[-35px] h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-yellow-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">lock</span>
                             </div>
 
                             <div data-title="Eliminar usuario" (click)="delete(row)"
-                                class="flex items-center cursor-pointer before:left-[-30px] before:top-[-35px] h-full tool-tip relative">
+                                class="flex items-center cursor-pointer before:top-[-35px] h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-red-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">delete</span>
                             </div>

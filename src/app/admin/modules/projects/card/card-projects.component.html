@@ -102,7 +102,7 @@
         <div class="w-full ">
             <div class="w-full mt-2 mb-2 flex flex-wrap md:flex-nowrap justify-end gap-5">
                 <div data-title="Presupuesto" class="relative tool-tip ">
-                    <button (click)="budget()" matRipple
+                    <button (click)="budgets()" matRipple
                         class="p-2 rounded-full  bg-green-400 flex items-center gap-2 text-white">
 
                         <i translate="no" class="material-symbols-outlined cursor-pointer text-white"
@@ -112,7 +112,8 @@
                 </div>
 
                 <div data-title="Inmuebles" class="relative tool-tip ">
-                    <button matRipple class="p-2 rounded-full bg-blue-400 flex items-center gap-2 text-white">
+                    <button matRipple (click)="inmuebles()"
+                        class="p-2 rounded-full bg-blue-400 flex items-center gap-2 text-white">
 
                         <i translate="no" class="material-symbols-outlined cursor-pointer text-white"
                             style="font-size: 24px;">apartment</i>

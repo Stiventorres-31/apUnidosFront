@@ -102,7 +102,10 @@ export class InmueblesService {
 
   delete(id: number): Observable<{ isError: boolean, message: string }> {
     this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
-    return this.http.delete<InmuebleResponse>(environment.backend + `api/inmueble/${id}`, { headers: this.headersService.getJsonHeaders() })
+    return this.http.delete<InmuebleResponse>(environment.backend + `api/inmueble`, {
+      body: { id: id },
+      headers: this.headersService.getJsonHeaders()
+    })
       .pipe(
         map((rs: { isError: boolean, message: string }) => {
 
@@ -111,10 +114,10 @@ export class InmueblesService {
         }), catchError((error: HttpErrorResponse) => {
           this.LoginService.unauthorized(error)
           if (error.status == 422) {
-            return of({ isError: false, message: error.error.message });
+            return of({ isError: true, message: error.error.message });
           }
 
-          return of({ isError: false, message: "No se puedo realizar la operación, por favor intenta mas tarde" });
+          return of({ isError: true, message: "No se puedo realizar la operación, por favor intenta mas tarde" });
         })
       )
   }

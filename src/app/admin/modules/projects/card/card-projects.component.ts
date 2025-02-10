@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { EncryptionService } from '../../../../shared/services/encryption/encryption.service';
 import { ProjectService } from '../../../../shared/services/project/project.service';
 import { AppComponent } from '../../../../app.component';
+import { inmueble } from '../pages/inmuebles/models/inmuebles.interface';
 
 @Component({
   selector: 'card-projects',
@@ -29,9 +30,15 @@ export class CardProjectsComponent {
     this.Router.navigate(["/admin/projects/update/", this.EncryptionService.encrypt(`${this.project.codigo_proyecto}`)])
   }
 
-  budget() {
+  budgets() {
+    this.Router.navigate(["/admin/projects/budgets"])
+  }
+
+
+  inmuebles() {
     this.Router.navigate(["/admin/projects/budget/", this.EncryptionService.encrypt(`${this.project.codigo_proyecto}`)])
   }
+
 
   delete() {
     this.AppComponent.confirm({

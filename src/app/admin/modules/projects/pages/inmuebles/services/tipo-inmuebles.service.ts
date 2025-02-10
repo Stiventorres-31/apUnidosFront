@@ -101,7 +101,10 @@ export class TipoInmueblesService {
 
   delete(id: number): Observable<{ isError: boolean, message: string }> {
     this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
-    return this.http.delete<TipoInmuebleResponse>(environment.backend + `api/tipo_inmueble/${id}`, { headers: this.headersService.getJsonHeaders() })
+    return this.http.delete<TipoInmuebleResponse>(environment.backend + `api/tipo_inmueble`, {
+      body: { id: id },
+      headers: this.headersService.getJsonHeaders()
+    })
       .pipe(
         map((rs: { isError: boolean, message: string }) => {
 

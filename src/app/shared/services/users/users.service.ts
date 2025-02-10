@@ -8,7 +8,7 @@ import { HeadersService } from '../utilities/headers.service';
 import { catchError, map, Observable, of } from 'rxjs';
 import { LoginService } from '../../../auth/services/login.service';
 import { environment } from '../../../../environments/environment';
-import { Usuario, UsuarioForm, UsuarioResponse, UsuariosResponse } from '../../models/users/users.interface';
+import { Usuario, UsuarioForm, UsuarioPassword, UsuarioResponse, UsuariosResponse } from '../../models/users/users.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -82,6 +82,25 @@ export class UsersService {
   update(user: UsuarioForm): Observable<{ isError: boolean, message: string }> {
     this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
     return this.http.put<UsuarioResponse>(environment.backend + `api/usuario/${user?.numero_identificacion}`, { ...user }, { headers: this.headersService.getJsonHeaders() })
+      .pipe(
+        map((rs: { isError: boolean, message: string }) => {
+          return rs;
+        }), catchError((error: HttpErrorResponse) => {
+          console.error(error)
+          this.LoginService.unauthorized(error)
+          if (error.status == 422) {
+            return of({ isError: true, message: error.error.message });
+          }
+
+          return of({ isError: true, message: "No se puedo realizar la operación, por favor intenta mas tarde" });
+        })
+      )
+
+  }
+
+  updatePassword(user: UsuarioPassword): Observable<{ isError: boolean, message: string }> {
+    this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
+    return this.http.put<UsuarioResponse>(environment.backend + `api/usuario/changePasswordAdmin`, { ...user }, { headers: this.headersService.getJsonHeaders() })
       .pipe(
         map((rs: { isError: boolean, message: string }) => {
           return rs;

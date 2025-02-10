@@ -30,7 +30,7 @@ export const isLogged: CanActivateFn = (route, state) => {
   if (token && token != '') {
 
     //Validar roles
-    const ruta = rol === "SUPER ADMIN" ? "/admin/dashboard" : "/dashboard";
+    const ruta = rol === "SUPER ADMIN" || rol === "ADMINISTRADOR" ? "/admin/dashboard" : "/dashboard";
     router.navigate([ruta]);
     return false
   } else {

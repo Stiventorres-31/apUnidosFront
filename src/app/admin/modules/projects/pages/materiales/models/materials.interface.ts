@@ -1,3 +1,4 @@
+import { invetario } from '../../../../../../shared/models/inventory/inventory.interface';
 import { ApiResponse, Usuario } from '../../../../../../shared/models/users/users.interface';
 
 export interface materials {
@@ -5,12 +6,8 @@ export interface materials {
     referencia_material: string;
     nombre_material: string;
     numero_identificacion: string;
-    //costo: string;
-    // cantidad: number;
-    // nit_proveedor: string;
-    // descripcion_proveedor: string;
     estado: string;
-    //Usuario: Usuario;
+    inventario?: invetario[];
 }
 
 export interface form_materials {

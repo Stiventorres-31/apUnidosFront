@@ -1,0 +1,24 @@
+<div class="w-full flex items-center justify-center h-96 overflow-hidden">
+    <div class="w-full max-w-lg bg-white shadow-lg rounded-xl py-6 px-6">
+        <div class="flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-lg bg-gray-50 w-full cursor-pointer"
+            (click)="fileInput.click()">
+            <svg-icon src="assets/img/icons/heroicons/solid/upload.svg" [svgClass]="'h-20 w-20'"></svg-icon>
+
+
+            <input type="file" #fileInput (change)="onFileSelected($event)" hidden accept=".csv" />
+            @if(fileName){
+            <p class="mt-2 text-gray-600 text-center">{{ fileName }}</p>
+            }@else{
+            <p class="mt-2 text-gray-600 text-center">Haz clic para subir un archivo CSV</p>
+            }
+
+
+        </div>
+
+        @if(file){
+        <button (click)="uploadFile()" class="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+            Subir Archivo
+        </button>
+        }
+    </div>
+</div>
