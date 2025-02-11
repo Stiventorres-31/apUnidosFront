@@ -9,6 +9,7 @@ import { LoginService } from '../../../../../../auth/services/login.service';
 import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from '../../../../../../../environments/environment';
 import { ApiResponse } from '../../../../../../shared/models/users/users.interface';
+import { inmueble } from '../../inmuebles/models/inmuebles.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +44,32 @@ export class BudgetsService {
         })
       )
 
+  }
+
+  delete(id: string, ref: string, cod: string): Observable<{ isError: boolean, message: string }> {
+    this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
+    return this.http.delete<ApiResponse<{}>>(environment.backend + `api/presupuesto`, {
+      body: {
+        inmueble_id: id,
+        referencia_material: ref,
+        codigo_proyecto: cod,
+      },
+      headers: this.headersService.getJsonHeaders()
+    })
+      .pipe(
+        map((rs: { isError: boolean, message: string }) => {
+
+          return rs;
+
+        }), catchError((error: HttpErrorResponse) => {
+          this.LoginService.unauthorized(error)
+          if (error.status == 422) {
+            return of({ isError: true, message: error.error.message });
+          }
+
+          return of({ isError: true, message: "No se puedo realizar la operación, por favor intenta mas tarde" });
+        })
+      )
   }
 }
 

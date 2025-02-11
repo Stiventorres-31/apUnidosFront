@@ -33,10 +33,11 @@
 
                 <div class="my-5 px-5">
 
-                    <ngx-datatable class="material striped rounded-3xl" [rows]="projects.inmuebles ?? []"
+                    <ngx-datatable class="material striped rounded-3xl" [rows]="inmueble.presupuestos ?? []"
                         [columnMode]="'force'" [swapColumns]="true" [rowHeight]="'auto'" [headerHeight]="55"
                         [limit]="15" [offset]="0" [footerHeight]="50" [scrollbarH]="true">
-                        <ngx-datatable-column [flexGrow]="0.4" [resizeable]="false" [minWidth]="50" [prop]="'index'"
+
+                        <!-- <ngx-datatable-column [flexGrow]="0.4" [resizeable]="false" [minWidth]="50" [prop]="'index'"
                             name="No." [sortable]="true">
                             <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
 
@@ -44,31 +45,53 @@
                                     <span>{{ row.id}}</span>
                                 </div>
                             </ng-template>
-                        </ngx-datatable-column>
+                        </ngx-datatable-column> -->
 
                         <ngx-datatable-column [flexGrow]="1" [minWidth]="100" [resizeable]="false"
-                            [prop]="'tipo_inmueble.nombre_tipo_inmueble '" name="Tipo" [sortable]="true">
+                            [prop]="'referencia_material '" name="Referencia 
+                            Material" [sortable]="true">
                             <ng-template let-row="row" ngx-datatable-cell-template>
-                                <span class=" font-medium"> {{row.tipo_inmueble.nombre_tipo_inmueble }}</span>
+                                <span class=" font-medium"> {{row.referencia_material }}</span>
                             </ng-template>
                         </ngx-datatable-column>
 
                         <ngx-datatable-column [flexGrow]="2" [minWidth]="150" [resizeable]="false"
-                            [prop]="'total_presupuesto'" name="Presupuesto" [sortable]="true">
+                            [prop]="'costo_material'" name="Costo" [sortable]="true">
                             <ng-template let-row="row" ngx-datatable-cell-template>
-                                <span class=" font-medium">{{pipeMoney(row.total_presupuesto)}} </span>
+                                <span class=" font-medium">{{pipeMoney(row.costo_material)}} </span>
                             </ng-template>
                         </ngx-datatable-column>
+
+                        <ngx-datatable-column [flexGrow]="2" [minWidth]="150" [resizeable]="false"
+                            [prop]="'cantidad_material'" name="Cantidad" [sortable]="true">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span class=" font-medium">{{row.cantidad_material}} </span>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column [flexGrow]="2" [minWidth]="150" [resizeable]="false" [prop]="'subtotal'"
+                            name="subtotal" [sortable]="true">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span class=" font-medium">{{pipeMoney(row.subtotal)}} </span>
+                            </ng-template>
+                        </ngx-datatable-column>
+
 
 
                         <ngx-datatable-column [flexGrow]="1.5" [minWidth]="100" [resizeable]="false" name="Acciones"
                             [sortable]="true" cellClass="accion_">
                             <ng-template let-row="row" ngx-datatable-cell-template>
                                 <div class="flex gap-3 ">
-                                    <div data-title="Ver presupuestos" (click)="view(row)"
+                                    <div data-title="Ver presupuestos" (click)="update(row)"
                                         class="flex items-center cursor-pointer  before:top-[-35px] h-full tool-tip relative">
                                         <span matRipple style="font-size: 16px !important;"
-                                            class="text-center text-white bg-blue-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">visibility</span>
+                                            class="text-center text-white bg-blue-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">edit</span>
+                                    </div>
+
+                                    <div data-title="delete presupuestos" (click)="delete(row)"
+                                        class="flex items-center cursor-pointer  before:top-[-35px] h-full tool-tip relative">
+                                        <span matRipple style="font-size: 16px !important;"
+                                            class="text-center text-white bg-red-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">delete</span>
                                     </div>
 
                                 </div>

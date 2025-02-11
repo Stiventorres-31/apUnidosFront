@@ -74,7 +74,7 @@ export class FormInmueblesComponent {
               { label: 'Dashboard', url: '/admin/dashboard' },
               { label: 'Inmuebles', url: '/admin/property/' },
               { label: 'Actualizar', url: '/admin/property/update/' + this.EncryptionService.encrypt(`${rs.id}`) },
-              { label: rs.nombre_inmueble, url: '/admin/property/update/' },
+              { label: rs.tipo_inmueble.nombre_tipo_inmueble, url: '/admin/property/update/' },
 
             ];
             this.reset();

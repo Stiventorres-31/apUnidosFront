@@ -67,7 +67,7 @@ export class InmueblesComponent {
   delete(row: inmueble) {
     this.AppComponent.confirm({
       header: `Confirmar eliminación`,
-      message: `¿Estás seguro/a de que deseas eliminar el inmueble ${row.nombre_inmueble} ? `,
+      message: `¿Estás seguro/a de que deseas eliminar el inmueble ${row.tipo_inmueble.nombre_tipo_inmueble + ' ' + row.id} ? `,
       styles: `warn`
     }).then((rs) => {
       if (rs) {
