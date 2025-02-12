@@ -177,7 +177,7 @@
 
 
             <div class="mt-8 w-full">
-                @if (filtros) {
+                @if (filtros && filtros.data.length > 0) {
                 @if (typeOrigin == 0) {
                 <pagination-table [datos]="filtros" (newLink)="index($event)"></pagination-table>
                 }

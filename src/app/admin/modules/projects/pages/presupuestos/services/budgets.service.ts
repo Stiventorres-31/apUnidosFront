@@ -46,6 +46,15 @@ export class BudgetsService {
 
   }
 
+  downloadCSVTemplate(): void {
+    const filePath = 'assets/template/template-presupuesto-masivo.csv';
+    const link = document.createElement('a');
+    link.href = filePath;
+    link.download = 'template-presupuesto-masivo.csv';
+    link.click();
+  }
+
+
   delete(id: string, ref: string, cod: string): Observable<{ isError: boolean, message: string }> {
     this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
     return this.http.delete<ApiResponse<{}>>(environment.backend + `api/presupuesto`, {

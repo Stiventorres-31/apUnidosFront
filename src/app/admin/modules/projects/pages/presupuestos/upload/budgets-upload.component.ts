@@ -72,6 +72,10 @@ export class BudgetsUploadComponent {
 
   }
 
+  downloadFile() {
+    this.BudgetsService.downloadCSVTemplate();
+  }
+
   ngOnDestroy(): void {
     this.BreadCrumbService.setBreadcrumbs([]);
 

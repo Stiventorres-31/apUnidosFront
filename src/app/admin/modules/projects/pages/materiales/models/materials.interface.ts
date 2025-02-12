@@ -20,6 +20,14 @@ export interface form_materials {
     descripcion_proveedor: string;
 }
 
+export interface form_inventario {
+    referencia_material: string;
+    consecutivo: number;
+    costo_material: string;
+    cantidad: number;
+}
+
+
 export interface dd {
     id: number;
     nombre_tipo_inmueble: string;
@@ -27,3 +35,4 @@ export interface dd {
 
 export type MaterialsResponse = ApiResponse<{ materiale: materials[] }>;
 export type MaterialResponse = ApiResponse<{ material: materials }>;
+export type InventarioResponse = ApiResponse<{ inventario: invetario[] }>;

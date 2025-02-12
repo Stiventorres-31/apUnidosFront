@@ -61,6 +61,10 @@ export class MaterialsComponent {
     this.Router.navigate(["/admin/materials/update/", this.EncryptionService.encrypt(`${type.referencia_material}`)])
   }
 
+  view(type: materials) {
+    this.Router.navigate(["/admin/materials/lots/", this.EncryptionService.encrypt(`${type.referencia_material}`)])
+  }
+
   filter(event: Event) { }
 
 

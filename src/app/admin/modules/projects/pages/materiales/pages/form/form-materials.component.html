@@ -46,10 +46,30 @@
                                     Actualizar material
                                 </div>
                                 }@else {
-                                <div (click)="store()"
-                                    class=" w-56 rounded-full bg-primary cursor-pointer text-white flex justify-center items-center h-10">
-                                    <span class="material-icons mr-2" translate="no">add</span>Agregar material
-                                </div>
+                                <ng-container>
+                                    @if(isUpdateLots){
+                                    <div (click)="updateLot()"
+                                        class=" w-56 rounded-full bg-primary cursor-pointer text-white flex justify-center items-center h-10">
+                                        Actualizar lote
+                                    </div>
+                                    }@else {
+                                    <ng-container>
+                                        @if(isNewLot){
+                                        <div (click)="storeLot()"
+                                            class=" w-56 rounded-full bg-primary cursor-pointer text-white flex justify-center items-center h-10">
+                                            <span class="material-icons mr-2" translate="no">add</span>Agregar lote
+                                        </div>
+                                        }@else {
+                                        <div (click)="store()"
+                                            class=" w-56 rounded-full bg-primary cursor-pointer text-white flex justify-center items-center h-10">
+                                            <span class="material-icons mr-2" translate="no">add</span>Agregar material
+                                        </div>
+                                        }
+                                    </ng-container>
+
+                                    }
+                                </ng-container>
+
                                 }
                             </ng-container>
                             }
@@ -57,6 +77,7 @@
 
                     </div>
 
+                    @if(!isUpdateLots){
                     <div class="w-full flex flex-wrap md:flex-nowrap gap-0 justify-between md:gap-4 px-5">
                         <div class="w-full">
                             <div class="mt-6 input-container  ">
@@ -65,6 +86,7 @@
                                     class="label-flotante label-float-active required">Referencia material</label>
                                 <input (input)="labelBlur('referencia_material', $event)" autocomplete="false"
                                     (focus)="labelFocus('referencia_material')" maxlength="10"
+                                    [attr.readonly]="isUpdate ? true : null"
                                     (blur)="labelBlur('referencia_material', $event)" type="text"
                                     class="form-control input-control uppercase " id="referencia_material"
                                     formControlName="referencia_material" required>
@@ -85,7 +107,10 @@
                             </div>
                         </div>
                     </div>
+                    }
 
+
+                    @if(!isUpdate){
                     <div class="w-full flex flex-wrap md:flex-nowrap gap-0 justify-between md:gap-4 px-5">
                         <div class="w-full">
                             <div class="mt-6 input-container  ">
@@ -112,50 +137,60 @@
                         </div>
                     </div>
 
-                    <div class="w-full flex flex-wrap md:flex-nowrap gap-0 justify-between md:gap-4 px-5">
-                        <div class="w-full">
+                    <ng-container>
+                        @if(!isUpdateLots){
+                        <div class="w-full flex flex-wrap md:flex-nowrap gap-0 justify-between md:gap-4 px-5">
+                            <div class="w-full">
+                                <div class="mt-6 input-container  ">
+                                    <label for="nombre_proveedor"
+                                        [ngClass]="{'label-float-active': inputs['nombre_proveedor'], 'label-float-inactive': !inputs['nombre_proveedor'] || inputs['nombre_proveedor'] == null }"
+                                        class="label-flotante label-float-active required">Nombre proveedor</label>
+                                    <input (input)="labelBlur('nombre_proveedor', $event)" autocomplete="false"
+                                        (focus)="labelFocus('nombre_proveedor')"
+                                        (blur)="labelBlur('nombre_proveedor', $event)" type="text"
+                                        class="form-control input-control  " id="nombre_proveedor"
+                                        formControlName="nombre_proveedor" required>
+
+                                </div>
+                            </div>
+                            <div class="w-full">
+                                <div class="mt-6 input-container  ">
+                                    <label for="nit_proveedor"
+                                        [ngClass]="{'label-float-active': inputs['nit_proveedor'], 'label-float-inactive': !inputs['nit_proveedor'] || inputs['nit_proveedor'] == null }"
+                                        class="label-flotante label-float-active required">NIT proveedor</label>
+                                    <input (input)="labelBlur('nit_proveedor', $event)" autocomplete="false"
+                                        (focus)="labelFocus('nit_proveedor')"
+                                        (blur)="labelBlur('nit_proveedor', $event)" type="text"
+                                        class="form-control input-control  " id="nit_proveedor"
+                                        formControlName="nit_proveedor" required>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="w-full px-5">
                             <div class="mt-6 input-container  ">
-                                <label for="nombre_proveedor"
-                                    [ngClass]="{'label-float-active': inputs['nombre_proveedor'], 'label-float-inactive': !inputs['nombre_proveedor'] || inputs['nombre_proveedor'] == null }"
-                                    class="label-flotante label-float-active required">Nombre proveedor</label>
-                                <input (input)="labelBlur('nombre_proveedor', $event)" autocomplete="false"
-                                    (focus)="labelFocus('nombre_proveedor')"
-                                    (blur)="labelBlur('nombre_proveedor', $event)" type="text"
-                                    class="form-control input-control  " id="nombre_proveedor"
-                                    formControlName="nombre_proveedor" required>
+                                <textarea name="" id="" class="form-control " [rows]="7"
+                                    formControlName="descripcion_proveedor"
+                                    placeholder="Descripción del proveedor..."></textarea>
 
+                                @if(form.get('descripcion_proveedor')?.value != '' &&
+                                (form.get('descripcion_proveedor')?.hasError('minlength'))){
+                                <div class="w-full pl-2 mt-2">
+                                    <span class=" text-red-500">
+                                        La descripción usada mínimo debe tener 6 caracteres
+                                    </span>
+                                </div>
+                                }
                             </div>
                         </div>
-                        <div class="w-full">
-                            <div class="mt-6 input-container  ">
-                                <label for="nit_proveedor"
-                                    [ngClass]="{'label-float-active': inputs['nit_proveedor'], 'label-float-inactive': !inputs['nit_proveedor'] || inputs['nit_proveedor'] == null }"
-                                    class="label-flotante label-float-active required">NIT proveedor</label>
-                                <input (input)="labelBlur('nit_proveedor', $event)" autocomplete="false"
-                                    (focus)="labelFocus('nit_proveedor')" (blur)="labelBlur('nit_proveedor', $event)"
-                                    type="text" class="form-control input-control  " id="nit_proveedor"
-                                    formControlName="nit_proveedor" required>
+                        }
+                    </ng-container>
 
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="w-full px-5">
-                        <div class="mt-6 input-container  ">
-                            <textarea name="" id="" class="form-control " [rows]="7"
-                                formControlName="descripcion_proveedor"
-                                placeholder="Descripción del proveedor..."></textarea>
+                    }
 
-                            @if(form.get('descripcion_proveedor')?.value != '' &&
-                            (form.get('descripcion_proveedor')?.hasError('minlength'))){
-                            <div class="w-full pl-2 mt-2">
-                                <span class=" text-red-500">
-                                    La descripción usada mínimo debe tener 6 caracteres
-                                </span>
-                            </div>
-                            }
-                        </div>
-                    </div>
+
 
                 </div>
 

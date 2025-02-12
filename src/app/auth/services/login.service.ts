@@ -61,7 +61,7 @@ export class LoginService {
       }),
       catchError((error: HttpErrorResponse) => {
         // Maneja el error según el código de estado
-        if (error.status === 422) {
+        if (error.status === 422 || error.status === 401) {
           const { message } = error.error;
           this.appComponent.alert({
             severity: "error",

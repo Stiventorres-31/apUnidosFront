@@ -65,7 +65,7 @@
                                     [ngClass]="{'label-float-active': inputs['codigo_proyecto'], 'label-float-inactive': !inputs['codigo_proyecto'] || inputs['codigo_proyecto'] == null }"
                                     class="label-flotante label-float-active required">Código</label>
                                 <input (input)="labelBlur('codigo_proyecto', $event);" autocomplete="false"
-                                    (focus)="labelFocus('codigo_proyecto')" [attr.readonly]="isUpdate ? null : null"
+                                    (focus)="labelFocus('codigo_proyecto')" [attr.readonly]="isUpdate ? true : null"
                                     (blur)="labelBlur('codigo_proyecto', $event)" type="text"
                                     class="form-control input-control uppercase" id="codigo_proyecto"
                                     formControlName="codigo_proyecto" required>

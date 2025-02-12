@@ -9,13 +9,14 @@ import { FormUserComponent } from "./modules/users/pages/form/form-user.componen
 import { TipoInmueblesComponent } from "./modules/projects/pages/inmuebles/pages/tipo/tipo-inmuebles.component";
 import { FormTipoInmuebleComponent } from "./modules/projects/pages/inmuebles/pages/tipo/form/form-tipo-inmueble.component";
 import { MaterialsComponent } from "./modules/projects/pages/materiales/materials.component";
-import { FormMaterialsComponent } from "./modules/projects/pages/materiales/form/form-materials.component";
+import { FormMaterialsComponent } from "./modules/projects/pages/materiales/pages/form/form-materials.component";
 import { InmueblesComponent } from "./modules/projects/pages/inmuebles/inmuebles.component";
 import { FormProjectsComponent } from "./modules/projects/pages/form/form-projects.component";
 import { FormInmueblesComponent } from "./modules/projects/pages/inmuebles/pages/form/form-inmuebles.component";
 import { BudgetsProjectsComponent } from "./modules/projects/pages/presupuestos/budgets-projects.component";
 import { BudgetsUploadComponent } from "./modules/projects/pages/presupuestos/upload/budgets-upload.component";
 import { BudgetsInmueblesComponent } from "./modules/projects/pages/presupuestos/inmuebles/budgets-inmuebles.component";
+import { LotsComponent } from "./modules/projects/pages/materiales/pages/lotes/lots.component";
 
 export const ADMIN_ROUTES: Routes = [
 
@@ -72,6 +73,9 @@ export const ADMIN_ROUTES: Routes = [
                     { path: '', component: MaterialsComponent },
                     { path: 'new', component: FormMaterialsComponent },
                     { path: 'update/:id', component: FormMaterialsComponent },
+                    { path: 'lots/:id', component: LotsComponent },
+                    { path: 'lots/new/:ref', component: FormMaterialsComponent },
+                    { path: 'lots/update/:ref/:lot', component: FormMaterialsComponent },
                 ]
             }
 
