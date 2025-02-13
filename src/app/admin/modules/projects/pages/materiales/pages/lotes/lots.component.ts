@@ -110,15 +110,15 @@ export class LotsComponent {
   delete(row: invetario) {
     this.AppComponent.confirm({
       header: `Confirmar eliminación`,
-      message: `¿Estás seguro/a de que deseas eliminar el material ${row.referencia_material} ? `,
+      message: `¿Estás seguro/a de que deseas eliminar el lote ${row.consecutivo} ? `,
       styles: `warn`
     }).then((rs) => {
       if (rs) {
-        this.MaterialsService.delete(row.referencia_material).subscribe((rx) => {
-          this.AppComponent.alert({ summary: `Operación ${rx.isError ? 'fallida' : 'exitosa'}`, detail: rx.message, severity: `${rx.isError ? 'error' : 'success'}` });
+        // this.MaterialsService.delete(row.referencia_material).subscribe((rx) => {
+        //   this.AppComponent.alert({ summary: `Operación ${rx.isError ? 'fallida' : 'exitosa'}`, detail: rx.message, severity: `${rx.isError ? 'error' : 'success'}` });
 
-          if (!rx.isError) this.index(`${this.material.id}`);
-        })
+        //   if (!rx.isError) this.index(`${this.material.id}`);
+        // })
       }
 
     })

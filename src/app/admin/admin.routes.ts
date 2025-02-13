@@ -14,9 +14,10 @@ import { InmueblesComponent } from "./modules/projects/pages/inmuebles/inmuebles
 import { FormProjectsComponent } from "./modules/projects/pages/form/form-projects.component";
 import { FormInmueblesComponent } from "./modules/projects/pages/inmuebles/pages/form/form-inmuebles.component";
 import { BudgetsProjectsComponent } from "./modules/projects/pages/presupuestos/budgets-projects.component";
-import { BudgetsUploadComponent } from "./modules/projects/pages/presupuestos/upload/budgets-upload.component";
-import { BudgetsInmueblesComponent } from "./modules/projects/pages/presupuestos/inmuebles/budgets-inmuebles.component";
+import { BudgetsInmueblesComponent } from "./modules/projects/pages/presupuestos/pages/inmuebles/budgets-inmuebles.component";
 import { LotsComponent } from "./modules/projects/pages/materiales/pages/lotes/lots.component";
+import { BudgetsUploadComponent } from "./modules/projects/pages/presupuestos/pages/upload/budgets-upload.component";
+import { FormBudgetComponent } from "./modules/projects/pages/presupuestos/pages/form/form-budget.component";
 
 export const ADMIN_ROUTES: Routes = [
 
@@ -37,6 +38,7 @@ export const ADMIN_ROUTES: Routes = [
                     { path: '', component: ProjectsComponent },
                     { path: 'update/:id', component: FormProjectsComponent },
                     { path: 'budget/:id', component: BudgetsProjectsComponent },
+                    { path: 'budget/new/:id/:cod', component: FormBudgetComponent },
                     { path: 'budgets', component: BudgetsUploadComponent },
                     { path: 'new', component: FormProjectsComponent },
                 ]

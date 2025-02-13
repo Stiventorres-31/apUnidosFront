@@ -27,6 +27,15 @@ export interface form_inventario {
     cantidad: number;
 }
 
+export interface form_lot {
+    referencia_material: string;
+    costo: string;
+    cantidad: number;
+    nit_proveedor: string;
+    nombre_proveedor: string;
+    descripcion_proveedor: string;
+}
+
 
 export interface dd {
     id: number;

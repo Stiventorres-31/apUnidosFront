@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
-import { inmueble } from '../../inmuebles/models/inmuebles.interface';
-import { InmueblesService } from '../../inmuebles/services/inmuebles.service';
-import { EncryptionService } from '../../../../../../shared/services/encryption/encryption.service';
+import { Component, ViewChild } from '@angular/core';
+import { inmueble } from '../../../inmuebles/models/inmuebles.interface';
+import { InmueblesService } from '../../../inmuebles/services/inmuebles.service';
+import { EncryptionService } from '../../../../../../../shared/services/encryption/encryption.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BreadCrumbService } from '../../../../../../shared/services/breadcrumbs/bread-crumb.service';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { AppComponent } from '../../../../../../app.component';
-import { BudgetsService } from '../services/budgets.service';
+import { BreadCrumbService } from '../../../../../../../shared/services/breadcrumbs/bread-crumb.service';
+import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { AppComponent } from '../../../../../../../app.component';
+import { BudgetsService } from '../../services/budgets.service';
+import { debounceTime, fromEvent, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-budgets-inmuebles',
@@ -16,6 +17,9 @@ import { BudgetsService } from '../services/budgets.service';
   styles: ''
 })
 export class BudgetsInmueblesComponent {
+  resizeSubscription: Subscription | undefined;
+  resizeObserver: ResizeObserver | undefined;
+  @ViewChild(DatatableComponent) table!: DatatableComponent;
   public isLoading: boolean = true;
   public inmueble!: inmueble;
   constructor(
@@ -49,6 +53,18 @@ export class BudgetsInmueblesComponent {
 
       }
     });
+
+    this.resizeSubscription = fromEvent(window, 'resize')
+      .pipe(debounceTime(300))
+      .subscribe(() => this.recalculateTable());
+  }
+
+  ngAfterViewInit() {
+    const mainContent = document.getElementById('main-content');
+    if (mainContent) {
+      this.resizeObserver = new ResizeObserver(() => this.recalculateTable());
+      this.resizeObserver.observe(mainContent);
+    }
   }
 
   index(id: string) {
@@ -79,6 +95,12 @@ export class BudgetsInmueblesComponent {
 
   update(row: any) {
 
+  }
+
+  newBudget() {
+    const id = this.EncryptionService.encrypt(`${this.inmueble.id}`);
+    const cod = this.EncryptionService.encrypt(`${this.inmueble.codigo_proyecto}`)
+    this.router.navigate(['/admin/projects/budget/new/', id, cod]);
   }
 
   delete(row: any) {
@@ -115,5 +137,22 @@ export class BudgetsInmueblesComponent {
     money = money.toLocaleString('de-DE');
     return '$' + money;
 
+  }
+
+  recalculateTable(): void {
+    if (this.table) {
+      this.table.recalculate();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.BreadCrumbService.setBreadcrumbs([]);
+
+    if (this.resizeSubscription) {
+      this.resizeSubscription.unsubscribe();
+    }
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
   }
 }

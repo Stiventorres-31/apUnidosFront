@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BreadCrumbService } from '../../../../../../../shared/services/breadcrumbs/bread-crumb.service';
 import { LabelsService } from '../../../../../../../shared/services/labels/labels.service';
 import { ValidationsService } from '../../../../../../../shared/services/validations/validations.service';
-import { form_inventario } from '../../models/materials.interface';
+import { form_inventario, form_lot } from '../../models/materials.interface';
 
 @Component({
   selector: 'app-form-materials',
@@ -116,18 +116,25 @@ export class FormMaterialsComponent {
 
           if (rs) {
 
+            console.log(rs)
             this.form.patchValue({
               referencia_material: rs.referencia_material,
               consecutivo: rs.consecutivo,
               costo: rs.costo,
               cantidad: rs.cantidad,
               nit_proveedor: rs.nit_proveedor,
-              nombre_proveedor: rs.nombre_proveedor,
-              descripcion_proveedor: rs.descripcion_proveedor,
+              nombre_proveedor: rs.nombre_proveedor
             }, { emitEvent: true });
 
             this.form.get("nombre_material")?.setValidators([]);
             this.form.get("nombre_material")?.updateValueAndValidity();
+
+            this.form.get("nit_proveedor")?.setValidators([]);
+            this.form.get("nombre_proveedor")?.setValidators([]);
+
+
+            this.form.get("nit_proveedor")?.updateValueAndValidity();
+            this.form.get("nombre_proveedor")?.updateValueAndValidity();
 
             let costo = Math.round(Number(rs.costo));
 
@@ -147,7 +154,7 @@ export class FormMaterialsComponent {
             ];
             this.reset();
             this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
-            console.log(this.form.value)
+            console.log(this.form.valid)
 
           } else {
             this.router.navigate(['/admin/materials']);
@@ -162,6 +169,27 @@ export class FormMaterialsComponent {
           this.router.navigate(['/admin/materials']);
           return;
         }
+
+        this.form.patchValue({
+          referencia_material: id,
+        }, { emitEvent: true });
+
+        this.form.get("nombre_material")?.setValidators([]);
+        this.form.get("nombre_material")?.updateValueAndValidity();
+
+        this.isLoading = false;
+        this.isNewLot = true;
+        const breadcrumbs = [
+          { label: 'Dashboard', url: '/admin/dashboard' },
+          { label: 'Materiales', url: '/admin/materials/' },
+          { label: 'Lotes', url: '/admin/materials/lots/' + this.EncryptionService.encrypt(`${id}`) },
+          { label: 'Agregar', url: '/admin/materials/lots/new/' },
+
+        ];
+        this.reset();
+        this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
+
+
       }
       else {
         this.isLoading = false;
@@ -206,6 +234,7 @@ export class FormMaterialsComponent {
 
   updateLot() {
     this.isSending = true;
+    console.log(this.form.value)
     if (!this.form.valid) {
       this.AppComponent.alert({
         summary: "Formulario invalido",
@@ -242,7 +271,43 @@ export class FormMaterialsComponent {
     });
   }
   storeLot() {
+    this.isSending = true;
+    if (!this.form.valid) {
+      this.AppComponent.alert({
+        summary: "Formulario invalido",
+        detail: "Por favor, Asegurese que la información del material es valida.",
+        severity: 'warn'
+      })
+      this.isSending = false;
+      return;
+    }
+    const form = this.form.value;
+    form.costo = this.parseMoneda(form.costo);
 
+    const body: form_lot = {
+      referencia_material: form.referencia_material,
+      nit_proveedor: form.nit_proveedor,
+      nombre_proveedor: form.nombre_proveedor,
+      descripcion_proveedor: form.descripcion_proveedor,
+      costo: form.costo,
+      cantidad: form.cantidad,
+    }
+
+    this.materialsService.storeLot(body).subscribe((rs) => {
+      console.log(rs);
+      if (rs.isError) {
+        this.isSending = false;
+        this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
+      } else {
+
+        this.router.navigate(['/admin/materials/lots', this.EncryptionService.encrypt(`${form.referencia_material}`)]);
+        this.AppComponent.alert({
+          summary: "Operación exitosa",
+          detail: rs.message,
+          severity: 'success'
+        });
+      }
+    });
   }
 
   update() {

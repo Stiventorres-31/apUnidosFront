@@ -8,7 +8,7 @@ import { SingletonService } from '../../../../../../shared/services/singleton/si
 import { HeadersService } from '../../../../../../shared/services/utilities/headers.service';
 import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from '../../../../../../../environments/environment';
-import { form_inventario, form_materials, InventarioResponse, MaterialResponse, materials, MaterialsResponse } from '../models/materials.interface';
+import { form_inventario, form_lot, form_materials, InventarioResponse, MaterialResponse, materials, MaterialsResponse } from '../models/materials.interface';
 import { invetario } from '../../../../../../shared/models/inventory/inventory.interface';
 import { ApiResponse } from '../../../../../../shared/models/users/users.interface';
 
@@ -104,6 +104,25 @@ export class MaterialsService {
   store(materials: form_materials): Observable<{ isError: boolean, message: string }> {
     this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
     return this.http.post<MaterialResponse>(environment.backend + `api/materiale`, { ...materials }, { headers: this.headersService.getJsonHeaders() })
+      .pipe(
+        map((rs: { isError: boolean, message: string }) => {
+          return rs;
+        }), catchError((error: HttpErrorResponse) => {
+          console.error(error)
+          this.LoginService.unauthorized(error)
+          if (error.status == 422) {
+            return of({ isError: true, message: error.error.message });
+          }
+
+          return of({ isError: true, message: "No se puedo realizar la operación, por favor intenta mas tarde" });
+        })
+      )
+
+  }
+
+  storeLot(materials: form_lot): Observable<{ isError: boolean, message: string }> {
+    this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
+    return this.http.post<MaterialResponse>(environment.backend + `api/inventario`, { ...materials }, { headers: this.headersService.getJsonHeaders() })
       .pipe(
         map((rs: { isError: boolean, message: string }) => {
           return rs;

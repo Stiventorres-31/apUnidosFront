@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ProjectService } from '../../../../../shared/services/project/project.service';
 import { EncryptionService } from '../../../../../shared/services/encryption/encryption.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreadCrumbService } from '../../../../../shared/services/breadcrumbs/bread-crumb.service';
 import { projects } from '../../../../../shared/models/projects/projects.interface';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { inmueble } from '../inmuebles/models/inmuebles.interface';
+import { debounceTime, fromEvent, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-budgets-projects',
@@ -15,6 +16,9 @@ import { inmueble } from '../inmuebles/models/inmuebles.interface';
   styles: ''
 })
 export class BudgetsProjectsComponent {
+  resizeSubscription: Subscription | undefined;
+  resizeObserver: ResizeObserver | undefined;
+  @ViewChild(DatatableComponent) table!: DatatableComponent;
   public isLoading: boolean = true;
   public projects!: projects;
   constructor(
@@ -67,6 +71,18 @@ export class BudgetsProjectsComponent {
 
       }
     });
+
+    this.resizeSubscription = fromEvent(window, 'resize')
+      .pipe(debounceTime(300))
+      .subscribe(() => this.recalculateTable());
+  }
+
+  ngAfterViewInit() {
+    const mainContent = document.getElementById('main-content');
+    if (mainContent) {
+      this.resizeObserver = new ResizeObserver(() => this.recalculateTable());
+      this.resizeObserver.observe(mainContent);
+    }
   }
 
 
@@ -93,4 +109,22 @@ export class BudgetsProjectsComponent {
     return '$' + money;
 
   }
+
+  recalculateTable(): void {
+    if (this.table) {
+      this.table.recalculate();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.BreadCrumbService.setBreadcrumbs([]);
+
+    if (this.resizeSubscription) {
+      this.resizeSubscription.unsubscribe();
+    }
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+  }
+
 }
