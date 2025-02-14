@@ -1,1 +1,222 @@
-<p>form-budget works!</p>
+<div class="w-full ">
+    @if(isLoading){
+
+    <div class="w-full rounded-xl skeleton-medium h-full pb-5">
+
+
+        <div class="w-full flex justify-center">
+            <div class="w-8/12">
+                <div class="w-full flex justify-between gap-2 px-5 pt-20 mt-20">
+                    <div class="w-auto relative"></div>
+                    <div class=" w-56 skeleton rounded-full h-10"></div>
+                </div>
+                <div class="w-full flex justify-between gap-4 my-5 px-5">
+                    <div class="w-1/2 h-12 rounded-3xl skeleton animate-skeleton-1000 mt-4"></div>
+                    <div class="w-1/2 h-12 rounded-3xl skeleton animate-skeleton-1000 mt-4"></div>
+                </div>
+                <div class="w-full flex justify-between my-5 px-5">
+                    <div class="w-1/2 h-12 rounded-3xl skeleton animate-skeleton-1000 mt-4"></div>
+                    <div class="w-1/2 h-12 rounded-3xl skeleton animate-skeleton-1000 mt-4"></div>
+                </div>
+                <div class="w-full flex justify-between my-5 px-5">
+                    <div class="w-1/2 h-12 rounded-3xl skeleton animate-skeleton-1000 mt-4"></div>
+                    <div class="w-1/2 h-12 rounded-3xl skeleton animate-skeleton-1000 mt-4"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    }@else {
+    <div class="w-full bg-white h-full rounded-xl pt-5 pb-20">
+        <div class="w-full flex justify-center">
+            <div class="w-full md:w-8/12 lg:w-9/12">
+                <div class="w-full flex justify-between gap-2 px-5 pt-10 mt-10">
+                    <div class="w-auto relative"></div>
+                    <div class="btns flex">
+                        @if(isSending){
+                        <mat-spinner class="mr-2" [diameter]="30"></mat-spinner>
+                        }@else{
+                        <div (click)="showModal= !showModal"
+                            class=" px-4 rounded-l-full bg-gray-500 cursor-pointer text-white flex justify-center items-center h-10">
+                            <span class="material-icons mr-2" translate="no">add</span>
+                            Agregar material
+                        </div>
+                        <div (click)="submit()"
+                            class="px-4 rounded-r-full bg-primary cursor-pointer text-white flex justify-center items-center h-10">
+                            Enviar presupuesto
+                        </div>
+                        }
+                    </div>
+
+                </div>
+
+                <div class="my-5 px-5">
+
+                    <ngx-datatable class="material striped rounded-3xl" [rows]="lots" [columnMode]="'force'"
+                        [swapColumns]="true" [rowHeight]="'auto'" [headerHeight]="55" [limit]="15" [offset]="0"
+                        [footerHeight]="50" [scrollbarH]="true">
+
+                        <ngx-datatable-column [flexGrow]="0.4" [resizeable]="false" [minWidth]="30"
+                            [prop]="'consecutivo'" name="Lote" [sortable]="true">
+                            <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                                <div class="flex items-center">
+                                    <span>{{ row.consecutivo}}</span>
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column [flexGrow]="1" [minWidth]="100" [resizeable]="false"
+                            [prop]="'referencia_material '" name="Referencia" [sortable]="true">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span class=" font-medium"> {{row.referencia_material }}</span>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column [flexGrow]="1" [minWidth]="100" [resizeable]="false"
+                            [prop]="'costo_material'" name="Costo" [sortable]="true">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span class=" font-medium">{{(row.costo_material)}} </span>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column [flexGrow]="1" [minWidth]="100" [resizeable]="false"
+                            [prop]="'cantidad_material'" name="Cantidad" [sortable]="true">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span class=" font-medium">{{row.cantidad_material}} </span>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column [flexGrow]="1.5" [minWidth]="100" [resizeable]="false" name="Acciones"
+                            [sortable]="true" cellClass="accion_">
+                            <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                                <div class="flex gap-3 ">
+
+                                    <div data-title="Eliminar" (click)="removeMaterial(rowIndex)"
+                                        class="flex items-center cursor-pointer  before:top-[-35px] h-full tool-tip relative">
+                                        <span matRipple style="font-size: 16px !important;"
+                                            class="text-center text-white bg-red-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">delete</span>
+                                    </div>
+
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+
+
+
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+
+
+    @if(showModal){
+    <div class="show-form">
+        <div class="modal-flotante bg-white rounded" (click)="$event.stopPropagation()">
+            <div class="header bg-primary text-white">
+                <span class="text-base font-medium">Agregar un material</span>
+
+            </div>
+
+            <div class="body" [formGroup]="budget">
+                <div class="w-full">
+
+
+                    <div class="w-full flex flex-wrap md:flex-nowrap gap-0 justify-between md:gap-4 px-5">
+
+                        <div class="mt-6 input-container w-full">
+                            <label for="referencia_material" class="label-float-active obligatorio">
+                                Referencia Material
+                            </label>
+                            <input type="text" class="form-control input-control" id="referencia_material"
+                                (focus)="isSearching = true" formControlName="referencia_material" [readOnly]="true"
+                                [placeholder]="'Buscar material'" required>
+                            <div>
+                                @if (isSearching) {
+                                <selects-list-materials [data]="refMateriales"
+                                    (newValueSelect)="budget.get('referencia_material')?.setValue($event); isSearching = false; "></selects-list-materials>
+
+                                }
+                            </div>
+                        </div>
+
+                        <div class="mt-6 input-container w-full ">
+                            <label for="consecutivo" class="label-flotante obligatorio"
+                                [ngClass]="{'label-float-active': inputs['consecutivo'], 'label-float-inactive': !inputs['consecutivo'] || inputs['consecutivo'] == null }">Lote</label>
+                            <select id="consecutivo" formControlName="consecutivo"
+                                (input)="labelBlur('consecutivo', $event)" (focus)="labelFocus('consecutivo')"
+                                (blur)="labelBlur('consecutivo', $event)" required
+                                class="w-full form-control input-control ">
+                                @if(lotMateriales.length > 0){
+                                <option value="" selected disabled>Seleccionar</option>
+
+                                @for(lot of lotMateriales; track $index){
+                                <option [value]="lot.consecutivo">Lote {{lot.consecutivo}}</option>
+                                }
+                                }
+                            </select>
+                        </div>
+
+
+                    </div>
+                    <div class="w-full flex flex-wrap md:flex-nowrap gap-0 justify-between md:gap-4 px-5">
+                        <div class="w-full">
+                            <div class="mt-6 input-container w-full ">
+                                <label for="costo_material"
+                                    [ngClass]="{'label-float-active': inputs['costo_material'], 'label-float-inactive': !inputs['costo_material'] || inputs['costo_material'] == null }"
+                                    class="label-flotante label-float-active required">Costo</label>
+                                <input (input)="labelBlur('costo_material', $event); moneda($event)"
+                                    autocomplete="false" (focus)="labelFocus('costo_material')"
+                                    (blur)="labelBlur('costo_material', $event)" type="text"
+                                    class="form-control input-control  " id="costo_material"
+                                    formControlName="costo_material" required>
+
+                            </div>
+                        </div>
+                        <div class="w-full">
+                            <div class="mt-6 input-container w-full ">
+                                <label for="cantidad_material"
+                                    [ngClass]="{'label-float-active': inputs['cantidad_material'], 'label-float-inactive': !inputs['cantidad_material'] || inputs['cantidad_material'] == null }"
+                                    class="label-flotante label-float-active required">Cantidad</label>
+                                <input (input)="labelBlur('cantidad_material', $event); numeric($event)"
+                                    autocomplete="false" (focus)="labelFocus('cantidad_material')"
+                                    (blur)="labelBlur('cantidad_material', $event)" type="text"
+                                    class="form-control input-control  " id="cantidad_material"
+                                    formControlName="cantidad_material" required>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
+            </div>
+            <hr>
+            <div class="footer space-x-3 text-right">
+                @if(isSending){
+                <mat-spinner [diameter]="30"></mat-spinner>
+                }@else {
+                <button class="px-4 py-2 rounded-full bg-gray-500 text-white " (click)="closeModal()">Cancelar</button>
+                <button class="px-4 py-2 rounded-full bg-primary text-white" (click)="store()">Guardar</button>
+                }
+
+            </div>
+        </div>
+    </div>
+    }
+
+    }
+</div>

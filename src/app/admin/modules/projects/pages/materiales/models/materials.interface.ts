@@ -1,5 +1,6 @@
 import { invetario } from '../../../../../../shared/models/inventory/inventory.interface';
 import { ApiResponse, Usuario } from '../../../../../../shared/models/users/users.interface';
+import { inmueble } from '../../inmuebles/models/inmuebles.interface';
 
 export interface materials {
     id: number;
@@ -24,7 +25,8 @@ export interface form_inventario {
     referencia_material: string;
     consecutivo: number;
     costo_material: string;
-    cantidad: number;
+    cantidad?: number;
+    cantidad_material?: number
 }
 
 export interface form_lot {
@@ -36,6 +38,20 @@ export interface form_lot {
     descripcion_proveedor: string;
 }
 
+
+export interface form_budget {
+    referencia_material: string;
+    inmueble_id: number;
+    materiales: form_inventario[];
+}
+
+export interface form_update_budget {
+    referencia_material: string;
+    inmueble_id: number;
+    codigo_proyecto: string;
+    cantidad_material: number;
+    costo_material: string;
+}
 
 export interface dd {
     id: number;
