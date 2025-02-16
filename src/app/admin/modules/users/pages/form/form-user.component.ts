@@ -29,7 +29,7 @@ export class FormUserComponent {
   public isUpdatePassword: boolean = false;
 
   public roles: { id: number, name: string }[] = [
-    { id: 1, name: 'SUPER ADMIN' },
+    //{ id: 1, name: 'SUPER ADMIN' },
     { id: 2, name: 'ADMINISTRADOR' },
     { id: 3, name: 'OPERARIO' },
     { id: 4, name: 'CONSULTOR' }

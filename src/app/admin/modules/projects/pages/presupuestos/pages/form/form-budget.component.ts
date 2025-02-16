@@ -110,7 +110,7 @@ export class FormBudgetComponent {
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Proyectos', url: '/admin/projects/' },
-          { label: 'Presupuestos', url: '/admin/property/view/' + this.EncryptionService.encrypt(this.data.inmueble_id) },
+          { label: 'Presupuestos', url: '/admin/property/view/budget/' + this.EncryptionService.encrypt(this.data.inmueble_id) },
           { label: 'Agregar', url: '/admin/projects/budget/new/' + this.EncryptionService.encrypt(this.data.inmueble_id) + '/' + this.EncryptionService.encrypt(this.data.codigo_proyecto) },
           { label: this.data.codigo_proyecto, url: '/admin/projects/budget/new/' },
 
@@ -191,7 +191,7 @@ export class FormBudgetComponent {
           this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
         } else {
           const id = this.EncryptionService.encrypt(`${this.data.inmueble_id}`);
-          this.Router.navigate(['/admin/property/view/', id]);
+          this.Router.navigate(['/admin/property/view/budget/', id]);
 
           this.AppComponent.alert({
             summary: "Operación exitosa",

@@ -101,8 +101,20 @@
     <div class="w-full bg-card px-7 py-2 mt-4">
         <div class="w-full ">
             <div class="w-full mt-2 mb-2 flex flex-wrap md:flex-nowrap justify-end gap-5">
-                <div data-title="Presupuesto" class="relative tool-tip ">
-                    <button (click)="budgets()" matRipple
+
+
+                <div data-title="Asignaciones" class="relative tool-tip ">
+                    <button (click)="assignment()" matRipple
+                        class="p-2 rounded-full  bg-primary flex items-center gap-2 text-white">
+
+                        <i translate="no" class="material-symbols-outlined cursor-pointer text-white"
+                            style="font-size: 24px;">assignment</i>
+                    </button>
+
+                </div>
+
+                <div data-title="Presupuestos" class="relative tool-tip ">
+                    <button (click)="inmuebles()" matRipple
                         class="p-2 rounded-full  bg-green-400 flex items-center gap-2 text-white">
 
                         <i translate="no" class="material-symbols-outlined cursor-pointer text-white"
@@ -111,15 +123,6 @@
 
                 </div>
 
-                <div data-title="Inmuebles" class="relative tool-tip ">
-                    <button matRipple (click)="inmuebles()"
-                        class="p-2 rounded-full bg-blue-400 flex items-center gap-2 text-white">
-
-                        <i translate="no" class="material-symbols-outlined cursor-pointer text-white"
-                            style="font-size: 24px;">apartment</i>
-                    </button>
-
-                </div>
 
                 <div data-title="Actualizar" class="relative tool-tip ">
                     <button matRipple (click)="update()"

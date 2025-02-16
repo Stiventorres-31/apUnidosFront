@@ -27,11 +27,11 @@
     }@else {
 
     <div class="w-full bg-white h-full rounded-xl py-5">
-        <div class="w-full flex flex-wrap justify-center mt-20 px-4">
+        <div class="w-full flex flex-wrap justify-center mt-20 px-4" [formGroup]="form">
             <div class="w-full lg:w-8/12 xl:w-6/12">
                 <div class="input-container w-full ">
-                    <input type="text" #inputSearch formControlName="termino" (input)="filter($event)"
-                        class=" py-3 pl-11 pr-3 w-full rounded-3xl h-11 outline-none border border-slate-300 bg-slate-100 slideInTop"
+                    <input type="text" #inputSearch formControlName="codigo_proyecto" (input)="reset()"
+                        class=" py-3 pl-11 pr-3 w-full rounded-3xl uppercase h-11 outline-none border border-slate-300 bg-slate-100 slideInTop"
                         placeholder="Buscar...">
                     <div class="absolute top-[10px] left-3">
                         <i translate="no" class="material-icons text-slate-500">search</i>

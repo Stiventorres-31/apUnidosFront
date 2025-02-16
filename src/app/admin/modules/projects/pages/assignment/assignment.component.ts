@@ -1,21 +1,21 @@
 import { Component, ViewChild } from '@angular/core';
-import { ProjectService } from '../../../../../shared/services/project/project.service';
-import { EncryptionService } from '../../../../../shared/services/encryption/encryption.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BreadCrumbService } from '../../../../../shared/services/breadcrumbs/bread-crumb.service';
-import { projects } from '../../../../../shared/models/projects/projects.interface';
-import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { inmueble } from '../inmuebles/models/inmuebles.interface';
 import { debounceTime, fromEvent, Subscription } from 'rxjs';
+import { BreadCrumbService } from '../../../../../shared/services/breadcrumbs/bread-crumb.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { EncryptionService } from '../../../../../shared/services/encryption/encryption.service';
+import { ProjectService } from '../../../../../shared/services/project/project.service';
+import { projects } from '../../../../../shared/models/projects/projects.interface';
+import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 @Component({
-  selector: 'app-budgets-projects',
+  selector: 'app-assignment',
   standalone: true,
   imports: [NgxDatatableModule],
-  templateUrl: './budgets-projects.component.html',
+  templateUrl: './assignment.component.html',
   styles: ''
 })
-export class BudgetsProjectsComponent {
+export class AssignmentComponent {
   resizeSubscription: Subscription | undefined;
   resizeObserver: ResizeObserver | undefined;
   @ViewChild(DatatableComponent) table!: DatatableComponent;
@@ -90,7 +90,7 @@ export class BudgetsProjectsComponent {
   }
 
   view(row: inmueble) {
-    this.router.navigate(["/admin/property/view/budget/", this.EncryptionService.encrypt(`${row.id}`)])
+    this.router.navigate(["/admin/property/view/assignment/", this.EncryptionService.encrypt(`${row.id}`)])
 
   }
 
@@ -129,5 +129,4 @@ export class BudgetsProjectsComponent {
       this.resizeObserver.disconnect();
     }
   }
-
 }

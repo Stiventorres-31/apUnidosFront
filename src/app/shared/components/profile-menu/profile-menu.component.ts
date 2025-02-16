@@ -6,6 +6,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ThemeService } from '../../../core/services/theme.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { LoginService } from '../../../auth/services/login.service';
+import { EncryptionService } from '../../services/encryption/encryption.service';
 
 @Component({
   selector: 'app-profile-menu',
@@ -83,10 +84,15 @@ export class ProfileMenuComponent implements OnInit {
   ];
 
   public themeMode = ['light', 'dark'];
+  protected user: any = {};
 
-  constructor(private login: LoginService) { }
+  constructor(private login: LoginService, private EncryptionService: EncryptionService) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.user.name = this.EncryptionService.loadData("fullname");
+    this.user.role = this.EncryptionService.loadData("role");
+    this.user.id = this.EncryptionService.loadData("id");
+  }
 
   public toggleMenu(): void {
     this.isOpen = !this.isOpen;

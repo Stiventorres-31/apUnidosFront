@@ -12,11 +12,12 @@ import { CardProjectsComponent } from './card/card-projects.component';
 import { environment } from '../../../../environments/environment';
 import { pagination_interface } from '../../../shared/models/pagination/pagination.interface';
 import { PaginationTableComponent } from '../../../shared/components/pagination/pagination-table.component';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [NgxDatatableModule, RouterLink, CardProjectsComponent, PaginationTableComponent],
+  imports: [NgxDatatableModule, ReactiveFormsModule, RouterLink, CardProjectsComponent, PaginationTableComponent],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss'
 })
@@ -24,15 +25,26 @@ export class ProjectsComponent {
   resizeSubscription: Subscription | undefined;
   resizeObserver: ResizeObserver | undefined;
   @ViewChild(DatatableComponent) table!: DatatableComponent;
+  public form!: FormGroup;
   public isLoading = true;
   public isSearching = false;
   public filtros!: pagination_interface;
   public projects_data: projects[] = [];
-
+  private searchTimeout: any;
   public typeOrigin: number = 0; //0  = index, 1 = input busqueda
 
-  constructor(private ProjectService: ProjectService, private EncryptionService: EncryptionService, private Router: Router, private BreadCrumbService: BreadCrumbService, private AppComponent: AppComponent
-  ) { }
+  constructor(private ProjectService: ProjectService,
+    private EncryptionService: EncryptionService,
+    private Router: Router,
+    private BreadCrumbService: BreadCrumbService,
+    private AppComponent: AppComponent,
+    private fb: FormBuilder
+  ) {
+    this.form = this.fb.group({
+      codigo_proyecto: ['', Validators.required
+      ],
+    })
+  }
 
 
   ngOnInit() {
@@ -43,6 +55,7 @@ export class ProjectsComponent {
   }
 
   index(endpoint: string = `${environment.backend}api/proyecto?page=1`) {
+    this.typeOrigin = 0;
     this.isSearching = true;
     if (environment.production) {
       const url = new URL(endpoint);
@@ -78,8 +91,37 @@ export class ProjectsComponent {
 
 
 
-  filter(event: Event) { }
+  search() {
+    this.isSearching = true;
+    const filtros = this.form.value;
+    this.typeOrigin = 1;
+    this.projects_data = [];
 
+    this.ProjectService.searchCode(filtros.codigo_proyecto).subscribe((rs) => {
+      this.isSearching = false;
+      if (rs) {
+        this.projects_data = rs;
+
+      }
+
+    })
+
+  }
+
+  reset() {
+    this.isSearching = false;
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
+    const filtros = this.form.value;
+    if (filtros.codigo_proyecto.trim() !== '') {
+      this.searchTimeout = setTimeout(() => {
+        this.search()
+      }, 1000)
+    } else if (this.typeOrigin == 1) {
+      this.index()
+    }
+  }
 
 
 

@@ -12,22 +12,22 @@
         <span class="material-icons text-foreground">person</span>
       </div>
       <div class="overflow-hidden px-2 text-sm font-semibold text-foreground">
-        JCastrillon
-        <p class="truncate text-ellipsis text-xs font-semibold text-muted-foreground">lnfiern0677</p>
+        {{user.name}}
+        <p class="truncate text-ellipsis text-xs font-semibold text-muted-foreground">{{user.role}}</p>
       </div>
     </div>
 
     <div class="border-b border-dashed border-border"></div>
 
     <ul class="my-2 mx-4 flex flex-col">
-      @for (item of profileMenu; track $index) {
+      <!-- @for (item of profileMenu; track $index) {
 
       <li routerLink="{{ item.link }}" :key="$index"
         class="inline-flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold text-muted-foreground hover:bg-card hover:text-primary">
         <svg-icon src="{{ item.icon }}" [svgClass]="'h-5 w-5 text-muted-foreground/50'"> </svg-icon>
         {{ item.title }}
       </li>
-      }
+      } -->
       <li (click)="logout()"
         class="inline-flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold text-muted-foreground hover:bg-card hover:text-primary">
         <svg-icon src="./assets/img/icons/heroicons/outline/logout.svg" [svgClass]="'h-5 w-5 text-muted-foreground/50'">

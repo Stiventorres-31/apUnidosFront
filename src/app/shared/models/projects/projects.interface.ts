@@ -32,4 +32,5 @@ export interface selectProjects {
 
 export type ProjectResponse = ApiResponse<{ proyecto: projects }>;
 export type ProjectsResponse = ApiResponse<{ proyectos: pagination_interface }>;
+export type ProjectsResponse_ = ApiResponse<{ proyectos: projects[] }>;
 export type ProjectSelectsResponse = ApiResponse<selectProjects[]>;

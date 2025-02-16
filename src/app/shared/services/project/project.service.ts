@@ -8,7 +8,7 @@ import { LoginService } from '../../../auth/services/login.service';
 import { Router } from '@angular/router';
 import { SingletonService } from '../singleton/singleton.service';
 import { HeadersService } from '../utilities/headers.service';
-import { ProjectResponse, projects, ProjectSelectsResponse, projectsForm, ProjectsResponse, selectProjects } from '../../models/projects/projects.interface';
+import { ProjectResponse, projects, ProjectSelectsResponse, projectsForm, ProjectsResponse, ProjectsResponse_, selectProjects } from '../../models/projects/projects.interface';
 import { pagination_interface } from '../../models/pagination/pagination.interface';
 
 @Injectable({
@@ -72,6 +72,22 @@ export class ProjectService {
           return of({} as ProjectsResponse);
         })
       );
+  }
+
+  searchCode(id: string): Observable<projects[]> {
+    return this.http.get<ProjectsResponse_>(environment.backend + `api/proyecto/similitud/${id}`, {
+      headers: this.headersService.getJsonHeaders()
+    })
+      .pipe(
+        map((rs) => {
+          return rs.result.proyectos;
+
+        }), catchError((error: HttpErrorResponse) => {
+          this.LoginService.unauthorized(error)
+          return of([]);
+        })
+      )
+
   }
 
   search(id: string): Observable<projects | null> {

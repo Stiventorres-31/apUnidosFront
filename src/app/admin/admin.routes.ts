@@ -18,6 +18,8 @@ import { BudgetsInmueblesComponent } from "./modules/projects/pages/presupuestos
 import { LotsComponent } from "./modules/projects/pages/materiales/pages/lotes/lots.component";
 import { BudgetsUploadComponent } from "./modules/projects/pages/presupuestos/pages/upload/budgets-upload.component";
 import { FormBudgetComponent } from "./modules/projects/pages/presupuestos/pages/form/form-budget.component";
+import { AssignmentComponent } from "./modules/projects/pages/assignment/assignment.component";
+import { AssignmentsUploadComponent } from "./modules/projects/pages/assignment/pages/upload/assignment-upload.component";
 
 export const ADMIN_ROUTES: Routes = [
 
@@ -39,8 +41,10 @@ export const ADMIN_ROUTES: Routes = [
                     { path: 'update/:id', component: FormProjectsComponent },
                     { path: 'budget/:id', component: BudgetsProjectsComponent },
                     { path: 'budget/new/:id/:cod', component: FormBudgetComponent },
-                    { path: 'budgets', component: BudgetsUploadComponent },
+                    { path: 'budgets/:id', component: BudgetsUploadComponent },
                     { path: 'new', component: FormProjectsComponent },
+                    { path: 'assignment/:id', component: AssignmentComponent },
+                    { path: 'assignments/:id', component: AssignmentsUploadComponent }
                 ]
             },
             {
@@ -66,7 +70,8 @@ export const ADMIN_ROUTES: Routes = [
                     { path: '', component: InmueblesComponent },
                     { path: 'new', component: FormInmueblesComponent },
                     { path: 'update/:id', component: FormInmueblesComponent },
-                    { path: 'view/:id', component: BudgetsInmueblesComponent },
+                    { path: 'view/budget/:id', component: BudgetsInmueblesComponent },
+                    //{ path: 'view/assignment/:id', component: AssignmentsInmueblesComponent },
                 ]
             },
             {

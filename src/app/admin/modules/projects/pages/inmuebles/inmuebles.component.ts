@@ -61,6 +61,13 @@ export class InmueblesComponent {
     this.Router.navigate(["/admin/property/update/", this.EncryptionService.encrypt(`${type.id}`)])
   }
 
+  report(type: inmueble) {
+    this.InmueblesService.report(`${type.id}`).subscribe((rs) => {
+      console.log(rs);
+      //this.AppComponent.alert({ summary: 'Reporte generado', detail: rs.message, severity:'success' });
+    });
+  }
+
   filter(event: Event) { }
 
 

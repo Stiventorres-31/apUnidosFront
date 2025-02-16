@@ -3,19 +3,19 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppComponent } from '../../../../../../../app.component';
 import { BreadCrumbService } from '../../../../../../../shared/services/breadcrumbs/bread-crumb.service';
-import { BudgetsService } from '../../services/budgets.service';
 import { EncryptionService } from '../../../../../../../shared/services/encryption/encryption.service';
 import { ProjectService } from '../../../../../../../shared/services/project/project.service';
+import { AssignmentService } from '../../services/assignment.service';
 
 @Component({
-  selector: 'app-budgets-upload',
+  selector: 'app-assignment-upload',
   standalone: true,
   imports: [AngularSvgIconModule],
-  templateUrl: './budgets-upload.component.html',
+  templateUrl: './assignment-upload.component.html',
   styles: `
   `
 })
-export class BudgetsUploadComponent {
+export class AssignmentsUploadComponent {
   public isLoading: boolean = true;
   public fileName: string | null = null;
   public errorMessage: string | null = null;
@@ -28,7 +28,7 @@ export class BudgetsUploadComponent {
     private EncryptionService: EncryptionService,
     private ProjectService: ProjectService,
     private Router: Router,
-    private BudgetsService: BudgetsService) { }
+    private AssignmentService: AssignmentService) { }
 
   ngOnInit() {
 
@@ -48,8 +48,8 @@ export class BudgetsUploadComponent {
             const breadcrumbs = [
               { label: 'Dashboard', url: '/admin/dashboard' },
               { label: 'Proyectos', url: '/admin/projects' },
-              { label: 'Presupuestos CSV', url: '/admin/projects/budgets/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
-              { label: rs.codigo_proyecto + ' - ' + rs.ciudad_municipio_proyecto + ', ' + rs.departamento_proyecto, url: '/admin/projects/budgets/' },
+              { label: 'Asignaciones CSV', url: '/admin/projects/assignments/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
+              { label: rs.codigo_proyecto + ' - ' + rs.ciudad_municipio_proyecto + ', ' + rs.departamento_proyecto, url: '/admin/projects/assignments/' },
             ];
             this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
 
@@ -104,7 +104,7 @@ export class BudgetsUploadComponent {
     formData.append('file', this.file);
     formData.append('codigo_proyecto', this.id);
 
-    this.BudgetsService.storeCSV(formData).subscribe((rs) => {
+    this.AssignmentService.storeCSV(formData).subscribe((rs) => {
       if (!rs.isError) {
         this.AppComponent.alert({ summary: "Operación exitosa", detail: rs.message, severity: 'success' });
         this.Router.navigate(['/admin/projects']);
@@ -117,7 +117,7 @@ export class BudgetsUploadComponent {
   }
 
   downloadFile() {
-    this.BudgetsService.downloadCSVTemplate();
+    this.AssignmentService.downloadCSVTemplate();
   }
 
   ngOnDestroy(): void {

@@ -30,10 +30,9 @@ export class CardProjectsComponent {
     this.Router.navigate(["/admin/projects/update/", this.EncryptionService.encrypt(`${this.project.codigo_proyecto}`)])
   }
 
-  budgets() {
-    this.Router.navigate(["/admin/projects/budgets"])
+  assignment() {
+    this.Router.navigate(["/admin/projects/assignment/", this.EncryptionService.encrypt(`${this.project.codigo_proyecto}`)])
   }
-
 
   inmuebles() {
     this.Router.navigate(["/admin/projects/budget/", this.EncryptionService.encrypt(`${this.project.codigo_proyecto}`)])

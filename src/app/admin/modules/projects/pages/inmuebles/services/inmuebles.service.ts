@@ -9,7 +9,7 @@ import { SingletonService } from '../../../../../../shared/services/singleton/si
 import { HeadersService } from '../../../../../../shared/services/utilities/headers.service';
 import { InmueblesResponse, inmueble, InmuebleResponse } from '../models/inmuebles.interface';
 import { LoginService } from '../../../../../../auth/services/login.service';
-import { materials } from '../../materiales/models/materials.interface';
+import { ApiResponse } from '../../../../../../shared/models/users/users.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -61,6 +61,24 @@ export class InmueblesService {
 
   }
 
+  report(id: string): Observable<string | null> {
+    return this.http.get<ApiResponse<{ inmueble: string }>>(environment.backend + `api/inmueble/report/${id}`, {
+      headers: this.headersService.getJsonHeaders()
+    })
+      .pipe(
+        map((rs) => {
+          return rs.result.inmueble;
+
+        }), catchError((error: HttpErrorResponse) => {
+          this.LoginService.unauthorized(error)
+          return of(null);
+        })
+      )
+
+  }
+
+
+
 
   store(tipo_inmueble: inmueble): Observable<{ isError: boolean, message: string }> {
     this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
@@ -81,9 +99,9 @@ export class InmueblesService {
 
   }
 
-  update(tipo_inmueble: inmueble): Observable<{ isError: boolean, message: string }> {
+  update(inmueble: inmueble): Observable<{ isError: boolean, message: string }> {
     this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
-    return this.http.put<InmuebleResponse>(environment.backend + `api/inmueble/${tipo_inmueble?.id}`, { ...tipo_inmueble }, { headers: this.headersService.getJsonHeaders() })
+    return this.http.put<InmuebleResponse>(environment.backend + `api/inmueble/${inmueble?.id}`, { ...inmueble }, { headers: this.headersService.getJsonHeaders() })
       .pipe(
         map((rs: { isError: boolean, message: string }) => {
           return rs;

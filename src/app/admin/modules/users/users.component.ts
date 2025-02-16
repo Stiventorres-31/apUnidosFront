@@ -36,7 +36,7 @@ export class UsersComponent {
     this.userService.index().subscribe(
       (rs) => {
         console.log(rs);
-        this.filtros = rs;
+        this.filtros = rs.filter(user => user.rol_usuario != "SUPER ADMIN");
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Usuarios', url: '/admin/users' },
