@@ -7,6 +7,7 @@ import { EncryptionService } from '../../../../../shared/services/encryption/enc
 import { BreadCrumbService } from '../../../../../shared/services/breadcrumbs/bread-crumb.service';
 import { AppComponent } from '../../../../../app.component';
 import { inmueble } from './models/inmuebles.interface';
+import { filter_ngx } from '../../../../../core/pipes/filter.pipe';
 
 @Component({
   selector: 'app-inmuebles',
@@ -20,6 +21,7 @@ export class InmueblesComponent {
   resizeObserver: ResizeObserver | undefined;
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   public isLoading = true;
+  public data: inmueble[] = [];
   public filtros: inmueble[] = [];
 
   constructor(private InmueblesService: InmueblesService, private EncryptionService: EncryptionService, private Router: Router, private BreadCrumbService: BreadCrumbService, private AppComponent: AppComponent
@@ -37,6 +39,7 @@ export class InmueblesComponent {
     this.InmueblesService.index().subscribe(
       (rs) => {
         console.log(rs);
+        this.data = rs;
         this.filtros = rs;
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
@@ -68,7 +71,15 @@ export class InmueblesComponent {
     });
   }
 
-  filter(event: Event) { }
+  filter(event: Event) {
+    const key = event.target as HTMLInputElement;
+    const value = key.value;
+    if (value.trim() == "" || value == null) {
+      this.filtros = this.data;
+    } else {
+      this.filtros = new filter_ngx().transform(this.data, value);
+    }
+  }
 
 
   delete(row: inmueble) {

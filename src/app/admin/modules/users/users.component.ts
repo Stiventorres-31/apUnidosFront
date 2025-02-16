@@ -7,6 +7,7 @@ import { BreadCrumbService } from '../../../shared/services/breadcrumbs/bread-cr
 import { Usuario } from '../../../shared/models/users/users.interface';
 import { EncryptionService } from '../../../shared/services/encryption/encryption.service';
 import { AppComponent } from '../../../app.component';
+import { filter_ngx } from '../../../core/pipes/filter.pipe';
 
 @Component({
   selector: 'app-users',
@@ -20,6 +21,7 @@ export class UsersComponent {
   resizeObserver: ResizeObserver | undefined;
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   public isLoading = true;
+  private data: Usuario[] = [];
   public filtros: Usuario[] = [];
 
   constructor(private userService: UsersService, private EncryptionService: EncryptionService, private Router: Router, private BreadCrumbService: BreadCrumbService, private AppComponent: AppComponent) { }
@@ -36,6 +38,7 @@ export class UsersComponent {
     this.userService.index().subscribe(
       (rs) => {
         console.log(rs);
+        this.data = rs.filter(user => user.rol_usuario != "SUPER ADMIN");
         this.filtros = rs.filter(user => user.rol_usuario != "SUPER ADMIN");
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
@@ -56,7 +59,16 @@ export class UsersComponent {
   }
 
 
-  filter(event: Event) { }
+  filter(event: Event) {
+    const key = event.target as HTMLInputElement;
+    const value = key.value;
+    if (value.trim() == "" || value == null) {
+      this.filtros = this.data;
+    } else {
+      this.filtros = new filter_ngx().transform(this.data, value);
+    }
+  }
+
 
   update(usuario: Usuario) {
     this.Router.navigate(["/admin/users/update/", this.EncryptionService.encrypt(`${usuario.numero_identificacion}`)])

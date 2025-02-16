@@ -5,13 +5,14 @@
       <div class="sm:order-1 md:hidden">
         <button (click)="toggleMobileMenu()" type="button"
           class="inline-flex items-center justify-center rounded-md bg-muted p-2 text-muted-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary hover:bg-muted-foreground hover:text-muted"
-          aria-expanded="false">
+          aria-expanded="false" [ngClass]="{ 'rotate-180': menuService.showMobileMenu }">
           <span class="sr-only text-white">Open menu</span>
           <!-- Heroicon name: outline/menu -->
-          srtrt
+          <svg-icon src="/assets/img/icons/heroicons/solid/chevron-double-left.svg"> </svg-icon>
 
         </button>
       </div>
+
 
       <!-- Logo -->
       <!-- Profile menu -->

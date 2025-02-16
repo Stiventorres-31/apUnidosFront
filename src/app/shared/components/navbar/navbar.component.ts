@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuService } from '../../services/services/menu.service';
 import { ProfileMenuComponent } from '../profile-menu/profile-menu.component';
+import { NgClass } from '@angular/common';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 
 
@@ -9,7 +11,7 @@ import { ProfileMenuComponent } from '../profile-menu/profile-menu.component';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
   standalone: true,
-  imports: [ProfileMenuComponent],
+  imports: [ProfileMenuComponent, NgClass, AngularSvgIconModule],
 })
 export class NavbarComponent implements OnInit {
   constructor(public menuService: MenuService

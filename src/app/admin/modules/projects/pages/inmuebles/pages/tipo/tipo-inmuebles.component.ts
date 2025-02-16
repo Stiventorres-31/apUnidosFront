@@ -7,6 +7,7 @@ import { debounceTime, fromEvent, Subscription } from 'rxjs';
 import { TipoInmueblesService } from '../../services/tipo-inmuebles.service';
 import { tipo_inmueble } from '../../models/inmuebles.interface';
 import { AppComponent } from '../../../../../../../app.component';
+import { filter_ngx } from '../../../../../../../core/pipes/filter.pipe';
 
 @Component({
   selector: 'app-tipo-inmuebles',
@@ -20,6 +21,7 @@ export class TipoInmueblesComponent {
   resizeObserver: ResizeObserver | undefined;
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   public isLoading = true;
+  public data: tipo_inmueble[] = [];
   public filtros: tipo_inmueble[] = [];
 
   constructor(private tipoInmuebleService: TipoInmueblesService, private EncryptionService: EncryptionService, private Router: Router, private BreadCrumbService: BreadCrumbService, private AppComponent: AppComponent) { }
@@ -36,6 +38,7 @@ export class TipoInmueblesComponent {
     this.tipoInmuebleService.index().subscribe(
       (rs) => {
         console.log(rs);
+        this.data = rs;
         this.filtros = rs;
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
@@ -59,7 +62,15 @@ export class TipoInmueblesComponent {
     this.Router.navigate(["/admin/type-property/update/", this.EncryptionService.encrypt(`${type.id}`)])
   }
 
-  filter(event: Event) { }
+  filter(event: Event) {
+    const key = event.target as HTMLInputElement;
+    const value = key.value;
+    if (value.trim() == "" || value == null) {
+      this.filtros = this.data;
+    } else {
+      this.filtros = new filter_ngx().transform(this.data, value);
+    }
+  }
 
 
   delete(row: tipo_inmueble) {

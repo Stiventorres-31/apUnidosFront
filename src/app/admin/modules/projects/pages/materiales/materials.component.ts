@@ -8,6 +8,7 @@ import { BreadCrumbService } from '../../../../../shared/services/breadcrumbs/br
 import { MaterialsService } from './services/materials.service';
 import { materials } from './models/materials.interface';
 import { ValidationsService } from '../../../../../shared/services/validations/validations.service';
+import { filter_ngx } from '../../../../../core/pipes/filter.pipe';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class MaterialsComponent {
   resizeObserver: ResizeObserver | undefined;
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   public isLoading = true;
+  public data: materials[] = [];
   public filtros: materials[] = [];
 
   constructor(private materialsService: MaterialsService, private EncryptionService: EncryptionService, private Router: Router, private BreadCrumbService: BreadCrumbService, private AppComponent: AppComponent, private ValidationsService: ValidationsService) { }
@@ -38,6 +40,7 @@ export class MaterialsComponent {
     this.materialsService.index().subscribe(
       (rs) => {
         console.log(rs);
+        this.data = rs;
         this.filtros = rs;
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
@@ -65,7 +68,15 @@ export class MaterialsComponent {
     this.Router.navigate(["/admin/materials/lots/", this.EncryptionService.encrypt(`${type.referencia_material}`)])
   }
 
-  filter(event: Event) { }
+  filter(event: Event) {
+    const key = event.target as HTMLInputElement;
+    const value = key.value;
+    if (value.trim() == "" || value == null) {
+      this.filtros = this.data;
+    } else {
+      this.filtros = new filter_ngx().transform(this.data, value);
+    }
+  }
 
 
   delete(row: materials) {
