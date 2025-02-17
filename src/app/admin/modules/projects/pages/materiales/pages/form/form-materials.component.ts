@@ -206,6 +206,12 @@ export class FormMaterialsComponent {
       }
       else {
         this.isLoading = false;
+        this.form.get("materiale_id")?.setValidators([]);
+        this.form.get("referencia_material")?.setValidators([Validators.required]);
+
+        this.form.get("referencia_material")?.updateValueAndValidity();
+        this.form.get("materiale_id")?.updateValueAndValidity();
+
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Materiales', url: '/admin/materials/' },
