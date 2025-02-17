@@ -1,3 +1,4 @@
+import { projects } from '../../../../../../shared/models/projects/projects.interface';
 import { ApiResponse, Usuario } from '../../../../../../shared/models/users/users.interface';
 
 export interface tipo_inmueble {
@@ -15,6 +16,7 @@ export interface inmueble {
     presupuestos?: any[];
     asignaciones?: any[];
     estado: string;
+    proyecto: projects;
 
 }
 

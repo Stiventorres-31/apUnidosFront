@@ -24,6 +24,7 @@ export interface form_materials {
 export interface form_inventario {
     id?: number;
     materiale_id: number;
+    referencia_material: string;
     consecutivo: number;
     costo_material: string;
     cantidad?: number;

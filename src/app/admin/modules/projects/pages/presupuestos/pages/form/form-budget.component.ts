@@ -142,7 +142,7 @@ export class FormBudgetComponent {
       return;
     }
     const lot = this.budget.value;
-    const ref = this.lots.find((l) => l.materiale_id == lot.materiale_id);
+    const ref = this.lots.find((l) => l.referencia_material == lot.referencia_material);
 
     if (ref) {
       this.AppComponent.alert({
@@ -176,10 +176,12 @@ export class FormBudgetComponent {
       return;
     }
 
+    this.data.inmueble_id = Number(this.data.inmueble_id);
     this.data.materiales = this.lots.map(l => ({
       ...l,
       costo_material: this.parseMoneda(l.costo_material),
-      cantidad_material: Number(l.cantidad_material)
+      cantidad_material: Number(l.cantidad_material),
+      consecutivo: Number(l.consecutivo)
     }));
 
 

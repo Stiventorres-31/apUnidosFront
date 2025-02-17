@@ -1,5 +1,5 @@
 import { pagination_interface } from "../pagination/pagination.interface";
-import { ApiResponse } from "../users/users.interface";
+import { ApiResponse, Usuario } from "../users/users.interface";
 
 export interface projects {
     id: number;
@@ -12,6 +12,7 @@ export interface projects {
     fecha_final_proyecto: string;
     inmuebles?: any[];
     total_presupuesto?: string;
+    usuario?: Usuario;
     estado: string;
 }
 

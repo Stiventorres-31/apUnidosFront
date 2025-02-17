@@ -100,7 +100,7 @@ export class BudgetsInmueblesComponent {
           { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Proyectos', url: '/admin/projects/' },
           { label: 'Presupuestos', url: '/admin/property/view/budget/' + this.EncryptionService.encrypt(`${rs.id}`) },
-          { label: rs.codigo_proyecto + ' - ' + rs.tipo_inmueble.nombre_tipo_inmueble, url: '/admin/projects/budget/' },
+          { label: rs.proyecto.codigo_proyecto + ' - ' + rs.tipo_inmueble.nombre_tipo_inmueble, url: '/admin/projects/budget/' },
 
         ];
 
@@ -168,7 +168,7 @@ export class BudgetsInmueblesComponent {
 
   newBudget() {
     const id = this.EncryptionService.encrypt(`${this.inmueble.id}`);
-    const cod = this.EncryptionService.encrypt(`${this.inmueble.codigo_proyecto}`)
+    const cod = this.EncryptionService.encrypt(`${this.inmueble.proyecto.codigo_proyecto}`)
     this.router.navigate(['/admin/projects/budget/new/', id, cod]);
   }
 
