@@ -40,10 +40,9 @@ export class BudgetsUploadComponent {
           this.Router.navigate(['/admin/projects']);
           return;
         }
-        this.id = id;
-
         this.ProjectService.search(id).subscribe((rs) => {
           if (rs) {
+            this.id = `${rs.id}`;
             this.isLoading = false;
             const breadcrumbs = [
               { label: 'Dashboard', url: '/admin/dashboard' },
@@ -102,7 +101,7 @@ export class BudgetsUploadComponent {
     if (!this.file) return;
     const formData = new FormData();
     formData.append('file', this.file);
-    formData.append('codigo_proyecto', this.id);
+    formData.append('proyecto_id', this.id);
 
     this.BudgetsService.storeCSV(formData).subscribe((rs) => {
       if (!rs.isError) {

@@ -85,8 +85,8 @@ export class AssignmentComponent {
     }
   }
 
-  budgets() {
-    this.router.navigate(["/admin/projects/budgets/", this.EncryptionService.encrypt(`${this.projects.codigo_proyecto}`)])
+  assignments() {
+    this.router.navigate(["/admin/projects/assignments/", this.EncryptionService.encrypt(`${this.projects.codigo_proyecto}`)])
   }
 
   view(row: inmueble) {

@@ -26,8 +26,8 @@ export interface tipo_inmueble_form {
 }
 
 
-export type InmueblesResponse = ApiResponse<{ inmueble: inmueble[] }>;
+export type InmueblesResponse = ApiResponse<{ inmuebles: inmueble[] }>;
 export type InmuebleResponse = ApiResponse<{ inmueble: inmueble }>;
 
-export type TipoInmueblesResponse = ApiResponse<{ tipo_inmueble: tipo_inmueble[] }>;
+export type TipoInmueblesResponse = ApiResponse<{ tipo_inmuebles: tipo_inmueble[] }>;
 export type TipoInmuebleResponse = ApiResponse<{ tipo_inmueble: tipo_inmueble }>;

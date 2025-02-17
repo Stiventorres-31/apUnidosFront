@@ -8,7 +8,7 @@ export interface materials {
     nombre_material: string;
     numero_identificacion: string;
     estado: string;
-    inventario?: invetario[];
+    inventarios?: invetario[];
 }
 
 export interface form_materials {
@@ -22,7 +22,8 @@ export interface form_materials {
 }
 
 export interface form_inventario {
-    referencia_material: string;
+    id?: number;
+    materiale_id: number;
     consecutivo: number;
     costo_material: string;
     cantidad?: number;
@@ -30,7 +31,8 @@ export interface form_inventario {
 }
 
 export interface form_lot {
-    referencia_material: string;
+    id?: number;
+    materiale_id?: string;
     costo: string;
     cantidad: number;
     nit_proveedor: string;
@@ -58,6 +60,6 @@ export interface dd {
     nombre_tipo_inmueble: string;
 }
 
-export type MaterialsResponse = ApiResponse<{ materiale: materials[] }>;
-export type MaterialResponse = ApiResponse<{ material: materials }>;
-export type InventarioResponse = ApiResponse<{ inventario: invetario[] }>;
+export type MaterialsResponse = ApiResponse<{ materiales: materials[] }>;
+export type MaterialResponse = ApiResponse<{ materiale: materials }>;
+export type InventarioResponse = ApiResponse<{ inventario: invetario }>;

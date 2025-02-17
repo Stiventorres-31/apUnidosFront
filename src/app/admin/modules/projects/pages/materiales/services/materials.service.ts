@@ -35,7 +35,7 @@ export class MaterialsService {
       })
       .pipe(
         map((rs) => {
-          return rs.result.materiale.map((material: materials, index: number) => ({
+          return rs.result.materiales.map((material: materials, index: number) => ({
             ...material,
             index,
           }));
@@ -53,7 +53,7 @@ export class MaterialsService {
     })
       .pipe(
         map((rs) => {
-          return rs.result.material;
+          return rs.result.materiale;
 
         }), catchError((error: HttpErrorResponse) => {
           this.LoginService.unauthorized(error)
@@ -63,13 +63,13 @@ export class MaterialsService {
 
   }
 
-  searchLot(id: string, lot: string): Observable<invetario | null> {
-    return this.http.get<InventarioResponse>(environment.backend + `api/inventario/${id}/${lot}`, {
+  searchLot(id: string): Observable<invetario | null> {
+    return this.http.get<InventarioResponse>(environment.backend + `api/inventario/${id}`, {
       headers: this.headersService.getJsonHeaders()
     })
       .pipe(
         map((rs) => {
-          return rs.result.inventario[0];
+          return rs.result.inventario;
 
         }), catchError((error: HttpErrorResponse) => {
           this.LoginService.unauthorized(error)
@@ -82,9 +82,9 @@ export class MaterialsService {
 
 
 
-  updateLote(materials: form_inventario): Observable<{ isError: boolean, message: string }> {
+  updateLote(materials: materials): Observable<{ isError: boolean, message: string }> {
     this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
-    return this.http.put<ApiResponse<{}>>(environment.backend + `api/inventario`, { ...materials }, { headers: this.headersService.getJsonHeaders() })
+    return this.http.put<ApiResponse<{}>>(environment.backend + `api/inventario/${materials.id}`, { ...materials }, { headers: this.headersService.getJsonHeaders() })
       .pipe(
         map((rs: { isError: boolean, message: string }) => {
           return rs;
@@ -141,7 +141,7 @@ export class MaterialsService {
 
   update(materials: form_materials): Observable<{ isError: boolean, message: string }> {
     this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
-    return this.http.put<MaterialResponse>(environment.backend + `api/materiale/${materials?.id}`, { ...materials }, { headers: this.headersService.getJsonHeaders() })
+    return this.http.put<MaterialResponse>(environment.backend + `api/materiale/${materials?.referencia_material}`, { ...materials }, { headers: this.headersService.getJsonHeaders() })
       .pipe(
         map((rs: { isError: boolean, message: string }) => {
           return rs;
@@ -162,6 +162,28 @@ export class MaterialsService {
     this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
     return this.http.delete<MaterialResponse>(environment.backend + `api/materiale/`, {
       body: { referencia_material: id },
+      headers: this.headersService.getJsonHeaders()
+    })
+      .pipe(
+        map((rs: { isError: boolean, message: string }) => {
+
+          return rs;
+
+        }), catchError((error: HttpErrorResponse) => {
+          this.LoginService.unauthorized(error)
+          if (error.status == 422) {
+            return of({ isError: true, message: error.error.message });
+          }
+
+          return of({ isError: true, message: "No se puedo realizar la operación, por favor intenta mas tarde" });
+        })
+      )
+  }
+
+  deleteLot(id: string): Observable<{ isError: boolean, message: string }> {
+    this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
+    return this.http.delete<ApiResponse<{}>>(environment.backend + `api/inventario/`, {
+      body: { id: id },
       headers: this.headersService.getJsonHeaders()
     })
       .pipe(

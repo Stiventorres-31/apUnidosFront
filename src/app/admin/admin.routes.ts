@@ -79,10 +79,10 @@ export const ADMIN_ROUTES: Routes = [
                 children: [
                     { path: '', component: MaterialsComponent },
                     { path: 'new', component: FormMaterialsComponent },
-                    { path: 'update/:id', component: FormMaterialsComponent },
+                    { path: 'update/:ref', component: FormMaterialsComponent },
                     { path: 'lots/:id', component: LotsComponent },
-                    { path: 'lots/new/:ref', component: FormMaterialsComponent },
-                    { path: 'lots/update/:ref/:lot', component: FormMaterialsComponent },
+                    { path: 'lots/new/:id/:ref', component: FormMaterialsComponent },
+                    { path: 'lots/update/:lot/:ref', component: FormMaterialsComponent },
                 ]
             }
 

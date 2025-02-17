@@ -1,5 +1,6 @@
 export interface invetario {
-    referencia_material: string;
+    id: string;
+    materiale_id: string;
     consecutivo: number;
     costo: string;
     cantidad: string;

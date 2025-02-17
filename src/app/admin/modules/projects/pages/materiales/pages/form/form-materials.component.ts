@@ -28,6 +28,7 @@ export class FormMaterialsComponent {
   public isUpdate: boolean = false;
   public isUpdateLots: boolean = false;
   public isNewLot: boolean = false;
+  private ref: string = '';
 
 
   constructor(
@@ -44,7 +45,8 @@ export class FormMaterialsComponent {
     this.form = this.fb.group({
       id: [''],
       consecutivo: [''],
-      referencia_material: ['', Validators.required],
+      referencia_material: [''],
+      materiale_id: ['', Validators.required],
       nombre_material: ['', Validators.required],
       costo: ['', Validators.required],
       cantidad: ['', Validators.required],
@@ -57,8 +59,104 @@ export class FormMaterialsComponent {
 
   ngOnInit() {
     this.parametros.params.subscribe((params) => {
-      if (params['id']) {
+      if (params['lot'] && params['ref']) {
+        /***
+         * Actualizar Lotes
+         */
+        const lot = this.EncryptionService.decrypt(params['lot']);
+        const ref = this.EncryptionService.decrypt(params['ref']);
+        console.log(lot);
+        if (!lot || !ref) {
+          this.router.navigate(['/admin/materials']);
+          return;
+        }
+        this.ref = ref;
+        this.isUpdateLots = true;
+        this.materialsService.searchLot(lot).subscribe((rs) => {
+          if (rs) {
+
+            console.log(rs)
+            this.form.patchValue({
+              id: rs.id,
+              consecutivo: rs.consecutivo,
+              costo: rs.costo,
+              cantidad: rs.cantidad,
+              nit_proveedor: rs.nit_proveedor,
+              materiale_id: rs.materiale_id,
+              nombre_proveedor: rs.nombre_proveedor
+            }, { emitEvent: true });
+
+            this.form.get("nombre_material")?.setValidators([]);
+            this.form.get("nombre_material")?.updateValueAndValidity();
+
+            this.form.get("materiale_id")?.setValidators([]);
+            this.form.get("materiale_id")?.setValidators([]);
+
+            let costo = Math.round(Number(rs.costo));
+
+            this.form.patchValue({
+              costo: this.ValidationsService.format_moneda(costo || 0, false)
+            }, { emitEvent: true });
+
+            this.isLoading = false;
+
+            const breadcrumbs = [
+              { label: 'Dashboard', url: '/admin/dashboard' },
+              { label: 'Materiales', url: '/admin/materials/' },
+              { label: 'Lotes', url: '/admin/materials/lots/' + this.EncryptionService.encrypt(`${this.ref}`) },
+              { label: 'Actualizar', url: '/admin/materials/lots/update/' + this.EncryptionService.encrypt(`${rs.id}`) },
+              { label: rs.nombre_proveedor, url: '/admin/materials/lots/update/' },
+
+            ];
+            this.reset();
+            this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
+            console.log(this.form.valid)
+
+          } else {
+            console.log(rs, "Invalid")
+            this.router.navigate(['/admin/materials']);
+            return;
+          }
+
+        });
+      } else if (params['id'] && params['ref']) {
+        /***
+         * Agregar lote 
+         */
         const id = this.EncryptionService.decrypt(params['id']);
+        const ref = this.EncryptionService.decrypt(params['ref']);
+        console.log(id);
+        if (!id || !ref) {
+          this.router.navigate(['/admin/materials']);
+          return;
+        }
+
+        this.form.patchValue({
+          materiale_id: id,
+          referencia_material: ref
+        }, { emitEvent: true });
+
+        this.form.get("nombre_material")?.setValidators([]);
+        this.form.get("nombre_material")?.updateValueAndValidity();
+
+        this.isLoading = false;
+        this.isNewLot = true;
+        const breadcrumbs = [
+          { label: 'Dashboard', url: '/admin/dashboard' },
+          { label: 'Materiales', url: '/admin/materials/' },
+          { label: 'Lotes', url: '/admin/materials/lots/' + this.EncryptionService.encrypt(`${ref}`) },
+          { label: 'Agregar', url: '/admin/materials/lots/new/' },
+
+        ];
+        this.reset();
+        this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
+
+
+      } else if (params['ref']) {
+        /***
+         * Actualizar Materiles
+         */
+        const id = this.EncryptionService.decrypt(params['ref']);
         console.log(id);
         if (!id) {
           this.router.navigate(['/admin/materials']);
@@ -72,8 +170,10 @@ export class FormMaterialsComponent {
             this.form.get("costo")?.setValidators([]);
             this.form.get("cantidad")?.setValidators([]);
             this.form.get("nit_proveedor")?.setValidators([]);
+            this.form.get("materiale_id")?.setValidators([]);
             this.form.get("nombre_proveedor")?.setValidators([]);
 
+            this.form.get("materiale_id")?.updateValueAndValidity();
             this.form.get("costo")?.updateValueAndValidity();
             this.form.get("cantidad")?.updateValueAndValidity();
             this.form.get("nit_proveedor")?.updateValueAndValidity();
@@ -103,93 +203,6 @@ export class FormMaterialsComponent {
           }
 
         });
-      } else if (params['ref'] && params['lot']) {
-        const id = this.EncryptionService.decrypt(params['ref']);
-        const lot = this.EncryptionService.decrypt(params['lot']);
-        console.log(id, lot);
-        if (!id || !lot) {
-          this.router.navigate(['/admin/materials']);
-          return;
-        }
-        this.isUpdateLots = true;
-        this.materialsService.searchLot(id, lot).subscribe((rs) => {
-
-          if (rs) {
-
-            console.log(rs)
-            this.form.patchValue({
-              referencia_material: rs.referencia_material,
-              consecutivo: rs.consecutivo,
-              costo: rs.costo,
-              cantidad: rs.cantidad,
-              nit_proveedor: rs.nit_proveedor,
-              nombre_proveedor: rs.nombre_proveedor
-            }, { emitEvent: true });
-
-            this.form.get("nombre_material")?.setValidators([]);
-            this.form.get("nombre_material")?.updateValueAndValidity();
-
-            this.form.get("nit_proveedor")?.setValidators([]);
-            this.form.get("nombre_proveedor")?.setValidators([]);
-
-
-            this.form.get("nit_proveedor")?.updateValueAndValidity();
-            this.form.get("nombre_proveedor")?.updateValueAndValidity();
-
-            let costo = Math.round(Number(rs.costo));
-
-            this.form.patchValue({
-              costo: this.ValidationsService.format_moneda(costo || 0, false)
-            }, { emitEvent: true });
-
-            this.isLoading = false;
-
-            const breadcrumbs = [
-              { label: 'Dashboard', url: '/admin/dashboard' },
-              { label: 'Materiales', url: '/admin/materials/' },
-              { label: 'Lotes', url: '/admin/materials/lots/' + this.EncryptionService.encrypt(`${rs.referencia_material}`) },
-              { label: 'Actualizar', url: '/admin/materials/lots/update/' + this.EncryptionService.encrypt(`${rs.referencia_material}/${rs.consecutivo}`) },
-              { label: rs.referencia_material, url: '/admin/materials/lots/update/' },
-
-            ];
-            this.reset();
-            this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
-            console.log(this.form.valid)
-
-          } else {
-            this.router.navigate(['/admin/materials']);
-            return;
-          }
-
-        });
-      } else if (params['ref']) {
-        const id = this.EncryptionService.decrypt(params['ref']);
-        console.log(id);
-        if (!id) {
-          this.router.navigate(['/admin/materials']);
-          return;
-        }
-
-        this.form.patchValue({
-          referencia_material: id,
-        }, { emitEvent: true });
-
-        this.form.get("nombre_material")?.setValidators([]);
-        this.form.get("nombre_material")?.updateValueAndValidity();
-
-        this.isLoading = false;
-        this.isNewLot = true;
-        const breadcrumbs = [
-          { label: 'Dashboard', url: '/admin/dashboard' },
-          { label: 'Materiales', url: '/admin/materials/' },
-          { label: 'Lotes', url: '/admin/materials/lots/' + this.EncryptionService.encrypt(`${id}`) },
-          { label: 'Agregar', url: '/admin/materials/lots/new/' },
-
-        ];
-        this.reset();
-        this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
-
-
       }
       else {
         this.isLoading = false;
@@ -247,21 +260,14 @@ export class FormMaterialsComponent {
     const form = this.form.value;
     form.costo = this.parseMoneda(form.costo);
 
-    const body: form_inventario = {
-      referencia_material: form.referencia_material,
-      consecutivo: form.consecutivo,
-      costo_material: form.costo,
-      cantidad: form.cantidad,
-    }
-
-    this.materialsService.updateLote(body).subscribe((rs) => {
+    this.materialsService.updateLote(form).subscribe((rs) => {
       console.log(rs);
       if (rs.isError) {
         this.isSending = false;
         this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
       } else {
 
-        this.router.navigate(['/admin/materials/lots', this.EncryptionService.encrypt(`${form.referencia_material}`)]);
+        this.router.navigate(['/admin/materials/lots', this.EncryptionService.encrypt(`${this.ref}`)]);
         this.AppComponent.alert({
           summary: "Operación exitosa",
           detail: rs.message,
@@ -270,6 +276,7 @@ export class FormMaterialsComponent {
       }
     });
   }
+
   storeLot() {
     this.isSending = true;
     if (!this.form.valid) {
@@ -285,7 +292,7 @@ export class FormMaterialsComponent {
     form.costo = this.parseMoneda(form.costo);
 
     const body: form_lot = {
-      referencia_material: form.referencia_material,
+      materiale_id: form.materiale_id,
       nit_proveedor: form.nit_proveedor,
       nombre_proveedor: form.nombre_proveedor,
       descripcion_proveedor: form.descripcion_proveedor,

@@ -33,7 +33,7 @@ export class InmueblesService {
       })
       .pipe(
         map((rs) => {
-          return rs.result.inmueble.map((inmu, index) => ({
+          return rs.result.inmuebles.map((inmu, index) => ({
             ...inmu,
             index,
           }));

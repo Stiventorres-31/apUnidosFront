@@ -31,6 +31,7 @@ export class LotsComponent {
   resizeObserver: ResizeObserver | undefined;
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   public isLoading: boolean = true;
+  public id: string = '';
   public material!: materials;
   public lots: invetario[] = [];
 
@@ -44,7 +45,8 @@ export class LotsComponent {
           return;
         }
 
-        this.index(id);
+        this.id = id;
+        this.index(this.id);
 
 
       } else {
@@ -72,7 +74,7 @@ export class LotsComponent {
       if (rs) {
         this.isLoading = false;
         this.material = rs;
-        this.lots = rs.inventario ?? [];
+        this.lots = rs.inventarios ?? [];
 
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
@@ -95,15 +97,15 @@ export class LotsComponent {
   filter(event: Event): void { }
 
   update(lot: invetario): void {
-    const referencia = this.EncryptionService.encrypt(`${lot.referencia_material}`);
-    const consecutivo = this.EncryptionService.encrypt(`${lot.consecutivo}`);
-
-    this.router.navigate(["/admin/materials/lots/update", referencia, consecutivo]);
+    const id = this.EncryptionService.encrypt(`${lot.id}`);
+    const ref = this.EncryptionService.encrypt(`${this.material.referencia_material}`);
+    this.router.navigate(["/admin/materials/lots/update", id, ref]);
   }
 
   new(): void {
     const referencia = this.EncryptionService.encrypt(`${this.material.referencia_material}`);
-    this.router.navigate(["/admin/materials/lots/new", referencia]);
+    const id = this.EncryptionService.encrypt(`${this.material.id}`);
+    this.router.navigate(["/admin/materials/lots/new", id, referencia]);
   }
 
 
@@ -114,11 +116,11 @@ export class LotsComponent {
       styles: `warn`
     }).then((rs) => {
       if (rs) {
-        // this.MaterialsService.delete(row.referencia_material).subscribe((rx) => {
-        //   this.AppComponent.alert({ summary: `Operación ${rx.isError ? 'fallida' : 'exitosa'}`, detail: rx.message, severity: `${rx.isError ? 'error' : 'success'}` });
+        this.MaterialsService.deleteLot(row.id).subscribe((rx) => {
+          this.AppComponent.alert({ summary: `Operación ${rx.isError ? 'fallida' : 'exitosa'}`, detail: rx.message, severity: `${rx.isError ? 'error' : 'success'}` });
 
-        //   if (!rx.isError) this.index(`${this.material.id}`);
-        // })
+          if (!rx.isError) this.index(this.id);
+        })
       }
 
     })

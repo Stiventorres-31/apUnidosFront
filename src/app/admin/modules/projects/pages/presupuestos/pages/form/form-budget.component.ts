@@ -85,7 +85,7 @@ export class FormBudgetComponent {
         this.materialsService.search(e).subscribe((rs) => {
           console.log(rs)
           if (rs) {
-            this.lotMateriales = rs.inventario ?? [];
+            this.lotMateriales = rs.inventarios ?? [];
           }
 
         });
@@ -142,7 +142,7 @@ export class FormBudgetComponent {
       return;
     }
     const lot = this.budget.value;
-    const ref = this.lots.find((l) => l.referencia_material == lot.referencia_material);
+    const ref = this.lots.find((l) => l.materiale_id == lot.materiale_id);
 
     if (ref) {
       this.AppComponent.alert({
