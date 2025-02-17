@@ -1,6 +1,6 @@
 export const environment = {
     backend: "https://api-ap-unido-production.up.railway.app/",
-    front: "http://localhost:4200/",
+    front: "https://ap-unidos.vercel.app/",
     production: true,
 }
 
