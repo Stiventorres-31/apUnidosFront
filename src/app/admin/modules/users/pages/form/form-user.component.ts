@@ -172,7 +172,12 @@ export class FormUserComponent {
     }
 
     const rol = this.roles.find(r => r.name === form.rol_usuario);
-    form.rol_usuario = rol;
+    if (rol) {
+      form.rol_usuario = rol;
+    }
+
+    console.log(rol, form.rol_usuario);
+
 
     this.UserService.store(form).subscribe((rs) => {
       if (rs.isError) {

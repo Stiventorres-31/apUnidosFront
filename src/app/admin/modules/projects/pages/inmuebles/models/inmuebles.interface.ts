@@ -6,7 +6,7 @@ export interface tipo_inmueble {
     nombre_tipo_inmueble: string;
     numero_identificacion: string;
     estado: string;
-    Usuario: Usuario;
+    usuario: Usuario;
 }
 
 export interface inmueble {
@@ -17,6 +17,7 @@ export interface inmueble {
     asignaciones?: any[];
     estado: string;
     proyecto: projects;
+    usuario: Usuario;
 
 }
 

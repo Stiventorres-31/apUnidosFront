@@ -93,13 +93,11 @@ export class BudgetsService {
 
   }
 
-  delete(id: string, ref: string, cod: string): Observable<{ isError: boolean, message: string }> {
+  delete(id: number): Observable<{ isError: boolean, message: string }> {
     this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
     return this.http.delete<ApiResponse<{}>>(environment.backend + `api/presupuesto`, {
       body: {
-        inmueble_id: id,
-        referencia_material: ref,
-        codigo_proyecto: cod,
+        id: id,
       },
       headers: this.headersService.getJsonHeaders()
     })

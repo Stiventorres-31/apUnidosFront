@@ -47,9 +47,17 @@ export class CardProjectsComponent {
     }).then((rs) => {
       if (rs) {
         this.ProjectService.delete(this.project.codigo_proyecto).subscribe((rx) => {
-          this.AppComponent.alert({ summary: `Operación ${rx.isError ? 'fallida' : 'exitosa'}`, detail: rx.message, severity: `${rx.isError ? 'error' : 'success'}` });
+          if (rx) {
+            if ((rx.isError == true || rx.isError == false)) {
+              this.AppComponent.alert({ summary: `Operación ${rx.isError ? 'fallida' : 'exitosa'}`, detail: rx.message, severity: `${rx.isError ? 'error' : 'success'}` });
 
-          if (!rx.isError) this.onload.emit(true);
+              if (!rx.isError) this.onload.emit(true);
+            } else {
+              this.AppComponent.alert({ summary: 'Error al eliminar', detail: 'No se pudo eliminar el proyecto', severity: 'error' });
+            }
+
+          }
+
         })
       }
 

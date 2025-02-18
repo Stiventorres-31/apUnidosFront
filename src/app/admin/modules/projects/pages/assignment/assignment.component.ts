@@ -41,7 +41,8 @@ export class AssignmentComponent {
           return;
         }
 
-        this.ProjectService.budget(id).subscribe((rs) => {
+        this.ProjectService.assignment(id).subscribe((rs) => {
+          console.log(rs);
           if (rs) {
 
             this.isLoading = false;

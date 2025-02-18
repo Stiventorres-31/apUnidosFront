@@ -122,6 +122,23 @@ export class ProjectService {
 
   }
 
+  assignment(id: string): Observable<projects | null> {
+    return this.http.get<ProjectResponse>(environment.backend + `api/proyecto/asignacion/${id}`, {
+      headers: this.headersService.getJsonHeaders()
+    })
+      .pipe(
+        map((rs) => {
+          return rs.result.proyecto;
+
+        }), catchError((error: HttpErrorResponse) => {
+          this.LoginService.unauthorized(error)
+          return of(null);
+        })
+      )
+
+  }
+
+
   store(project: projectsForm): Observable<{ isError: boolean, message: string }> {
     this.AppComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
     return this.http.post<ProjectResponse>(environment.backend + `api/proyecto`, { ...project }, { headers: this.headersService.getJsonHeaders() })

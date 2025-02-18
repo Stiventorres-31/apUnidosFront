@@ -40,8 +40,8 @@
 
                     <div class="flex">
                         <div class="flex gap-2 rounded-full items-center px-4 py-3 cursor-pointer bg-blue-500 hover:bg-blue-400 text-white"
-                            (click)="newBudget()">
-                            <span class="text-white">Agregar Presupuesto</span>
+                            (click)="newAssignment()">
+                            <span class="text-white">Agregar asignación</span>
                             <i translate="no" class="material-icons text-white">add</i>
 
 
@@ -51,22 +51,22 @@
 
                 <div class="my-5 px-5">
 
-                    <ngx-datatable class="material striped rounded-3xl" [rows]="inmueble.presupuestos ?? []"
+                    <ngx-datatable class="material striped rounded-3xl" [rows]="inmueble.asignaciones ?? []"
                         [columnMode]="'force'" [swapColumns]="true" [rowHeight]="'auto'" [headerHeight]="55"
                         [limit]="15" [offset]="0" [footerHeight]="50" [scrollbarH]="true">
 
-                        <ngx-datatable-column [flexGrow]="0.4" [resizeable]="false" [minWidth]="50" [prop]="'id'"
-                            name="ID" [sortable]="true">
+                        <!-- <ngx-datatable-column [flexGrow]="0.4" [resizeable]="false" [minWidth]="50" [prop]="'index'"
+                            name="No." [sortable]="true">
                             <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
 
                                 <div class="flex items-center">
                                     <span>{{ row.id}}</span>
                                 </div>
                             </ng-template>
-                        </ngx-datatable-column>
+                        </ngx-datatable-column> -->
 
                         <ngx-datatable-column [flexGrow]="1" [minWidth]="100" [resizeable]="false"
-                            [prop]="'materiale.referencia_material '" name="Referencia 
+                            [prop]="'referencia_material '" name="Referencia 
                             Material" [sortable]="true">
                             <ng-template let-row="row" ngx-datatable-cell-template>
                                 <span class=" font-medium"> {{row.materiale.referencia_material }}</span>
@@ -100,13 +100,8 @@
                             [sortable]="true" cellClass="accion_">
                             <ng-template let-row="row" ngx-datatable-cell-template>
                                 <div class="flex gap-3 ">
-                                    <div data-title="Ver presupuestos" (click)="update(row)"
-                                        class="flex items-center cursor-pointer  before:top-[-35px] h-full tool-tip relative">
-                                        <span matRipple style="font-size: 16px !important;"
-                                            class="text-center text-white bg-blue-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">edit</span>
-                                    </div>
 
-                                    <div data-title="delete presupuestos" (click)="delete(row)"
+                                    <div data-title="delete asignación" (click)="delete(row)"
                                         class="flex items-center cursor-pointer  before:top-[-35px] h-full tool-tip relative">
                                         <span matRipple style="font-size: 16px !important;"
                                             class="text-center text-white bg-red-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">delete</span>
@@ -135,63 +130,3 @@
     }
 
 </div>
-
-
-@if(showModal){
-<div class="show-form">
-    <div class="modal-flotante bg-white rounded" (click)="$event.stopPropagation()">
-        <div class="header bg-primary text-white">
-            <span class="text-base font-medium">Actualizar presupuesto</span>
-
-        </div>
-
-        <div class="body" [formGroup]="budget">
-            <div class="w-full">
-
-                <div class="w-full flex flex-wrap md:flex-nowrap gap-0 justify-between md:gap-4 px-5">
-                    <div class="w-full">
-                        <div class="mt-6 input-container w-full ">
-                            <label for="costo_material"
-                                [ngClass]="{'label-float-active': inputs['costo_material'], 'label-float-inactive': !inputs['costo_material'] || inputs['costo_material'] == null }"
-                                class="label-flotante label-float-active required">Costo</label>
-                            <input (input)="labelBlur('costo_material', $event); moneda($event)" autocomplete="false"
-                                (focus)="labelFocus('costo_material')" (blur)="labelBlur('costo_material', $event)"
-                                type="text" class="form-control input-control  " id="costo_material"
-                                formControlName="costo_material" required>
-
-                        </div>
-                    </div>
-                    <div class="w-full">
-                        <div class="mt-6 input-container w-full ">
-                            <label for="cantidad_material"
-                                [ngClass]="{'label-float-active': inputs['cantidad_material'], 'label-float-inactive': !inputs['cantidad_material'] || inputs['cantidad_material'] == null }"
-                                class="label-flotante label-float-active required">Cantidad</label>
-                            <input (input)="labelBlur('cantidad_material', $event); numeric($event)"
-                                autocomplete="false" (focus)="labelFocus('cantidad_material')"
-                                (blur)="labelBlur('cantidad_material', $event)" type="text"
-                                class="form-control input-control  " id="cantidad_material"
-                                formControlName="cantidad_material" required>
-
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-
-
-
-        </div>
-        <hr>
-        <div class="footer space-x-3 text-right">
-            @if(isSending){
-            <mat-spinner [diameter]="30"></mat-spinner>
-            }@else {
-            <button class="px-4 py-2 rounded-full bg-gray-500 text-white " (click)="closeModal()">Cancelar</button>
-            <button class="px-4 py-2 rounded-full bg-primary text-white" (click)="store()">Actualizar</button>
-            }
-
-        </div>
-    </div>
-</div>
-}

@@ -14,16 +14,17 @@ import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable'
 import { debounceTime, fromEvent, Subscription } from 'rxjs';
 import { AppComponent } from '../../../../../../../app.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { BudgetsService } from '../../services/budgets.service';
+import { AssignmentService } from '../../services/assignment.service';
+
 
 @Component({
-  selector: 'app-form-budget',
+  selector: 'app-form-assignment',
   standalone: true,
   imports: [ReactiveFormsModule, NgxDatatableModule, MatProgressSpinnerModule, SelectMaterialComponent, NgClass],
-  templateUrl: './form-budget.component.html',
+  templateUrl: './form-assignment.component.html',
   styles: ''
 })
-export class FormBudgetComponent {
+export class FormAssignmentComponent {
   resizeSubscription: Subscription | undefined;
   resizeObserver: ResizeObserver | undefined;
   @ViewChild(DatatableComponent) table!: DatatableComponent;
@@ -40,7 +41,7 @@ export class FormBudgetComponent {
 
   budget!: FormGroup;
 
-  constructor(private labels: LabelsService, private fb: FormBuilder, private ValidationsService: ValidationsService, private materialsService: MaterialsService, private BreadCrumbService: BreadCrumbService, private Router: Router, private parametros: ActivatedRoute, private EncryptionService: EncryptionService, private AppComponent: AppComponent, private BudgetsService: BudgetsService) {
+  constructor(private labels: LabelsService, private fb: FormBuilder, private ValidationsService: ValidationsService, private materialsService: MaterialsService, private BreadCrumbService: BreadCrumbService, private Router: Router, private parametros: ActivatedRoute, private EncryptionService: EncryptionService, private AppComponent: AppComponent, private AssignmentService: AssignmentService) {
     this.budget = this.fb.group({
       referencia_material: ['', Validators.required],
       consecutivo: ['', Validators.required],
@@ -190,23 +191,23 @@ export class FormBudgetComponent {
     }));
 
 
-    this.BudgetsService.store(this.data).subscribe(
-      (rs) => {
-        console.log(rs);
-        if (rs.isError) {
-          this.isSending = false;
-          this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
-        } else {
-          const id = this.EncryptionService.encrypt(`${this.data.inmueble_id}`);
-          this.Router.navigate(['/admin/property/view/budget/', id]);
+    // this.AssignmentService.store(this.data).subscribe(
+    //   (rs) => {
+    //     console.log(rs);
+    //     if (rs.isError) {
+    //       this.isSending = false;
+    //       this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
+    //     } else {
+    //       const id = this.EncryptionService.encrypt(`${this.data.inmueble_id}`);
+    //       this.Router.navigate(['/admin/property/view/budget/', id]);
 
-          this.AppComponent.alert({
-            summary: "Operación exitosa",
-            detail: rs.message,
-            severity: 'success'
-          });
-        }
-      });
+    //       this.AppComponent.alert({
+    //         summary: "Operación exitosa",
+    //         detail: rs.message,
+    //         severity: 'success'
+    //       });
+    //     }
+    //   });
 
 
   }

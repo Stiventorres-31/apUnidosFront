@@ -64,9 +64,36 @@ export class InmueblesComponent {
     this.Router.navigate(["/admin/property/update/", this.EncryptionService.encrypt(`${type.id}`)])
   }
 
-  report(type: inmueble) {
-    this.InmueblesService.report(`${type.id}`).subscribe((rs) => {
+  reportB(type: inmueble) {
+    this.InmueblesService.report(`${type.id}`, true).subscribe((rs: Blob) => {
       console.log(rs);
+      if (rs.size > 0) {
+        const url = window.URL.createObjectURL(rs);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `reporte_presupuesto_${type.id}_${type.proyecto.codigo_proyecto}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } else {
+        console.error('Error: El archivo no se generó correctamente.');
+      }
+      //this.AppComponent.alert({ summary: 'Reporte generado', detail: rs.message, severity:'success' });
+    });
+  }
+
+  reportA(type: inmueble) {
+    this.InmueblesService.report(`${type.id}`, false).subscribe((rs: Blob) => {
+      console.log(rs);
+      if (rs.size > 0) {
+        const url = window.URL.createObjectURL(rs);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `reporte_asignacion_${type.id}_${type.proyecto.codigo_proyecto}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } else {
+        console.error('Error: El archivo no se generó correctamente.');
+      }
       //this.AppComponent.alert({ summary: 'Reporte generado', detail: rs.message, severity:'success' });
     });
   }

@@ -12,6 +12,7 @@ export interface projects {
     fecha_final_proyecto: string;
     inmuebles?: any[];
     total_presupuesto?: string;
+    total_asignacion?: string;
     usuario?: Usuario;
     estado: string;
 }

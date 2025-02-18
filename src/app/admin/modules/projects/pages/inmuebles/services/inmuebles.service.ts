@@ -61,19 +61,20 @@ export class InmueblesService {
 
   }
 
-  report(id: string): Observable<string | null> {
-    return this.http.get<ApiResponse<{ inmueble: string }>>(environment.backend + `api/inmueble/report/${id}`, {
-      headers: this.headersService.getJsonHeaders()
-    })
-      .pipe(
-        map((rs) => {
-          return rs.result.inmueble;
-
-        }), catchError((error: HttpErrorResponse) => {
-          this.LoginService.unauthorized(error)
-          return of(null);
-        })
-      )
+  report(id: string, type: boolean = true): Observable<Blob> {
+    let url = 'api/inmueble/report/';
+    if (!type) {
+      url += `asignacion/`;
+    }
+    return this.http.get(environment.backend + url + `${id}`, {
+      headers: this.headersService.getFileHeaders(),
+      responseType: 'blob'  // Esto es importante para recibir el archivo como un blob
+    }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        this.LoginService.unauthorized(error);
+        return of(new Blob()); // Devolver un blob vacío en caso de error
+      })
+    );
 
   }
 

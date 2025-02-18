@@ -6,22 +6,22 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BreadCrumbService } from '../../../../../../../shared/services/breadcrumbs/bread-crumb.service';
 import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AppComponent } from '../../../../../../../app.component';
-import { BudgetsService } from '../../services/budgets.service';
 import { debounceTime, fromEvent, Subscription } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LabelsService } from '../../../../../../../shared/services/labels/labels.service';
 import { NgClass } from '@angular/common';
 import { ValidationsService } from '../../../../../../../shared/services/validations/validations.service';
+import { AssignmentService } from '../../services/assignment.service';
 
 @Component({
-  selector: 'app-budgets-inmuebles',
+  selector: 'app-assignments-inmuebles',
   standalone: true,
   imports: [NgxDatatableModule, ReactiveFormsModule, MatProgressSpinnerModule, NgClass],
-  templateUrl: './budgets-inmuebles.component.html',
+  templateUrl: './assignments-inmuebles.component.html',
   styles: ''
 })
-export class BudgetsInmueblesComponent {
+export class AssignmentsInmueblesComponent {
   resizeSubscription: Subscription | undefined;
   resizeObserver: ResizeObserver | undefined;
   @ViewChild(DatatableComponent) table!: DatatableComponent;
@@ -35,7 +35,7 @@ export class BudgetsInmueblesComponent {
 
   constructor(
     private InmueblesService: InmueblesService,
-    private BudgetsService: BudgetsService,
+    private AssignmentService: AssignmentService,
     private EncryptionService: EncryptionService,
     private labels: LabelsService, private fb: FormBuilder,
     private ValidationsService: ValidationsService,
@@ -45,7 +45,9 @@ export class BudgetsInmueblesComponent {
     private BreadCrumbService: BreadCrumbService,
   ) {
     this.budget = this.fb.group({
-      id: '',
+      referencia_material: ['', Validators.required],
+      inmueble_id: ['', Validators.required],
+      codigo_proyecto: ['', Validators.required],
       costo_material: ['', Validators.required],
       cantidad_material: [1, Validators.required],
     });
@@ -97,7 +99,7 @@ export class BudgetsInmueblesComponent {
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Proyectos', url: '/admin/projects/' },
-          { label: 'Presupuestos', url: '/admin/property/view/budget/' + this.EncryptionService.encrypt(`${rs.id}`) },
+          { label: 'Asignaciones', url: '/admin/property/view/assignment/' + this.EncryptionService.encrypt(`${rs.id}`) },
           { label: rs.proyecto.codigo_proyecto + ' - ' + rs.tipo_inmueble.nombre_tipo_inmueble, url: '/admin/projects/budget/' },
 
         ];
@@ -126,59 +128,22 @@ export class BudgetsInmueblesComponent {
 
   }
 
-  /**
-   * 
-   * Actualizar presupuesto
-   */
-  store() {
-    this.isSending = true;
-    if (!this.budget.valid) {
-      this.AppComponent.alert({
-        summary: "Formulario invalido",
-        detail: "Por favor, Asegurese que la información del presupuesto es valida.",
-        severity: 'warn'
-      })
-      this.isSending = false;
-      return;
-    }
-    const body = this.budget.value;
-    body.costo_material = this.parseMoneda(body.costo_material);
-    body.cantidad_material = Number(body.cantidad_material)
 
-
-    this.BudgetsService.update(body).subscribe((rs) => {
-      console.log(rs);
-      if (rs.isError) {
-        this.isSending = false;
-        this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
-      } else {
-        this.index(`${this.inmueble.id}`);
-        this.isSending = false;
-        this.closeModal();
-        this.AppComponent.alert({
-          summary: "Operación exitosa",
-          detail: rs.message,
-          severity: 'success'
-        });
-      }
-    });
-  }
-
-  newBudget() {
+  newAssignment() {
     const id = this.EncryptionService.encrypt(`${this.inmueble.id}`);
     const cod = this.EncryptionService.encrypt(`${this.inmueble.proyecto.codigo_proyecto}`)
-    this.router.navigate(['/admin/projects/budget/new/', id, cod]);
+    this.router.navigate(['/admin/projects/assignment/new/', id, cod]);
   }
 
 
   delete(row: any) {
     this.AppComponent.confirm({
       header: `Confirmar eliminación`,
-      message: `¿Estás seguro/a de que deseas eliminar el presupuesto del material con id ${row.id} ? `,
+      message: `¿Estás seguro/a de que deseas eliminar la asignación del material ${row.materiale.referencia_material} ? `,
       styles: `warn`
     }).then((rs) => {
       if (rs) {
-        this.BudgetsService.delete(row.id).subscribe((rx) => {
+        this.AssignmentService.delete(row.id).subscribe((rx) => {
           this.AppComponent.alert({ summary: `Operación ${rx.isError ? 'fallida' : 'exitosa'}`, detail: rx.message, severity: `${rx.isError ? 'error' : 'success'}` });
 
           if (!rx.isError) this.index(`${this.inmueble.id}`);
