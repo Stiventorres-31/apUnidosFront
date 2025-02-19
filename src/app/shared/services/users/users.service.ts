@@ -134,7 +134,7 @@ export class UsersService {
             return of({ isError: false, message: error.error.message });
           }
 
-          return of({ isError: false, message: "No se puedo realizar la operación, por favor intenta mas tarde" });
+          return of({ isError: true, message: "No se puedo realizar la operación, por favor intenta mas tarde" });
         })
       )
   }

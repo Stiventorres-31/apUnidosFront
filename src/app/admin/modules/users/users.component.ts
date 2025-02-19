@@ -87,8 +87,8 @@ export class UsersComponent {
       if (rs) {
         this.userService.delete(`${usuario.numero_identificacion}`).subscribe((rx) => {
           this.AppComponent.alert({ summary: `Operación ${rx.isError ? 'fallida' : 'exitosa'}`, detail: rx.message, severity: `${rx.isError ? 'error' : 'success'}` });
-
           if (!rx.isError) this.index();
+
         })
       }
 
