@@ -138,6 +138,19 @@ export class ProjectService {
 
   }
 
+  report(id: string): Observable<Blob> {
+    return this.http.get(environment.backend + 'api/proyecto/report/' + `${id}`, {
+      headers: this.headersService.getFileHeaders(),
+      responseType: 'blob'  // Esto es importante para recibir el archivo como un blob
+    }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        this.LoginService.unauthorized(error);
+        return of(new Blob()); // Devolver un blob vacío en caso de error
+      })
+    );
+
+  }
+
 
   store(project: projectsForm): Observable<{ isError: boolean, message: string }> {
     this.AppComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })

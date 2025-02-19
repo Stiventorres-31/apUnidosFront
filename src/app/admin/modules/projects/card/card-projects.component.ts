@@ -39,6 +39,22 @@ export class CardProjectsComponent {
   }
 
 
+  report() {
+    this.ProjectService.report(`${this.project.codigo_proyecto}`).subscribe((rs: Blob) => {
+      console.log(rs);
+      if (rs.size > 0) {
+        const url = window.URL.createObjectURL(rs);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `reporte_proyecto_${this.project.id}_${this.project.codigo_proyecto}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } else {
+        console.error('Error: El archivo no se generó correctamente.');
+      }
+    });
+  }
+
   delete() {
     this.AppComponent.confirm({
       header: `Confirmar eliminación`,

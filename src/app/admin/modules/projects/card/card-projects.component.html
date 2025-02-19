@@ -47,48 +47,33 @@
 
             </div>
 
-            <div class="px-3 pb-2 pt-3.5 items-center  flex rounded-xl bg-slate-100 ">
-                <div>
-                    <i translate="no" class="material-symbols-outlined text-blue-800">
-                        location_city
-                    </i>
-                </div>
-                <div class="flex flex-col px-3">
-                    <span class="text-gray-500 text-sm fonts-poppins">Ciudad</span>
-                    <span class=" font-medium text-base fonts-poppins text-gray-700 ">
-                        {{ project.ciudad_municipio_proyecto }}
-                    </span>
-
-                </div>
-
-            </div>
-
             <div class="px-3 pb-2 pt-3.5 items-center  flex rounded-xl bg-green-100 ">
                 <div>
-                    <i translate="no" class="material-symbols-outlined text-blue-800">
-                        map
+                    <i translate="no" class="material-symbols-outlined text-green-800">
+                        attach_money
                     </i>
                 </div>
                 <div class="flex flex-col px-3">
-                    <span class="text-gray-500 text-sm fonts-poppins">Departamento</span>
+                    <span class="text-gray-500 text-sm fonts-poppins">Asignación</span>
                     <span class=" font-medium text-base fonts-poppins text-gray-700 ">
-                        {{ project.departamento_proyecto }}
+                        {{ pipeMoney(project.total_asignacion ?? '0') }}
                     </span>
 
                 </div>
 
             </div>
 
-            <div class="px-3 pb-2 pt-3.5 items-center  flex rounded-xl bg-yellow-100 ">
+            <div class="px-3 pb-2 pt-3.5 items-center  flex rounded-xl bg-gray-100 ">
                 <div>
-                    <i translate="no" class="material-symbols-outlined text-yellow-800">
+                    <i translate="no" class="material-symbols-outlined text-gray-800">
                         home_pin
                     </i>
                 </div>
                 <div class="flex flex-col px-3">
-                    <span class="text-gray-500 text-sm fonts-poppins">Dirección</span>
+                    <span class="text-gray-500 text-sm fonts-poppins">Ubicación</span>
                     <span class=" font-medium text-base fonts-poppins text-gray-700 ">
-                        {{ project.direccion_proyecto }}
+                        {{ project.direccion_proyecto }}, {{ project.ciudad_municipio_proyecto }} - {{
+                        project.departamento_proyecto }}
                     </span>
 
                 </div>
@@ -101,8 +86,17 @@
     </div>
     <div class="w-full bg-card px-7 py-2 mt-4">
         <div class="w-full ">
-            <div class="w-full mt-2 mb-2 flex flex-wrap md:flex-nowrap justify-end gap-5">
+            <div class="w-full mt-2 mb-2 flex flex-wrap md:flex-nowrap justify-center md:justify-end gap-5">
 
+                <div data-title="Reporte proyecto" class="relative tool-tip ">
+                    <button (click)="report()" matRipple
+                        class="p-2 rounded-full  bg-gray-400 flex items-center gap-2 text-white">
+
+                        <i translate="no" class="material-symbols-outlined cursor-pointer text-white"
+                            style="font-size: 24px;">inventory</i>
+                    </button>
+
+                </div>
 
                 <div data-title="Asignaciones" class="relative tool-tip ">
                     <button (click)="assignment()" matRipple

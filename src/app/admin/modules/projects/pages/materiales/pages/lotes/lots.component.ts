@@ -9,6 +9,7 @@ import { BreadCrumbService } from '../../../../../../../shared/services/breadcru
 import { EncryptionService } from '../../../../../../../shared/services/encryption/encryption.service';
 import { materials } from '../../models/materials.interface';
 import { debounceTime, fromEvent, Subscription } from 'rxjs';
+import { filter_ngx } from '../../../../../../../core/pipes/filter.pipe';
 
 @Component({
   selector: 'app-lots',
@@ -34,6 +35,8 @@ export class LotsComponent {
   public id: string = '';
   public material!: materials;
   public lots: invetario[] = [];
+  public filtros: invetario[] = [];
+
 
   ngOnInit(): void {
     this.parametros.params.subscribe((params) => {
@@ -75,6 +78,7 @@ export class LotsComponent {
         this.isLoading = false;
         this.material = rs;
         this.lots = rs.inventarios ?? [];
+        this.filtros = this.lots;
 
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
@@ -94,7 +98,15 @@ export class LotsComponent {
     });
   }
 
-  filter(event: Event): void { }
+  filter(event: Event): void {
+    const key = event.target as HTMLInputElement;
+    const value = key.value;
+    if (value.trim() == "" || value == null) {
+      this.filtros = this.lots;
+    } else {
+      this.filtros = new filter_ngx().transform(this.lots, value);
+    }
+  }
 
   update(lot: invetario): void {
     const id = this.EncryptionService.encrypt(`${lot.id}`);

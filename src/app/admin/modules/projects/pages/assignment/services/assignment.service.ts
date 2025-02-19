@@ -9,7 +9,7 @@ import { HeadersService } from '../../../../../../shared/services/utilities/head
 import { catchError, map, Observable, of } from 'rxjs';
 import { ApiResponse } from '../../../../../../shared/models/users/users.interface';
 import { environment } from '../../../../../../../environments/environment';
-import { form_update_budget } from '../../materiales/models/materials.interface';
+import { form_budget, form_update_budget } from '../../materiales/models/materials.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -46,24 +46,24 @@ export class AssignmentService {
 
   }
 
-  // store(materials: form_assignment): Observable<{ isError: boolean, message: string }> {
-  //   this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
-  //   return this.http.post<ApiResponse<{}>>(environment.backend + `api/presupuesto`, { ...materials }, { headers: this.headersService.getJsonHeaders() })
-  //     .pipe(
-  //       map((rs: { isError: boolean, message: string }) => {
-  //         return rs;
-  //       }), catchError((error: HttpErrorResponse) => {
-  //         console.error(error)
-  //         this.LoginService.unauthorized(error)
-  //         if (error.status == 422 || error.status == 400 || error.status == 404) {
-  //           return of({ isError: true, message: error.error.message });
-  //         }
+  store(materials: form_budget): Observable<{ isError: boolean, message: string }> {
+    this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
+    return this.http.post<ApiResponse<{}>>(environment.backend + `api/asignacion`, { ...materials }, { headers: this.headersService.getJsonHeaders() })
+      .pipe(
+        map((rs: { isError: boolean, message: string }) => {
+          return rs;
+        }), catchError((error: HttpErrorResponse) => {
+          console.error(error)
+          this.LoginService.unauthorized(error)
+          if (error.status == 422 || error.status == 400 || error.status == 404) {
+            return of({ isError: true, message: error.error.message });
+          }
 
-  //         return of({ isError: true, message: "No se puedo realizar la operación, por favor intenta mas tarde" });
-  //       })
-  //     )
+          return of({ isError: true, message: "No se puedo realizar la operación, por favor intenta mas tarde" });
+        })
+      )
 
-  // }
+  }
 
   downloadCSVTemplate(): void {
     const filePath = 'assets/template/template-asignacion-masivo.csv';
@@ -73,24 +73,6 @@ export class AssignmentService {
     link.click();
   }
 
-  update(materials: form_update_budget): Observable<{ isError: boolean, message: string }> {
-    this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })
-    return this.http.put<ApiResponse<{}>>(environment.backend + `api/presupuesto`, { ...materials }, { headers: this.headersService.getJsonHeaders() })
-      .pipe(
-        map((rs: { isError: boolean, message: string }) => {
-          return rs;
-        }), catchError((error: HttpErrorResponse) => {
-          console.error(error)
-          this.LoginService.unauthorized(error)
-          if (error.status == 422) {
-            return of({ isError: true, message: error.error.message });
-          }
-
-          return of({ isError: true, message: "No se puedo realizar la operación, por favor intenta mas tarde" });
-        })
-      )
-
-  }
 
   delete(id: number): Observable<{ isError: boolean, message: string }> {
     this.appComponent.alert({ summary: "Operación en proceso", detail: " Por favor, espere mientras se completa la operación.", severity: "warn" })

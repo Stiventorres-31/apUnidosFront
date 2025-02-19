@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ValidationsService } from '../../../../../../../shared/services/validations/validations.service';
 import { LabelsService } from '../../../../../../../shared/services/labels/labels.service';
 import { MaterialsService } from '../../../materiales/services/materials.service';
-import { form_budget, form_inventario, materials } from '../../../materiales/models/materials.interface';
+import { form_inventario, materials } from '../../../materiales/models/materials.interface';
 import { BreadCrumbService } from '../../../../../../../shared/services/breadcrumbs/bread-crumb.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EncryptionService } from '../../../../../../../shared/services/encryption/encryption.service';
@@ -45,7 +45,6 @@ export class FormAssignmentComponent {
     this.budget = this.fb.group({
       referencia_material: ['', Validators.required],
       consecutivo: ['', Validators.required],
-      costo_material: ['', Validators.required],
       cantidad_material: [1, Validators.required],
     });
   }
@@ -116,9 +115,9 @@ export class FormAssignmentComponent {
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Proyectos', url: '/admin/projects/' },
-          { label: 'Presupuestos', url: '/admin/property/view/budget/' + this.EncryptionService.encrypt(this.data.inmueble_id) },
-          { label: 'Agregar', url: '/admin/projects/budget/new/' + this.EncryptionService.encrypt(this.data.inmueble_id) + '/' + this.EncryptionService.encrypt(this.data.codigo_proyecto) },
-          { label: this.data.codigo_proyecto, url: '/admin/projects/budget/new/' },
+          { label: 'Asignaciones', url: '/admin/property/view/assignment/' + this.EncryptionService.encrypt(this.data.inmueble_id) },
+          { label: 'Agregar', url: '/admin/projects/assignment/new/' + this.EncryptionService.encrypt(this.data.inmueble_id) + '/' + this.EncryptionService.encrypt(this.data.codigo_proyecto) },
+          { label: this.data.codigo_proyecto, url: '/admin/projects/assignment/new/' },
 
         ];
 
@@ -185,29 +184,28 @@ export class FormAssignmentComponent {
     this.data.inmueble_id = Number(this.data.inmueble_id);
     this.data.materiales = this.lots.map(l => ({
       ...l,
-      costo_material: this.parseMoneda(l.costo_material),
       cantidad_material: Number(l.cantidad_material),
       consecutivo: Number(l.consecutivo)
     }));
 
 
-    // this.AssignmentService.store(this.data).subscribe(
-    //   (rs) => {
-    //     console.log(rs);
-    //     if (rs.isError) {
-    //       this.isSending = false;
-    //       this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
-    //     } else {
-    //       const id = this.EncryptionService.encrypt(`${this.data.inmueble_id}`);
-    //       this.Router.navigate(['/admin/property/view/budget/', id]);
+    this.AssignmentService.store(this.data).subscribe(
+      (rs) => {
+        console.log(rs);
+        if (rs.isError) {
+          this.isSending = false;
+          this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
+        } else {
+          const id = this.EncryptionService.encrypt(`${this.data.inmueble_id}`);
+          this.Router.navigate(['/admin/property/view/assignment/', id]);
 
-    //       this.AppComponent.alert({
-    //         summary: "Operación exitosa",
-    //         detail: rs.message,
-    //         severity: 'success'
-    //       });
-    //     }
-    //   });
+          this.AppComponent.alert({
+            summary: "Operación exitosa",
+            detail: rs.message,
+            severity: 'success'
+          });
+        }
+      });
 
 
   }
@@ -218,19 +216,6 @@ export class FormAssignmentComponent {
 
 
   }
-
-  moneda(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    let value = input.value.replace(/[^0-9]/g, '');
-    input.value = this.ValidationsService.format_moneda(value, false);
-
-  }
-
-  private parseMoneda(value: string | number | null | undefined): number {
-    if (value == null) return 0; // Si es null o undefined, devolver 0
-    return Number(value.toString().replace(/[^0-9]/g, '') || 0);
-  }
-
 
   ngAfterViewInit() {
     const mainContent = document.getElementById('main-content');
