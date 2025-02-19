@@ -97,6 +97,7 @@ export class BudgetsInmueblesComponent {
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Proyectos', url: '/admin/projects/' },
+          { label: 'Inmuebles', url: '/admin/projects/budget/' + this.EncryptionService.encrypt(`${rs.proyecto.codigo_proyecto}`) },
           { label: 'Presupuestos', url: '/admin/property/view/budget/' + this.EncryptionService.encrypt(`${rs.id}`) },
           { label: rs.proyecto.codigo_proyecto + ' - ' + rs.tipo_inmueble.nombre_tipo_inmueble, url: '/admin/projects/budget/' },
 

@@ -142,25 +142,33 @@
                                 }
                             </div>
                         </div>
+
+                        <div class="mt-6 input-container w-full ">
+                            <label for="consecutivo" class="label-flotante obligatorio"
+                                [ngClass]="{'label-float-active': inputs['consecutivo'], 'label-float-inactive': !inputs['consecutivo'] || inputs['consecutivo'] == null }">Lote</label>
+                            <select id="consecutivo" formControlName="consecutivo"
+                                (input)="labelBlur('consecutivo', $event)" (focus)="labelFocus('consecutivo')"
+                                (blur)="labelBlur('consecutivo', $event)" required
+                                class="w-full form-control input-control ">
+                                @if(lotMateriales.length > 0){
+                                <option value="" selected disabled>Seleccionar</option>
+
+                                @for(lot of lotMateriales; track $index){
+                                <option [value]="lot.consecutivo">Lote {{lot.consecutivo +' -> '+ lot.cantidad}}
+                                </option>
+                                }
+                                }
+                            </select>
+                        </div>
                     </div>
                     <div class="w-full flex flex-wrap md:flex-nowrap gap-0 justify-between md:gap-4 px-5">
                         <div class="w-full">
                             <div class="mt-6 input-container w-full ">
-                                <label for="consecutivo" class="label-flotante obligatorio"
-                                    [ngClass]="{'label-float-active': inputs['consecutivo'], 'label-float-inactive': !inputs['consecutivo'] || inputs['consecutivo'] == null }">Lote</label>
-                                <select id="consecutivo" formControlName="consecutivo"
-                                    (input)="labelBlur('consecutivo', $event)" (focus)="labelFocus('consecutivo')"
-                                    (blur)="labelBlur('consecutivo', $event)" required
-                                    class="w-full form-control input-control ">
-                                    @if(lotMateriales.length > 0){
-                                    <option value="" selected disabled>Seleccionar</option>
+                                <label for="costo_material"
+                                    class="label-flotante label-float-active required">Costo</label>
+                                <input type="text" [attr.readonly]="true" formControlName="costo_material"
+                                    class="form-control input-control  " id="costo_material">
 
-                                    @for(lot of lotMateriales; track $index){
-                                    <option [value]="lot.consecutivo">Lote {{lot.consecutivo +' -> '+ lot.cantidad}}
-                                    </option>
-                                    }
-                                    }
-                                </select>
                             </div>
                         </div>
                         <div class="w-full">

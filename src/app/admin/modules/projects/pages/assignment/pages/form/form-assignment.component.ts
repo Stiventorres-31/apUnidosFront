@@ -46,6 +46,7 @@ export class FormAssignmentComponent {
       referencia_material: ['', Validators.required],
       consecutivo: ['', Validators.required],
       cantidad_material: [1, Validators.required],
+      costo_material: ['0']
     });
   }
 
@@ -88,6 +89,7 @@ export class FormAssignmentComponent {
             this.lotMateriales = rs.inventarios ?? [];
             if (!this.budget.get('consecutivo')?.value && this.lotMateriales.length > 0) {
               this.budget.get('consecutivo')?.setValue(this.lotMateriales[0].consecutivo);
+
             }
             this.resetInputs();
 
@@ -97,6 +99,18 @@ export class FormAssignmentComponent {
       }
 
 
+    });
+
+    this.budget.get('consecutivo')?.valueChanges.subscribe(e => {
+      this.budget.get('costo_material')?.setValue('0');
+      console.log(e)
+      if (e != '' && e) {
+        const ref = this.lotMateriales.find((l) => l.consecutivo == e);
+        if (ref) {
+          this.budget.get('costo_material')?.setValue(this.pipeMoney(ref.costo ?? 0));
+        }
+
+      }
     });
 
     this.resizeSubscription = fromEvent(window, 'resize')
@@ -253,6 +267,25 @@ export class FormAssignmentComponent {
     Object.keys(this.budget.controls).forEach(key => {
       this.inputs[key] = !!this.budget.get(key)?.value;
     })
+  }
+
+  parseDecimal(value: string | number): number {
+    if (typeof value === 'string') {
+      value = value.replace(/\./g, '').replace(/,/g, '.');
+      return parseFloat(value);
+    }
+    return value;
+  }
+
+  pipeMoney(valor: string): string {
+
+    let money: string | number = Math.round(Number(valor)) + "";
+    money = money.replace(/[^0-9$.,]+/g, ' ')
+
+    money = this.parseDecimal(money)
+    money = money.toLocaleString('de-DE');
+    return '$' + money;
+
   }
 
   labelFocus(campo: string) {
