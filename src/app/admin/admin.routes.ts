@@ -2,7 +2,6 @@ import { Routes } from "@angular/router";
 import { AdminLayoutComponent } from "./admin-layout.component";
 import { DashboardComponent } from "./modules/dashboard/dashboard.component";
 import { authGuard } from "../core/guards/auth.guard";
-import { isAdminGuard } from "../core/guards/admin.guard";
 import { ProjectsComponent } from "./modules/projects/projects.component";
 import { UsersComponent } from "./modules/users/users.component";
 import { FormUserComponent } from "./modules/users/pages/form/form-user.component";
@@ -22,12 +21,14 @@ import { AssignmentComponent } from "./modules/projects/pages/assignment/assignm
 import { AssignmentsUploadComponent } from "./modules/projects/pages/assignment/pages/upload/assignment-upload.component";
 import { AssignmentsInmueblesComponent } from "./modules/projects/pages/assignment/pages/inmuebles/assignments-inmuebles.component";
 import { FormAssignmentComponent } from "./modules/projects/pages/assignment/pages/form/form-assignment.component";
+import { RoleGuard } from "../core/guards/role.guard";
 
 export const ADMIN_ROUTES: Routes = [
 
     {
         path: "",
-        canActivate: [authGuard, isAdminGuard],
+        canActivateChild: [authGuard, RoleGuard],
+        data: { allowedRoles: ['OPERARIO', 'CONSULTOR', 'ADMINISTRADOR', 'SUPER ADMIN'] },
         component: AdminLayoutComponent,
         children: [
             {
@@ -40,18 +41,37 @@ export const ADMIN_ROUTES: Routes = [
                 path: 'projects',
                 children: [
                     { path: '', component: ProjectsComponent },
-                    { path: 'update/:id', component: FormProjectsComponent },
+                    {
+                        path: 'update/:id', component: FormProjectsComponent,
+                        data: { allowedRoles: ['ADMINISTRADOR', 'SUPER ADMIN'] }
+                    },
                     { path: 'budget/:id', component: BudgetsProjectsComponent },
-                    { path: 'budget/new/:id/:cod', component: FormBudgetComponent },
-                    { path: 'budgets/:id', component: BudgetsUploadComponent },
-                    { path: 'new', component: FormProjectsComponent },
+                    {
+                        path: 'budget/new/:id/:cod', component: FormBudgetComponent,
+                        data: { allowedRoles: ['ADMINISTRADOR', 'SUPER ADMIN'] }
+                    },
+                    {
+                        path: 'budgets/:id', component: BudgetsUploadComponent,
+                        data: { allowedRoles: ['ADMINISTRADOR', 'SUPER ADMIN'] }
+                    },
+                    {
+                        path: 'new', component: FormProjectsComponent,
+                        data: { allowedRoles: ['ADMINISTRADOR', 'SUPER ADMIN'] }
+                    },
                     { path: 'assignment/:id', component: AssignmentComponent },
-                    { path: 'assignments/:id', component: AssignmentsUploadComponent },
-                    { path: 'assignment/new/:id/:cod', component: FormAssignmentComponent },
+                    {
+                        path: 'assignments/:id', component: AssignmentsUploadComponent,
+                        data: { allowedRoles: ['ADMINISTRADOR', 'SUPER ADMIN', 'OPERARIO'] }
+                    },
+                    {
+                        path: 'assignment/new/:id/:cod', component: FormAssignmentComponent,
+                        data: { allowedRoles: ['ADMINISTRADOR', 'SUPER ADMIN', 'OPERARIO'] }
+                    },
                 ]
             },
             {
                 path: 'users',
+                data: { allowedRoles: ['ADMINISTRADOR', 'SUPER ADMIN'] },
                 children: [
                     { path: '', component: UsersComponent },
                     { path: 'update/:id', component: FormUserComponent },
@@ -61,6 +81,7 @@ export const ADMIN_ROUTES: Routes = [
             },
             {
                 path: 'type-property',
+                data: { allowedRoles: ['ADMINISTRADOR', 'SUPER ADMIN'] },
                 children: [
                     { path: '', component: TipoInmueblesComponent },
                     { path: 'new', component: FormTipoInmuebleComponent },
@@ -71,14 +92,21 @@ export const ADMIN_ROUTES: Routes = [
                 path: 'property',
                 children: [
                     { path: '', component: InmueblesComponent },
-                    { path: 'new', component: FormInmueblesComponent },
-                    { path: 'update/:id', component: FormInmueblesComponent },
+                    {
+                        path: 'new', component: FormInmueblesComponent,
+                        data: { allowedRoles: ['ADMINISTRADOR', 'SUPER ADMIN'] },
+                    },
+                    {
+                        path: 'update/:id', component: FormInmueblesComponent,
+                        data: { allowedRoles: ['ADMINISTRADOR', 'SUPER ADMIN'] },
+                    },
                     { path: 'view/budget/:id', component: BudgetsInmueblesComponent },
                     { path: 'view/assignment/:id', component: AssignmentsInmueblesComponent },
                 ]
             },
             {
                 path: 'materials',
+                data: { allowedRoles: ['ADMINISTRADOR', 'SUPER ADMIN'] },
                 children: [
                     { path: '', component: MaterialsComponent },
                     { path: 'new', component: FormMaterialsComponent },

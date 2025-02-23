@@ -37,6 +37,7 @@
                     </div>
 
                     <div class="flex">
+                        @if(hasRole('ADMINISTRADOR','OPERARIO', 'SUPER ADMIN')){
                         <div class="flex gap-2 rounded-full items-center px-4 py-3 cursor-pointer bg-blue-500 hover:bg-blue-400 text-white"
                             (click)="assignments()">
                             <span class="text-white">Asignaciones CVS</span>
@@ -44,6 +45,7 @@
 
 
                         </div>
+                        }
                     </div>
                 </div>
 

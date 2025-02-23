@@ -65,7 +65,7 @@ export class FormMaterialsComponent {
          */
         const lot = this.EncryptionService.decrypt(params['lot']);
         const ref = this.EncryptionService.decrypt(params['ref']);
-        console.log(lot);
+
         if (!lot || !ref) {
           this.router.navigate(['/admin/materials']);
           return;
@@ -75,7 +75,6 @@ export class FormMaterialsComponent {
         this.materialsService.searchLot(lot).subscribe((rs) => {
           if (rs) {
 
-            console.log(rs)
             this.form.patchValue({
               id: rs.id,
               consecutivo: rs.consecutivo,
@@ -110,10 +109,10 @@ export class FormMaterialsComponent {
             ];
             this.reset();
             this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
-            console.log(this.form.valid)
+
 
           } else {
-            console.log(rs, "Invalid")
+
             this.router.navigate(['/admin/materials']);
             return;
           }
@@ -125,7 +124,7 @@ export class FormMaterialsComponent {
          */
         const id = this.EncryptionService.decrypt(params['id']);
         const ref = this.EncryptionService.decrypt(params['ref']);
-        console.log(id);
+
         if (!id || !ref) {
           this.router.navigate(['/admin/materials']);
           return;
@@ -157,14 +156,14 @@ export class FormMaterialsComponent {
          * Actualizar Materiles
          */
         const id = this.EncryptionService.decrypt(params['ref']);
-        console.log(id);
+
         if (!id) {
           this.router.navigate(['/admin/materials']);
           return;
         }
         this.isUpdate = true;
         this.materialsService.search(id).subscribe((rs) => {
-          console.log(rs)
+
           if (rs) {
             this.form.patchValue(rs, { emitEvent: true });
             this.form.get("costo")?.setValidators([]);
@@ -195,7 +194,7 @@ export class FormMaterialsComponent {
             ];
             this.reset();
             this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
-            console.log(this.form.value)
+
 
           } else {
             this.router.navigate(['/admin/materials']);
@@ -253,7 +252,7 @@ export class FormMaterialsComponent {
 
   updateLot() {
     this.isSending = true;
-    console.log(this.form.value)
+
     if (!this.form.valid) {
       this.AppComponent.alert({
         summary: "Formulario invalido",
@@ -267,7 +266,7 @@ export class FormMaterialsComponent {
     form.costo = this.parseMoneda(form.costo);
 
     this.materialsService.updateLote(form).subscribe((rs) => {
-      console.log(rs);
+
       if (rs.isError) {
         this.isSending = false;
         this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
@@ -307,7 +306,7 @@ export class FormMaterialsComponent {
     }
 
     this.materialsService.storeLot(body).subscribe((rs) => {
-      console.log(rs);
+
       if (rs.isError) {
         this.isSending = false;
         this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
@@ -338,7 +337,7 @@ export class FormMaterialsComponent {
     form.costo = this.parseMoneda(form.costo);
 
     this.materialsService.update(form).subscribe((rs) => {
-      console.log(rs);
+
       if (rs.isError) {
         this.isSending = false;
         this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });

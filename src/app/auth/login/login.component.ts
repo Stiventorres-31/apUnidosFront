@@ -60,8 +60,19 @@ export class LoginComponent {
     this.loginService.login(this.form.value).subscribe(rs => {
       if (!rs.isError) {
         const rol = this.encryptionService.loadData('role');
-        const redirectUrl = rol == "SUPER ADMIN" || rol == "ADMINISTRADOR" ? "/admin/dashboard" : "/dashboard";
-        this.router.navigate([redirectUrl]);
+
+        const roles = ["CONSULTOR", "OPERARIO", "ADMINISTRADOR", "SUPER ADMIN"];
+        const url = roles.some(r => r === rol) ? '/admin/dashboard' : '';
+
+        // if (rol == "CONSULTOR") {
+        //   url = "consultant/dashboard";
+        // } else if (rol == "OPERARIO") {
+        //   url = "/operator/dashboard";
+        // } else if (rol == "SUPER ADMIN" || rol == "ADMINISTRADOR") {
+        //   url = "/admin/dashboard";
+        // }
+
+        this.router.navigate([url]);
       }
       this.isSending = false;
 

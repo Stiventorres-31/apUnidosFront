@@ -4,6 +4,7 @@ export interface pagination_interface {
     meta: Meta;
     first_page_url?: string;
     last_page_url?: string
+    total?: number;
 }
 
 

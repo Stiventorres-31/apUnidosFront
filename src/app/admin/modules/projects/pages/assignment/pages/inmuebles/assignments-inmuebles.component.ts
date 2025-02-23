@@ -32,7 +32,7 @@ export class AssignmentsInmueblesComponent {
   public inmueble!: inmueble;
 
   public inputs: { [key: string]: boolean } = {};
-
+  protected usuarioRol: string = '';
   constructor(
     private InmueblesService: InmueblesService,
     private AssignmentService: AssignmentService,
@@ -44,6 +44,7 @@ export class AssignmentsInmueblesComponent {
     private AppComponent: AppComponent,
     private BreadCrumbService: BreadCrumbService,
   ) {
+    this.usuarioRol = this.EncryptionService.loadData('role');
     this.budget = this.fb.group({
       referencia_material: ['', Validators.required],
       inmueble_id: ['', Validators.required],
@@ -60,7 +61,7 @@ export class AssignmentsInmueblesComponent {
     this.parametros.params.subscribe((params) => {
       if (params['id']) {
         const id = this.EncryptionService.decrypt(params['id']);
-        console.log(id);
+
         if (!id) {
           this.router.navigate(['/admin/projects']);
           return;
@@ -218,6 +219,10 @@ export class AssignmentsInmueblesComponent {
     Object.keys(this.budget.controls).forEach(key => {
       this.inputs[key] = !!this.budget.get(key)?.value;
     })
+  }
+
+  hasRole(...roles: string[]): boolean {
+    return roles.includes(this.usuarioRol);
   }
 
   labelFocus(campo: string) {

@@ -51,7 +51,7 @@ export class FormTipoInmuebleComponent {
     this.parametros.params.subscribe((params) => {
       if (params['id']) {
         const id = this.EncryptionService.decrypt(params['id']);
-        console.log(id);
+
         if (!id || isNaN(parseInt(id))) {
           this.router.navigate(['/admin/type-property']);
           return;
@@ -71,7 +71,7 @@ export class FormTipoInmuebleComponent {
             ];
             this.reset();
             this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
-            console.log(this.form.value)
+
 
           } else {
             this.router.navigate(['/admin/type-property']);
@@ -139,7 +139,7 @@ export class FormTipoInmuebleComponent {
     }
 
     this.tipoInmueblesService.update(body).subscribe((rs) => {
-      console.log(rs);
+
       if (rs.isError) {
         this.isSending = false;
         this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });

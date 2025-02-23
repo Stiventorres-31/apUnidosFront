@@ -42,7 +42,7 @@ export class LotsComponent {
     this.parametros.params.subscribe((params) => {
       if (params['id']) {
         const id = this.EncryptionService.decrypt(params['id']);
-        console.log(id);
+
         if (!id) {
           this.router.navigate(['/admin/materials']);
           return;
@@ -73,7 +73,7 @@ export class LotsComponent {
 
   index(id: string): void {
     this.MaterialsService.search(id).subscribe((rs) => {
-      console.log(rs)
+
       if (rs) {
         this.isLoading = false;
         this.material = rs;

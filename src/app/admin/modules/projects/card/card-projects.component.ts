@@ -16,7 +16,7 @@ import { inmueble } from '../pages/inmuebles/models/inmuebles.interface';
 export class CardProjectsComponent {
   @Output() onload = new EventEmitter<boolean>
   @Input() project!: projects;
-
+  protected usuarioRol: string = '';
   constructor(
     private Router: Router,
     private EncryptionService: EncryptionService,
@@ -24,7 +24,9 @@ export class CardProjectsComponent {
     private AppComponent: AppComponent,
 
 
-  ) { }
+  ) {
+    this.usuarioRol = this.EncryptionService.loadData('role');
+  }
 
   update() {
     this.Router.navigate(["/admin/projects/update/", this.EncryptionService.encrypt(`${this.project.codigo_proyecto}`)])
@@ -41,7 +43,6 @@ export class CardProjectsComponent {
 
   report() {
     this.ProjectService.report(`${this.project.codigo_proyecto}`).subscribe((rs: Blob) => {
-      console.log(rs);
       if (rs.size > 0) {
         const url = window.URL.createObjectURL(rs);
         const a = document.createElement('a');
@@ -49,8 +50,6 @@ export class CardProjectsComponent {
         a.download = `reporte_proyecto_${this.project.id}_${this.project.codigo_proyecto}.csv`;
         a.click();
         window.URL.revokeObjectURL(url);
-      } else {
-        console.error('Error: El archivo no se generó correctamente.');
       }
     });
   }
@@ -99,5 +98,8 @@ export class CardProjectsComponent {
 
   }
 
+  hasRole(...roles: string[]): boolean {
+    return roles.includes(this.usuarioRol);
+  }
 
 }

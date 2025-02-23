@@ -67,24 +67,23 @@ export class ProjectService {
         catchError((error) => {
           if (error.status == 401) {
             this.LoginService.unauthorized(error)
-
           }
           return of({} as ProjectsResponse);
         })
       );
   }
 
-  searchCode(id: string): Observable<projects[]> {
-    return this.http.get<ProjectsResponse_>(environment.backend + `api/proyecto/similitud/${id}`, {
+  searchCode(id: string): Observable<ProjectsResponse> {
+    return this.http.get<ProjectsResponse>(environment.backend + `api/proyecto/similitud/${id}`, {
       headers: this.headersService.getJsonHeaders()
     })
       .pipe(
-        map((rs) => {
-          return rs.result.proyectos;
+        map((response: ProjectsResponse) => {
+          return response;
 
         }), catchError((error: HttpErrorResponse) => {
           this.LoginService.unauthorized(error)
-          return of([]);
+          return of({} as ProjectsResponse);
         })
       )
 
@@ -159,7 +158,7 @@ export class ProjectService {
         map((rs: { isError: boolean, message: string }) => {
           return rs;
         }), catchError((error: HttpErrorResponse) => {
-          console.error(error)
+
           this.LoginService.unauthorized(error)
           if (error.status == 422) {
             return of({ isError: true, message: error.error.message });
@@ -178,7 +177,7 @@ export class ProjectService {
         map((rs: { isError: boolean, message: string }) => {
           return rs;
         }), catchError((error: HttpErrorResponse) => {
-          console.error(error)
+
           this.LoginService.unauthorized(error)
           if (error.status == 422) {
             return of({ isError: true, message: error.error.message });

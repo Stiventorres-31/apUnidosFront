@@ -59,7 +59,7 @@ export class FormInmueblesComponent {
     this.parametros.params.subscribe((params) => {
       if (params['id']) {
         const id = this.EncryptionService.decrypt(params['id']);
-        console.log(id);
+
         if (!id || isNaN(parseInt(id))) {
           this.router.navigate(['/admin/property']);
           return;
@@ -79,7 +79,7 @@ export class FormInmueblesComponent {
             ];
             this.reset();
             this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
-            console.log(this.form.value)
+
 
           } else {
             this.router.navigate(['/admin/property']);
@@ -153,7 +153,7 @@ export class FormInmueblesComponent {
     const form = this.form.value;
 
     this.InmueblesService.update(form).subscribe((rs) => {
-      console.log(rs);
+
       if (rs.isError) {
         this.isSending = false;
         this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });

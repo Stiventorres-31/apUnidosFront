@@ -88,7 +88,7 @@ export class InmueblesService {
         map((rs: { isError: boolean, message: string }) => {
           return rs;
         }), catchError((error: HttpErrorResponse) => {
-          console.error(error)
+
           this.LoginService.unauthorized(error)
           if (error.status == 422) {
             return of({ isError: true, message: error.error.message });
@@ -107,7 +107,7 @@ export class InmueblesService {
         map((rs: { isError: boolean, message: string }) => {
           return rs;
         }), catchError((error: HttpErrorResponse) => {
-          console.error(error)
+
           this.LoginService.unauthorized(error)
           if (error.status == 422) {
             return of({ isError: true, message: error.error.message });

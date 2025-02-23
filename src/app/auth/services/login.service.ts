@@ -83,16 +83,12 @@ export class LoginService {
 
 
   unauthorized(error: HttpErrorResponse): void {
-    console.log(error);
     if (error.status !== 401) return;
-    console.log("unauthorized", this.singletonService.shared.unauthorized);
-
     if (this.singletonService.shared.unauthorized) {
       this.singletonService.shared.unauthorized += 1;
     } else {
       this.singletonService.shared.unauthorized = 1;
     }
-
     if (this.singletonService.shared.unauthorized === 3) {
       this.logout().subscribe(() => { });
     }

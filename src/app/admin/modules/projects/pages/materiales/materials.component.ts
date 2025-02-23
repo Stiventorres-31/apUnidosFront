@@ -39,7 +39,7 @@ export class MaterialsComponent {
   index() {
     this.materialsService.index().subscribe(
       (rs) => {
-        console.log(rs);
+
         this.data = rs;
         this.filtros = rs;
         const breadcrumbs = [

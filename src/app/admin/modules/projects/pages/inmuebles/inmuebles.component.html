@@ -46,6 +46,7 @@
             </div>
 
             <div class="flex">
+                @if(hasRole('ADMINISTRADOR', 'SUPER ADMIN')){
                 <div class="flex gap-2 rounded-full items-center px-4 py-3 cursor-pointer bg-blue-500 hover:bg-blue-400 text-white"
                     [routerLink]="'/admin/property/new'">
                     <span class="text-white">Agregar inmueble</span>
@@ -53,6 +54,7 @@
 
 
                 </div>
+                }
             </div>
         </div>
 
@@ -67,11 +69,6 @@
                     <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
 
                         <div class="flex items-center">
-                            <!-- <button matRipple
-                                class="bg-blue-500 border-2 flex justify-center items-center rounded-full py-1 px-2 text-white"
-                                (click)="showDetails(row)" style="margin-right: 5px;">
-                                +
-                            </button> -->
                             <span>{{ row.id}}</span>
                         </div>
                     </ng-template>
@@ -90,8 +87,6 @@
                         <span class=" font-medium"> {{row.proyecto.codigo_proyecto}}</span>
                     </ng-template>
                 </ngx-datatable-column>
-
-
 
                 <ngx-datatable-column [flexGrow]="1" [minWidth]="50" [resizeable]="false" [prop]="'estado'"
                     name="Estado" [sortable]="true">
@@ -117,11 +112,6 @@
                     [sortable]="true" cellClass="accion_">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                         <div class="flex gap-3 ">
-                            <!-- <div data-title="Editar" (click)="update(row)"
-                                class="flex items-center cursor-pointer before:top-[-35px] h-full tool-tip relative">
-                                <span matRipple style="font-size: 16px !important;"
-                                    class="text-center text-white bg-blue-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">edit</span>
-                            </div> -->
 
                             <div data-title="Reporte presupuestos" (click)="reportB(row)"
                                 class=" flex items-center cursor-pointer before:top-[-35px] h-full tool-tip relative">
@@ -135,12 +125,18 @@
                                     class="text-center text-white bg-primary align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">description</span>
                             </div>
 
+                            @if(hasRole('ADMINISTRADOR', 'SUPER ADMIN')){
+                            <!-- <div data-title="Editar" (click)="update(row)"
+                                class="flex items-center cursor-pointer before:top-[-35px] h-full tool-tip relative">
+                                <span matRipple style="font-size: 16px !important;"
+                                    class="text-center text-white bg-blue-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">edit</span>
+                            </div> -->
                             <div data-title="Eliminar" (click)="delete(row)"
                                 class="flex items-center cursor-pointer before:top-[-35px] h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-red-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">delete</span>
                             </div>
-
+                            }
 
 
                         </div>

@@ -59,7 +59,6 @@ export class FormAssignmentComponent {
       if (params['id'] && params['cod']) {
         const id = this.EncryptionService.decrypt(params['id']);
         const cod = this.EncryptionService.decrypt(params['cod']);
-        console.log(id, cod);
         if (!id || !cod) {
           this.Router.navigate(['/admin/projects']);
           return;
@@ -81,10 +80,10 @@ export class FormAssignmentComponent {
     this.budget.get('referencia_material')?.valueChanges.subscribe(e => {
       this.lotMateriales = [];
       this.budget.get('consecutivo')?.setValue('');
-      console.log(e)
+
       if (e != '' && e) {
         this.materialsService.search(e).subscribe((rs) => {
-          console.log(rs)
+
           if (rs) {
             this.lotMateriales = rs.inventarios ?? [];
             if (!this.budget.get('consecutivo')?.value && this.lotMateriales.length > 0) {
@@ -103,7 +102,7 @@ export class FormAssignmentComponent {
 
     this.budget.get('consecutivo')?.valueChanges.subscribe(e => {
       this.budget.get('costo_material')?.setValue('0');
-      console.log(e)
+
       if (e != '' && e) {
         const ref = this.lotMateriales.find((l) => l.consecutivo == e);
         if (ref) {
@@ -122,7 +121,7 @@ export class FormAssignmentComponent {
   indexMateriales() {
     this.materialsService.index().subscribe(
       (rs) => {
-        console.log(rs);
+
         this.refMateriales = rs;
         this.isLoading = false;
 
@@ -173,7 +172,7 @@ export class FormAssignmentComponent {
       return;
     }
 
-    console.log(lot);
+
 
     this.lots = [...this.lots, lot];
 
@@ -205,7 +204,7 @@ export class FormAssignmentComponent {
 
     this.AssignmentService.store(this.data).subscribe(
       (rs) => {
-        console.log(rs);
+
         if (rs.isError) {
           this.isSending = false;
           this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });

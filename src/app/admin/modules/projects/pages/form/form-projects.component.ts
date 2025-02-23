@@ -53,7 +53,6 @@ export class FormProjectsComponent {
     this.parametros.params.subscribe((params) => {
       if (params['id']) {
         const id = this.EncryptionService.decrypt(params['id']);
-        console.log(id);
         if (!id) {
           this.router.navigate(['/admin/projects']);
           return;
@@ -73,7 +72,6 @@ export class FormProjectsComponent {
             ];
             this.reset();
             this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
-            console.log(this.form.value)
 
           } else {
             this.router.navigate(['/admin/projects']);
@@ -135,7 +133,7 @@ export class FormProjectsComponent {
     const form = this.form.value;
 
     this.ProjectService.update(form).subscribe((rs) => {
-      console.log(rs);
+
       if (rs.isError) {
         this.isSending = false;
         this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });

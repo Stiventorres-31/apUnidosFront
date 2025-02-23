@@ -23,9 +23,12 @@ export class InmueblesComponent {
   public isLoading = true;
   public data: inmueble[] = [];
   public filtros: inmueble[] = [];
+  protected usuarioRol: string = '';
 
   constructor(private InmueblesService: InmueblesService, private EncryptionService: EncryptionService, private Router: Router, private BreadCrumbService: BreadCrumbService, private AppComponent: AppComponent
-  ) { }
+  ) {
+    this.usuarioRol = this.EncryptionService.loadData('role');
+  }
 
 
   ngOnInit() {
@@ -38,7 +41,7 @@ export class InmueblesComponent {
   index() {
     this.InmueblesService.index().subscribe(
       (rs) => {
-        console.log(rs);
+
         this.data = rs;
         this.filtros = rs;
         const breadcrumbs = [
@@ -60,13 +63,13 @@ export class InmueblesComponent {
   }
 
   update(type: inmueble) {
-    console.log(type);
+
     this.Router.navigate(["/admin/property/update/", this.EncryptionService.encrypt(`${type.id}`)])
   }
 
   reportB(type: inmueble) {
     this.InmueblesService.report(`${type.id}`, true).subscribe((rs: Blob) => {
-      console.log(rs);
+
       if (rs.size > 0) {
         const url = window.URL.createObjectURL(rs);
         const a = document.createElement('a');
@@ -74,16 +77,12 @@ export class InmueblesComponent {
         a.download = `reporte_presupuesto_${type.id}_${type.proyecto.codigo_proyecto}.csv`;
         a.click();
         window.URL.revokeObjectURL(url);
-      } else {
-        console.error('Error: El archivo no se generó correctamente.');
       }
-      //this.AppComponent.alert({ summary: 'Reporte generado', detail: rs.message, severity:'success' });
     });
   }
 
   reportA(type: inmueble) {
     this.InmueblesService.report(`${type.id}`, false).subscribe((rs: Blob) => {
-      console.log(rs);
       if (rs.size > 0) {
         const url = window.URL.createObjectURL(rs);
         const a = document.createElement('a');
@@ -91,10 +90,7 @@ export class InmueblesComponent {
         a.download = `reporte_asignacion_${type.id}_${type.proyecto.codigo_proyecto}.csv`;
         a.click();
         window.URL.revokeObjectURL(url);
-      } else {
-        console.error('Error: El archivo no se generó correctamente.');
       }
-      //this.AppComponent.alert({ summary: 'Reporte generado', detail: rs.message, severity:'success' });
     });
   }
 
@@ -124,6 +120,10 @@ export class InmueblesComponent {
       }
 
     })
+  }
+
+  hasRole(...roles: string[]): boolean {
+    return roles.includes(this.usuarioRol);
   }
 
   showDetails(row: any) {

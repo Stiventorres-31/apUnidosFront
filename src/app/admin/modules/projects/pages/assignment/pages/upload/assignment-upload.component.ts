@@ -35,7 +35,7 @@ export class AssignmentsUploadComponent {
     this.parametros.params.subscribe((params) => {
       if (params['id']) {
         const id = this.EncryptionService.decrypt(params['id']);
-        console.log(id);
+
         if (!id) {
           this.Router.navigate(['/admin/projects']);
           return;

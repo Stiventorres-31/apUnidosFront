@@ -32,6 +32,7 @@ export class ProjectsComponent {
   public projects_data: projects[] = [];
   private searchTimeout: any;
   public typeOrigin: number = 0; //0  = index, 1 = input busqueda
+  protected usuarioRol: string = '';
 
   constructor(private ProjectService: ProjectService,
     private EncryptionService: EncryptionService,
@@ -40,6 +41,7 @@ export class ProjectsComponent {
     private AppComponent: AppComponent,
     private fb: FormBuilder
   ) {
+    this.usuarioRol = this.EncryptionService.loadData('role');
     this.form = this.fb.group({
       codigo_proyecto: ['', Validators.required
       ],
@@ -66,8 +68,8 @@ export class ProjectsComponent {
 
     this.ProjectService.index(endpoint).subscribe(
       (rs) => {
-        this.projects_data = rs.result.proyectos.data ?? [];
-        this.filtros = rs.result.proyectos;
+        this.projects_data = rs.result?.proyectos.data ?? [];
+        this.filtros = rs.result?.proyectos;
         const breadcrumbs = [
           { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Proyectos', url: '/admin/projects' },
@@ -100,7 +102,8 @@ export class ProjectsComponent {
     this.ProjectService.searchCode(filtros.codigo_proyecto).subscribe((rs) => {
       this.isSearching = false;
       if (rs) {
-        this.projects_data = rs;
+        this.projects_data = rs.result?.proyectos.data ?? [];
+        this.filtros = rs.result?.proyectos;
 
       }
 
@@ -118,7 +121,7 @@ export class ProjectsComponent {
       this.searchTimeout = setTimeout(() => {
         this.search()
       }, 1000)
-    } else if (this.typeOrigin == 1) {
+    } else {
       this.index()
     }
   }
@@ -136,6 +139,12 @@ export class ProjectsComponent {
       this.table.recalculate();
     }
   }
+
+
+  hasRole(...roles: string[]): boolean {
+    return roles.includes(this.usuarioRol);
+  }
+
 
   ngOnDestroy(): void {
     this.BreadCrumbService.setBreadcrumbs([]);

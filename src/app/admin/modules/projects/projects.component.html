@@ -46,6 +46,7 @@
             </div>
 
             <div class="flex">
+                @if(hasRole('ADMINISTRADOR', 'SUPER ADMIN')){
                 <div class="flex gap-2 rounded-full items-center px-4 py-3 cursor-pointer bg-blue-500 hover:bg-blue-400 text-white"
                     [routerLink]="'/admin/projects/new'">
                     <span class="text-white">Agregar proyecto</span>
@@ -53,10 +54,20 @@
 
 
                 </div>
+                }
+
             </div>
         </div>
 
+
+
         <div class="my-5 px-5">
+            @if(!isSearching){
+            <div class="w-full flex justify-start mb-3">
+                <span class="text-gray-700 ">Se encontraron {{ filtros.meta ? filtros.meta.total : filtros.total}}
+                    proyectos</span>
+            </div>
+            }
 
             <!-- <ngx-datatable class="material striped rounded-3xl" [rows]="filtros" [columnMode]="'force'"
                 [swapColumns]="true" [rowHeight]="'auto'" [headerHeight]="55" [limit]="15" [offset]="0"
@@ -178,9 +189,9 @@
 
             <div class="mt-8 w-full">
                 @if (filtros && filtros.data.length > 0) {
-                @if (typeOrigin == 0) {
+
                 <pagination-table [datos]="filtros" (newLink)="index($event)"></pagination-table>
-                }
+
                 }
             </div>
 

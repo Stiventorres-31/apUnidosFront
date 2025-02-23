@@ -21,13 +21,16 @@ export class BudgetsProjectsComponent {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   public isLoading: boolean = true;
   public projects!: projects;
+  protected usuarioRol: string = '';
   constructor(
     private ProjectService: ProjectService,
     private EncryptionService: EncryptionService,
     private router: Router,
     private parametros: ActivatedRoute,
     private BreadCrumbService: BreadCrumbService,
-  ) { }
+  ) {
+    this.usuarioRol = this.EncryptionService.loadData('role');
+  }
 
 
 
@@ -35,7 +38,7 @@ export class BudgetsProjectsComponent {
     this.parametros.params.subscribe((params) => {
       if (params['id']) {
         const id = this.EncryptionService.decrypt(params['id']);
-        console.log(id);
+
         if (!id) {
           this.router.navigate(['/admin/projects']);
           return;
@@ -119,6 +122,9 @@ export class BudgetsProjectsComponent {
     }
   }
 
+  hasRole(...roles: string[]): boolean {
+    return roles.includes(this.usuarioRol);
+  }
   ngOnDestroy(): void {
     this.BreadCrumbService.setBreadcrumbs([]);
 

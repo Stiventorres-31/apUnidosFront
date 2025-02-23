@@ -32,7 +32,7 @@ export class BudgetsInmueblesComponent {
   public inmueble!: inmueble;
 
   public inputs: { [key: string]: boolean } = {};
-
+  protected usuarioRol: string = '';
   constructor(
     private InmueblesService: InmueblesService,
     private BudgetsService: BudgetsService,
@@ -44,6 +44,7 @@ export class BudgetsInmueblesComponent {
     private AppComponent: AppComponent,
     private BreadCrumbService: BreadCrumbService,
   ) {
+    this.usuarioRol = this.EncryptionService.loadData('role');
     this.budget = this.fb.group({
       id: '',
       costo_material: ['', Validators.required],
@@ -58,7 +59,7 @@ export class BudgetsInmueblesComponent {
     this.parametros.params.subscribe((params) => {
       if (params['id']) {
         const id = this.EncryptionService.decrypt(params['id']);
-        console.log(id);
+
         if (!id) {
           this.router.navigate(['/admin/projects']);
           return;
@@ -148,7 +149,7 @@ export class BudgetsInmueblesComponent {
 
 
     this.BudgetsService.update(body).subscribe((rs) => {
-      console.log(rs);
+
       if (rs.isError) {
         this.isSending = false;
         this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
@@ -257,6 +258,10 @@ export class BudgetsInmueblesComponent {
 
   labelFocus(campo: string) {
     this.labels.labelFloatFocus(campo)
+  }
+
+  hasRole(...roles: string[]): boolean {
+    return roles.includes(this.usuarioRol);
   }
 
   labelBlur(campo: string, event: Event) {

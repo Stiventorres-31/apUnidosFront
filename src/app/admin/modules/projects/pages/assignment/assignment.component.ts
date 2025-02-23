@@ -21,13 +21,16 @@ export class AssignmentComponent {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   public isLoading: boolean = true;
   public projects!: projects;
+  protected usuarioRol: string = '';
   constructor(
     private ProjectService: ProjectService,
     private EncryptionService: EncryptionService,
     private router: Router,
     private parametros: ActivatedRoute,
     private BreadCrumbService: BreadCrumbService,
-  ) { }
+  ) {
+    this.usuarioRol = this.EncryptionService.loadData('role');
+  }
 
 
 
@@ -35,14 +38,12 @@ export class AssignmentComponent {
     this.parametros.params.subscribe((params) => {
       if (params['id']) {
         const id = this.EncryptionService.decrypt(params['id']);
-        console.log(id);
         if (!id) {
           this.router.navigate(['/admin/projects']);
           return;
         }
 
         this.ProjectService.assignment(id).subscribe((rs) => {
-          console.log(rs);
           if (rs) {
 
             this.isLoading = false;
@@ -51,8 +52,8 @@ export class AssignmentComponent {
             const breadcrumbs = [
               { label: 'Dashboard', url: '/admin/dashboard' },
               { label: 'Proyectos', url: '/admin/projects/' },
-              { label: 'Inmuebles', url: '/admin/projects/assignmet/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
-              { label: rs.codigo_proyecto + ' - ' + rs.ciudad_municipio_proyecto + ', ' + rs.departamento_proyecto, url: '/admin/projects/assignmet/' },
+              { label: 'Inmuebles', url: '/admin/projects/assignment/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
+              { label: rs.codigo_proyecto + ' - ' + rs.ciudad_municipio_proyecto + ', ' + rs.departamento_proyecto, url: '/admin/projects/assignment/' },
 
             ];
 
@@ -113,6 +114,11 @@ export class AssignmentComponent {
     return '$' + money;
 
   }
+
+  hasRole(...roles: string[]): boolean {
+    return roles.includes(this.usuarioRol);
+  }
+
 
   recalculateTable(): void {
     if (this.table) {

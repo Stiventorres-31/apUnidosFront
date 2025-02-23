@@ -60,7 +60,7 @@ export class FormUserComponent {
     this.parametros.params.subscribe((params) => {
       if (params['id']) {
         const id = this.EncryptionService.decrypt(params['id']);
-        console.log(id);
+
         if (!id || isNaN(parseInt(id))) {
           this.router.navigate(['/admin/users']);
           return;
@@ -71,7 +71,7 @@ export class FormUserComponent {
       }
       else if (params['user']) {
         const id = this.EncryptionService.decrypt(params['user']);
-        console.log(id);
+
         if (!id || isNaN(parseInt(id))) {
           this.router.navigate(['/admin/users']);
           return;
@@ -139,7 +139,7 @@ export class FormUserComponent {
         }
 
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
-        console.log(this.form.value)
+
 
       } else {
         this.router.navigate(['/admin/users']);
@@ -176,9 +176,6 @@ export class FormUserComponent {
       form.rol_usuario = rol;
     }
 
-    console.log(rol, form.rol_usuario);
-
-
     this.UserService.store(form).subscribe((rs) => {
       if (rs.isError) {
         this.isSending = false;
@@ -212,7 +209,7 @@ export class FormUserComponent {
         rol_usuario: rol,
       }
       this.UserService.update(body).subscribe((rs) => {
-        console.log(rs);
+
         if (rs.isError) {
           this.isSending = false;
           this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });

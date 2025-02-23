@@ -2,7 +2,10 @@ import { Injectable, OnDestroy, signal } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Menu } from '../../../core/constants/menu';
+import { MenuOperator } from '../../../core/constants/menu-operator';
+import { MenuConsultant } from '../../../core/constants/menu-consultant';
 import { SubMenuItem, MenuItem } from '../../../core/models/menu.model';
+import { EncryptionService } from '../encryption/encryption.service';
 
 
 @Injectable({
@@ -13,10 +16,22 @@ export class MenuService implements OnDestroy {
   private _showMobileMenu = signal(false);
   private _pagesMenu = signal<MenuItem[]>([]);
   private _subscription = new Subscription();
+  private rol: string;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private encriptacion: EncryptionService) {
     /** Set dynamic menu */
-    this._pagesMenu.set(Menu.pages);
+    this.rol = encriptacion.loadData('role');
+
+
+    if (this.rol == "CONSULTOR") {
+      this._pagesMenu.set(MenuConsultant.pages);
+    } else if (this.rol == "OPERARIO") {
+      this._pagesMenu.set(MenuOperator.pages);
+    } else if (this.rol == "SUPER ADMIN" || this.rol == "ADMINISTRADOR") {
+      this._pagesMenu.set(Menu.pages);
+    }
+
+
 
     let sub = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
