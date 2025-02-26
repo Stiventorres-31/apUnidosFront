@@ -114,25 +114,25 @@
                         <div class="flex gap-3 ">
 
                             <div data-title="Reporte presupuestos" (click)="reportB(row)"
-                                class=" flex items-center cursor-pointer before:top-[-35px] h-full tool-tip relative">
+                                class=" flex items-center cursor-pointer tooltip-left h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-green-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">description</span>
                             </div>
 
                             <div data-title="Reporte asignaciones" (click)="reportA(row)"
-                                class=" flex items-center cursor-pointer before:top-[-35px] h-full tool-tip relative">
+                                class=" flex items-center cursor-pointer tooltip-left h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-primary align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">description</span>
                             </div>
 
                             @if(hasRole('ADMINISTRADOR', 'SUPER ADMIN')){
                             <!-- <div data-title="Editar" (click)="update(row)"
-                                class="flex items-center cursor-pointer before:top-[-35px] h-full tool-tip relative">
+                                class="flex items-center cursor-pointer tooltip-left h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-blue-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">edit</span>
                             </div> -->
                             <div data-title="Eliminar" (click)="delete(row)"
-                                class="flex items-center cursor-pointer before:top-[-35px] h-full tool-tip relative">
+                                class="flex items-center cursor-pointer tooltip-left h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-red-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">delete</span>
                             </div>

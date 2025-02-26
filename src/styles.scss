@@ -444,9 +444,7 @@ ngx-datatable .datatable-body-cell.accion_ {
     position: absolute;
     top: -30px;
     left: 50%;
-    /* Lo posiciona en el centro horizontalmente */
     transform: translateX(-50%);
-    /* Lo centra completamente */
     background-color: var(--color-hovered);
     color: white;
     padding: 5px;
@@ -459,10 +457,19 @@ ngx-datatable .datatable-body-cell.accion_ {
     z-index: 999;
 }
 
+/* Ajustes para la izquierda */
+.tool-tip.tooltip-left::before {
+    left: auto !important;
+    right: 110%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 .tool-tip:hover::before {
     opacity: 1;
     visibility: visible;
 }
+
 
 /**Toast**/
 .p-toast>* {

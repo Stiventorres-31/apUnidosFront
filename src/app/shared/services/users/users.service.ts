@@ -131,7 +131,7 @@ export class UsersService {
         }), catchError((error: HttpErrorResponse) => {
           this.LoginService.unauthorized(error)
           if (error.status == 422) {
-            return of({ isError: false, message: error.error.message });
+            return of({ isError: true, message: error.error.message });
           }
 
           return of({ isError: true, message: "No se puedo realizar la operación, por favor intenta mas tarde" });
