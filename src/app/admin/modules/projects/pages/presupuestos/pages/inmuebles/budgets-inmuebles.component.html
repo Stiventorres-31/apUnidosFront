@@ -57,7 +57,7 @@
                         [columnMode]="'force'" [swapColumns]="true" [rowHeight]="'auto'" [headerHeight]="55"
                         [limit]="15" [offset]="0" [footerHeight]="50" [scrollbarH]="true">
 
-                        <ngx-datatable-column [flexGrow]="0.4" [resizeable]="false" [minWidth]="50" [prop]="'id'"
+                        <!-- <ngx-datatable-column [flexGrow]="0.3" [resizeable]="false" [minWidth]="10" [prop]="'id'"
                             name="ID" [sortable]="true">
                             <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
 
@@ -65,13 +65,20 @@
                                     <span>{{ row.id}}</span>
                                 </div>
                             </ng-template>
-                        </ngx-datatable-column>
+                        </ngx-datatable-column> -->
 
                         <ngx-datatable-column [flexGrow]="1" [minWidth]="100" [resizeable]="false"
                             [prop]="'materiale.referencia_material '" name="Referencia 
                             Material" [sortable]="true">
                             <ng-template let-row="row" ngx-datatable-cell-template>
                                 <span class=" font-medium"> {{row.materiale.referencia_material }}</span>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column [flexGrow]="1" [minWidth]="100" [resizeable]="false"
+                            [prop]="'materiale.nombre_material '" name="Material" [sortable]="true">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span class=" font-medium"> {{row.materiale.nombre_material }}</span>
                             </ng-template>
                         </ngx-datatable-column>
 
