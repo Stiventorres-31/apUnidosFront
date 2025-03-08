@@ -45,7 +45,7 @@ export class BudgetsUploadComponent {
             this.id = `${rs.id}`;
             this.isLoading = false;
             const breadcrumbs = [
-              { label: 'Dashboard', url: '/admin/dashboard' },
+              // { label: 'Dashboard', url: '/admin/dashboard' },
               { label: 'Proyectos', url: '/admin/projects' },
               { label: 'Presupuestos CSV', url: '/admin/projects/budgets/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
               { label: rs.codigo_proyecto + ' - ' + rs.ciudad_municipio_proyecto + ', ' + rs.departamento_proyecto, url: '/admin/projects/budgets/' },

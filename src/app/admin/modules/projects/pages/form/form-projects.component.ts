@@ -64,7 +64,7 @@ export class FormProjectsComponent {
             this.isLoading = false;
 
             const breadcrumbs = [
-              { label: 'Dashboard', url: '/admin/dashboard' },
+              // { label: 'Dashboard', url: '/admin/dashboard' },
               { label: 'Proyecto', url: '/admin/projects/' },
               { label: 'Actualizar', url: '/admin/projects/update/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
               { label: rs.codigo_proyecto, url: '/admin/projects/update/' },
@@ -82,7 +82,7 @@ export class FormProjectsComponent {
       } else {
         this.isLoading = false;
         const breadcrumbs = [
-          { label: 'Dashboard', url: '/admin/dashboard' },
+          // { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Proyectos', url: '/admin/projects/' },
           { label: 'Agregar', url: '/admin/projects/new/' },
         ];

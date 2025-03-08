@@ -71,7 +71,7 @@ export class ProjectsComponent {
         this.projects_data = rs.result?.proyectos.data ?? [];
         this.filtros = rs.result?.proyectos;
         const breadcrumbs = [
-          { label: 'Dashboard', url: '/admin/dashboard' },
+          // { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Proyectos', url: '/admin/projects' },
         ];
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);

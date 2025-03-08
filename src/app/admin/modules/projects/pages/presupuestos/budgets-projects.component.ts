@@ -51,7 +51,7 @@ export class BudgetsProjectsComponent {
             this.projects = rs;
 
             const breadcrumbs = [
-              { label: 'Dashboard', url: '/admin/dashboard' },
+              // { label: 'Dashboard', url: '/admin/dashboard' },
               { label: 'Proyectos', url: '/admin/projects/' },
               { label: 'Inmuebles', url: '/admin/projects/budget/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
               { label: rs.codigo_proyecto + ' - ' + rs.ciudad_municipio_proyecto + ', ' + rs.departamento_proyecto, url: '/admin/projects/budget/' },

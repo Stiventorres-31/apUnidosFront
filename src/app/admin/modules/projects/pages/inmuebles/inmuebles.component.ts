@@ -45,7 +45,7 @@ export class InmueblesComponent {
         this.data = rs;
         this.filtros = rs;
         const breadcrumbs = [
-          { label: 'Dashboard', url: '/admin/dashboard' },
+          // { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Inmuebles', url: '/admin/property' },
         ];
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);

@@ -62,7 +62,7 @@ export class LoginComponent {
         const rol = this.encryptionService.loadData('role');
 
         const roles = ["CONSULTOR", "OPERARIO", "ADMINISTRADOR", "SUPER ADMIN"];
-        const url = roles.some(r => r === rol) ? '/admin/dashboard' : '';
+        const url = roles.some(r => r === rol) ? '/admin/projects' : '';
 
         // if (rol == "CONSULTOR") {
         //   url = "consultant/dashboard";

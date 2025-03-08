@@ -71,7 +71,7 @@ export class FormInmueblesComponent {
             this.isLoading = false;
 
             const breadcrumbs = [
-              { label: 'Dashboard', url: '/admin/dashboard' },
+              // { label: 'Dashboard', url: '/admin/dashboard' },
               { label: 'Inmuebles', url: '/admin/property/' },
               { label: 'Actualizar', url: '/admin/property/update/' + this.EncryptionService.encrypt(`${rs.id}`) },
               { label: rs.tipo_inmueble.nombre_tipo_inmueble, url: '/admin/property/update/' },
@@ -90,7 +90,7 @@ export class FormInmueblesComponent {
       } else {
         this.isLoading = false;
         const breadcrumbs = [
-          { label: 'Dashboard', url: '/admin/dashboard' },
+          // { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Inmuebles', url: '/admin/property/' },
           { label: 'Agregar', url: '/admin/property/new/' },
         ];

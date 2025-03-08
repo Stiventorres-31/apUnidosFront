@@ -46,7 +46,7 @@ export class AssignmentsUploadComponent {
             this.id = `${rs.id}`;
             this.isLoading = false;
             const breadcrumbs = [
-              { label: 'Dashboard', url: '/admin/dashboard' },
+              // { label: 'Dashboard', url: '/admin/dashboard' },
               { label: 'Proyectos', url: '/admin/projects' },
               { label: 'Asignaciones CSV', url: '/admin/projects/assignments/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
               { label: rs.codigo_proyecto + ' - ' + rs.ciudad_municipio_proyecto + ', ' + rs.departamento_proyecto, url: '/admin/projects/assignments/' },

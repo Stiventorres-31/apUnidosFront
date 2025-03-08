@@ -95,4 +95,14 @@ export class ValidationsService {
     return value;
   }
 
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const year = date.getFullYear().toString().slice(-2); // Últimos 2 dígitos del año
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Mes con 2 dígitos
+    const day = String(date.getDate()).padStart(2, '0'); // Día con 2 dígitos
+    return `${year}-${month}-${day}`;
+  }
+
+
 }

@@ -7,6 +7,7 @@ export interface materials {
     referencia_material: string;
     nombre_material: string;
     numero_identificacion: string;
+    cantidad_total_de_material: string;
     estado: string;
     inventarios?: invetario[];
 }

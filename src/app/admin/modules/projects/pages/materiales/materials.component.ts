@@ -43,7 +43,7 @@ export class MaterialsComponent {
         this.data = rs;
         this.filtros = rs;
         const breadcrumbs = [
-          { label: 'Dashboard', url: '/admin/dashboard' },
+          // { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Materiales', url: '/admin/materials' },
         ];
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);

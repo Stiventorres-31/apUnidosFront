@@ -2,20 +2,20 @@ import { MenuItem } from '../models/menu.model';
 
 export class MenuConsultant {
   public static pages: MenuItem[] = [
-    {
-      group: 'Base',
-      separator: false,
-      items: [
-        {
-          icon: 'assets/img/icons/heroicons/outline/chart-pie.svg',
-          label: 'Dashboard',
-          route: '/admin/dashboard',
-          children: [
-            { label: 'Inmuebles', route: '/admin/dashboard' },
-          ],
-        },
-      ],
-    },
+    // {
+    //   group: 'Base',
+    //   separator: false,
+    //   items: [
+    //     {
+    //       icon: 'assets/img/icons/heroicons/outline/chart-pie.svg',
+    //       label: 'Dashboard',
+    //       route: '/admin/dashboard',
+    //       children: [
+    //         { label: 'Inmuebles', route: '/admin/dashboard' },
+    //       ],
+    //     },
+    //   ],
+    // },
     {
       group: 'CRM',
       separator: true,

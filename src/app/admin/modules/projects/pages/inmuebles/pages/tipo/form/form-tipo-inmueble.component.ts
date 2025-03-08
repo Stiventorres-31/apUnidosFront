@@ -63,7 +63,7 @@ export class FormTipoInmuebleComponent {
             this.isLoading = false;
 
             const breadcrumbs = [
-              { label: 'Dashboard', url: '/admin/dashboard' },
+              // { label: 'Dashboard', url: '/admin/dashboard' },
               { label: 'Tipo inmueble', url: '/admin/type-property/' },
               { label: 'Actualizar', url: '/admin/type-property/update/' + this.EncryptionService.encrypt(`${rs.id}`) },
               { label: rs.nombre_tipo_inmueble, url: '/admin/type-property/update/' },
@@ -82,7 +82,7 @@ export class FormTipoInmuebleComponent {
       } else {
         this.isLoading = false;
         const breadcrumbs = [
-          { label: 'Dashboard', url: '/admin/dashboard' },
+          // { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Tipo inmueble', url: '/admin/type-property/' },
           { label: 'Agregar', url: '/admin/type-property/new/' },
         ];

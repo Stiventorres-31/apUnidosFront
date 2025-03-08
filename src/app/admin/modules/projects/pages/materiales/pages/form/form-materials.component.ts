@@ -100,7 +100,7 @@ export class FormMaterialsComponent {
             this.isLoading = false;
 
             const breadcrumbs = [
-              { label: 'Dashboard', url: '/admin/dashboard' },
+              // { label: 'Dashboard', url: '/admin/dashboard' },
               { label: 'Materiales', url: '/admin/materials/' },
               { label: 'Lotes', url: '/admin/materials/lots/' + this.EncryptionService.encrypt(`${this.ref}`) },
               { label: 'Actualizar', url: '/admin/materials/lots/update/' + this.EncryptionService.encrypt(`${rs.id}`) },
@@ -141,7 +141,7 @@ export class FormMaterialsComponent {
         this.isLoading = false;
         this.isNewLot = true;
         const breadcrumbs = [
-          { label: 'Dashboard', url: '/admin/dashboard' },
+          // { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Materiales', url: '/admin/materials/' },
           { label: 'Lotes', url: '/admin/materials/lots/' + this.EncryptionService.encrypt(`${ref}`) },
           { label: 'Agregar', url: '/admin/materials/lots/new/' },
@@ -186,7 +186,7 @@ export class FormMaterialsComponent {
             this.isLoading = false;
 
             const breadcrumbs = [
-              { label: 'Dashboard', url: '/admin/dashboard' },
+              // { label: 'Dashboard', url: '/admin/dashboard' },
               { label: 'Materiales', url: '/admin/materials/' },
               { label: 'Actualizar', url: '/admin/materials/update/' + this.EncryptionService.encrypt(`${rs.referencia_material}`) },
               { label: rs.nombre_material, url: '/admin/materials/update/' },
@@ -212,7 +212,7 @@ export class FormMaterialsComponent {
         this.form.get("materiale_id")?.updateValueAndValidity();
 
         const breadcrumbs = [
-          { label: 'Dashboard', url: '/admin/dashboard' },
+          // { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Materiales', url: '/admin/materials/' },
           { label: 'Agregar', url: '/admin/materials/new/' },
         ];

@@ -83,7 +83,7 @@ export class FormUserComponent {
       else {
         this.isLoading = false;
         const breadcrumbs = [
-          { label: 'Dashboard', url: '/admin/dashboard' },
+          // { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'usuarios', url: '/admin/users/' },
           { label: 'Agregar', url: '/admin/users/new/' },
         ];
@@ -110,7 +110,7 @@ export class FormUserComponent {
           this.form.get("password_confirmation")?.updateValueAndValidity();
 
           breadcrumbs = [
-            { label: 'Dashboard', url: '/admin/dashboard' },
+            // { label: 'Dashboard', url: '/admin/dashboard' },
             { label: 'usuarios', url: '/admin/users/' },
             { label: 'Actualizar', url: '/admin/users/update/' + this.EncryptionService.encrypt(`${rs.numero_identificacion}`) },
             { label: rs.nombre_completo, url: '/admin/users/update/' },
@@ -130,7 +130,7 @@ export class FormUserComponent {
           this.form.get("rol_usuario")?.updateValueAndValidity();
 
           breadcrumbs = [
-            { label: 'Dashboard', url: '/admin/dashboard' },
+            // { label: 'Dashboard', url: '/admin/dashboard' },
             { label: 'usuarios', url: '/admin/users/' },
             { label: 'Actualizar password', url: '/admin/users/change-password/' + this.EncryptionService.encrypt(`${rs.numero_identificacion}`) },
             { label: rs.nombre_completo, url: '/admin/users/change-password/' },

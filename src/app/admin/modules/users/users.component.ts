@@ -41,7 +41,7 @@ export class UsersComponent {
         this.data = rs.filter(user => user.rol_usuario != "SUPER ADMIN");
         this.filtros = rs.filter(user => user.rol_usuario != "SUPER ADMIN");
         const breadcrumbs = [
-          { label: 'Dashboard', url: '/admin/dashboard' },
+          // { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Usuarios', url: '/admin/users' },
         ];
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);

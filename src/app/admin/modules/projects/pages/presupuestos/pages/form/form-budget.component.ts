@@ -113,7 +113,7 @@ export class FormBudgetComponent {
         this.isLoading = false;
 
         const breadcrumbs = [
-          { label: 'Dashboard', url: '/admin/dashboard' },
+          // { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Proyectos', url: '/admin/projects/' },
           { label: 'Presupuestos', url: '/admin/property/view/budget/' + this.EncryptionService.encrypt(this.data.inmueble_id) },
           { label: 'Agregar', url: '/admin/projects/budget/new/' + this.EncryptionService.encrypt(this.data.inmueble_id) + '/' + this.EncryptionService.encrypt(this.data.codigo_proyecto) },

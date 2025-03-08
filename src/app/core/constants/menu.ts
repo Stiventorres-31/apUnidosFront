@@ -2,28 +2,28 @@ import { MenuItem } from '../models/menu.model';
 
 export class Menu {
   public static pages: MenuItem[] = [
-    {
-      group: 'Base',
-      separator: false,
-      items: [
-        {
-          icon: 'assets/img/icons/heroicons/outline/chart-pie.svg',
-          label: 'Dashboard',
-          route: '/admin/dashboard',
-          children: [
-            { label: 'Inmuebles', route: '/admin/dashboard' },
-            // { label: 'Podcast', route: '/dashboard/podcast' },
-          ],
-        },
+    // {
+    //   group: 'Base',
+    //   separator: false,
+    //   items: [
+    //     {
+    //       icon: 'assets/img/icons/heroicons/outline/chart-pie.svg',
+    //       label: 'Dashboard',
+    //       route: '/admin/dashboard',
+    //       children: [
+    //         { label: 'Inmuebles', route: '/admin/dashboard' },
+    //         // { label: 'Podcast', route: '/dashboard/podcast' },
+    //       ],
+    //     },
 
-        // {
-        //   icon: 'assets/img/icons/heroicons/outline/cube.svg',
-        //   label: 'Components',
-        //   route: '/components',
-        //   children: [{ label: 'Table', route: '/components/table' }],
-        // },
-      ],
-    },
+    //     // {
+    //     //   icon: 'assets/img/icons/heroicons/outline/cube.svg',
+    //     //   label: 'Components',
+    //     //   route: '/components',
+    //     //   children: [{ label: 'Table', route: '/components/table' }],
+    //     // },
+    //   ],
+    // },
     {
       group: 'CRM',
       separator: true,

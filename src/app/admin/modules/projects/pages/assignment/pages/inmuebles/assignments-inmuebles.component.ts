@@ -98,7 +98,7 @@ export class AssignmentsInmueblesComponent {
         this.inmueble = rs;
 
         const breadcrumbs = [
-          { label: 'Dashboard', url: '/admin/dashboard' },
+          // { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Proyectos', url: '/admin/projects/' },
           { label: 'Inmuebles', url: '/admin/projects/assignment/' + this.EncryptionService.encrypt(`${rs.proyecto.codigo_proyecto}`) },
           { label: 'Asignaciones', url: '/admin/property/view/assignment/' + this.EncryptionService.encrypt(`${rs.id}`) },

@@ -41,7 +41,7 @@ export class TipoInmueblesComponent {
         this.data = rs;
         this.filtros = rs;
         const breadcrumbs = [
-          { label: 'Dashboard', url: '/admin/dashboard' },
+          // { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Tipo inmuebles', url: '/admin/type-property' },
         ];
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);

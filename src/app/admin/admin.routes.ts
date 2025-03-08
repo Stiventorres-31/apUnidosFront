@@ -33,10 +33,10 @@ export const ADMIN_ROUTES: Routes = [
         children: [
             {
                 path: '',
-                redirectTo: 'dashboard',
+                redirectTo: 'projects',
                 pathMatch: 'full'
             },
-            { path: 'dashboard', component: DashboardComponent },
+            // { path: 'dashboard', component: DashboardComponent },
             {
                 path: 'projects',
                 children: [

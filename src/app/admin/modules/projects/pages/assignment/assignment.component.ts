@@ -50,7 +50,7 @@ export class AssignmentComponent {
             this.projects = rs;
 
             const breadcrumbs = [
-              { label: 'Dashboard', url: '/admin/dashboard' },
+              // { label: 'Dashboard', url: '/admin/dashboard' },
               { label: 'Proyectos', url: '/admin/projects/' },
               { label: 'Inmuebles', url: '/admin/projects/assignment/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
               { label: rs.codigo_proyecto + ' - ' + rs.ciudad_municipio_proyecto + ', ' + rs.departamento_proyecto, url: '/admin/projects/assignment/' },

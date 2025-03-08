@@ -10,6 +10,7 @@ import { EncryptionService } from '../../../../../../../shared/services/encrypti
 import { materials } from '../../models/materials.interface';
 import { debounceTime, fromEvent, Subscription } from 'rxjs';
 import { filter_ngx } from '../../../../../../../core/pipes/filter.pipe';
+import { ValidationsService } from '../../../../../../../shared/services/validations/validations.service';
 
 @Component({
   selector: 'app-lots',
@@ -26,6 +27,7 @@ export class LotsComponent {
     private EncryptionService: EncryptionService,
     private router: Router,
     private parametros: ActivatedRoute,
+    private ValidationsService: ValidationsService
   ) { }
 
   resizeSubscription: Subscription | undefined;
@@ -81,7 +83,7 @@ export class LotsComponent {
         this.filtros = this.lots;
 
         const breadcrumbs = [
-          { label: 'Dashboard', url: '/admin/dashboard' },
+          // { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Materiales', url: '/admin/materials/' },
           { label: 'Lotes', url: '/admin/materials/lots/' + this.EncryptionService.encrypt(`${rs.referencia_material}`) },
           { label: rs.nombre_material, url: '/admin/materials/lots/' },
@@ -161,6 +163,11 @@ export class LotsComponent {
     if (this.table) {
       this.table.recalculate();
     }
+  }
+
+  formatDate(date: string): string {
+    if (date == '') return '';
+    return this.ValidationsService.formatDate(date);
   }
 
   ngOnDestroy(): void {

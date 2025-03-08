@@ -62,7 +62,7 @@
                 [swapColumns]="true" [rowHeight]="'auto'" [headerHeight]="55" [limit]="15" [offset]="0"
                 [footerHeight]="50" [scrollbarH]="true">
 
-                <ngx-datatable-column [flexGrow]="0.4" [resizeable]="false" [minWidth]="30" [prop]="'index'" name="No."
+                <ngx-datatable-column [flexGrow]="0.4" [resizeable]="false" [maxWidth]="40" [prop]="'index'" name="No."
                     [sortable]="true">
                     <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
                         <div class="flex items-center">
@@ -106,6 +106,15 @@
                     </ng-template>
                 </ngx-datatable-column>
 
+                <ngx-datatable-column [flexGrow]="1.5" [minWidth]="100" [resizeable]="false" [prop]="'created_at'"
+                    name="Creación" [sortable]="true">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span class=" font-medium">{{formatDate(row.created_at)}} </span>
+                    </ng-template>
+                </ngx-datatable-column>
+
+
+
                 <!-- <ngx-datatable-column [flexGrow]="1.5" [minWidth]="100" [resizeable]="false"
                     [prop]="'descripcion_proveedor'" name="Descripción" [sortable]="true">
                     <ng-template let-row="row" ngx-datatable-cell-template>
@@ -127,7 +136,7 @@
                     </ng-template>
                 </ngx-datatable-column> -->
 
-                <ngx-datatable-column [flexGrow]="1.5" [minWidth]="100" [resizeable]="false" name="Acciones"
+                <ngx-datatable-column [flexGrow]="1" [maxWidth]="150" [resizeable]="false" name="Acciones"
                     [sortable]="true" cellClass="accion_">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                         <div class="flex gap-3 ">

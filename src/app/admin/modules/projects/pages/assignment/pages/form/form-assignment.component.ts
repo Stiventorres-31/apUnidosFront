@@ -126,7 +126,7 @@ export class FormAssignmentComponent {
         this.isLoading = false;
 
         const breadcrumbs = [
-          { label: 'Dashboard', url: '/admin/dashboard' },
+          // { label: 'Dashboard', url: '/admin/dashboard' },
           { label: 'Proyectos', url: '/admin/projects/' },
           { label: 'Asignaciones', url: '/admin/property/view/assignment/' + this.EncryptionService.encrypt(this.data.inmueble_id) },
           { label: 'Agregar', url: '/admin/projects/assignment/new/' + this.EncryptionService.encrypt(this.data.inmueble_id) + '/' + this.EncryptionService.encrypt(this.data.codigo_proyecto) },
