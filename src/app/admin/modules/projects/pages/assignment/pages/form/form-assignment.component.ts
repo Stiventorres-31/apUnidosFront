@@ -230,6 +230,11 @@ export class FormAssignmentComponent {
 
   }
 
+  formatDate(date: string): string {
+    if (date == '') return '';
+    return this.ValidationsService.formatDate(date);
+  }
+
   ngAfterViewInit() {
     const mainContent = document.getElementById('main-content');
     if (mainContent) {

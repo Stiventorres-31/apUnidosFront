@@ -154,7 +154,8 @@
                                 <option value="" selected disabled>Seleccionar</option>
 
                                 @for(lot of lotMateriales; track $index){
-                                <option [value]="lot.consecutivo">Lote {{lot.consecutivo +' -> '+ lot.cantidad}}
+                                <option [value]="lot.consecutivo">Lote {{lot.consecutivo +' -> '+ lot.cantidad +' -> '+
+                                    formatDate(lot.created_at)}}
                                 </option>
                                 }
                                 }
