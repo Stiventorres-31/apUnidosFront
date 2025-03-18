@@ -63,14 +63,14 @@ export class AssignmentsInmueblesComponent {
         const id = this.EncryptionService.decrypt(params['id']);
 
         if (!id) {
-          this.router.navigate(['/admin/projects']);
+          this.router.navigate(['/admin/workshops']);
           return;
         }
         this.index(id);
 
 
       } else {
-        this.router.navigate(['/admin/projects']);
+        this.router.navigate(['/admin/workshops']);
         return;
 
 
@@ -99,10 +99,10 @@ export class AssignmentsInmueblesComponent {
 
         const breadcrumbs = [
           // { label: 'Dashboard', url: '/admin/dashboard' },
-          { label: 'Proyectos', url: '/admin/projects/' },
-          { label: 'Inmuebles', url: '/admin/projects/assignment/' + this.EncryptionService.encrypt(`${rs.proyecto.codigo_proyecto}`) },
-          { label: 'Asignaciones', url: '/admin/property/view/assignment/' + this.EncryptionService.encrypt(`${rs.id}`) },
-          { label: rs.proyecto.codigo_proyecto + ' - ' + rs.tipo_inmueble.nombre_tipo_inmueble, url: '/admin/projects/assignment/' },
+          { label: 'Talleres', url: '/admin/workshops/' },
+          { label: 'Vehiculos', url: '/admin/workshops/assignment/' + this.EncryptionService.encrypt(`${rs.proyecto.codigo_proyecto}`) },
+          { label: 'Asignaciones', url: '/admin/vehicles/view/assignment/' + this.EncryptionService.encrypt(`${rs.id}`) },
+          { label: rs.proyecto.codigo_proyecto + ' - ' + rs.tipo_inmueble.nombre_tipo_inmueble, url: '/admin/workshops/assignment/' },
 
         ];
 
@@ -110,7 +110,7 @@ export class AssignmentsInmueblesComponent {
 
 
       } else {
-        this.router.navigate(['/admin/projects']);
+        this.router.navigate(['/admin/workshops']);
         return;
       }
 
@@ -134,7 +134,7 @@ export class AssignmentsInmueblesComponent {
   newAssignment() {
     const id = this.EncryptionService.encrypt(`${this.inmueble.id}`);
     const cod = this.EncryptionService.encrypt(`${this.inmueble.proyecto.codigo_proyecto}`)
-    this.router.navigate(['/admin/projects/assignment/new/', id, cod]);
+    this.router.navigate(['/admin/workshops/assignment/new/', id, cod]);
   }
 
 

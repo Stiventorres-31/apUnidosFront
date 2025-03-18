@@ -46,7 +46,7 @@ export class InmueblesComponent {
         this.filtros = rs;
         const breadcrumbs = [
           // { label: 'Dashboard', url: '/admin/dashboard' },
-          { label: 'Inmuebles', url: '/admin/property' },
+          { label: 'Vihiculos', url: '/admin/vehicles' },
         ];
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
         this.isLoading = false;
@@ -64,7 +64,7 @@ export class InmueblesComponent {
 
   update(type: inmueble) {
 
-    this.Router.navigate(["/admin/property/update/", this.EncryptionService.encrypt(`${type.id}`)])
+    this.Router.navigate(["/admin/vehicles/update/", this.EncryptionService.encrypt(`${type.id}`)])
   }
 
   reportB(type: inmueble) {
@@ -108,7 +108,7 @@ export class InmueblesComponent {
   delete(row: inmueble) {
     this.AppComponent.confirm({
       header: `Confirmar eliminación`,
-      message: `¿Estás seguro/a de que deseas eliminar el inmueble ${row.tipo_inmueble.nombre_tipo_inmueble + ' ' + row.id} ? `,
+      message: `¿Estás seguro/a de que deseas eliminar el vehiculos ${row.tipo_inmueble.nombre_tipo_inmueble + ' ' + row.id} ? `,
       styles: `warn`
     }).then((rs) => {
       if (rs) {

@@ -61,7 +61,7 @@ export class FormInmueblesComponent {
         const id = this.EncryptionService.decrypt(params['id']);
 
         if (!id || isNaN(parseInt(id))) {
-          this.router.navigate(['/admin/property']);
+          this.router.navigate(['/admin/vehicles']);
           return;
         }
         this.isUpdate = true;
@@ -72,9 +72,9 @@ export class FormInmueblesComponent {
 
             const breadcrumbs = [
               // { label: 'Dashboard', url: '/admin/dashboard' },
-              { label: 'Inmuebles', url: '/admin/property/' },
-              { label: 'Actualizar', url: '/admin/property/update/' + this.EncryptionService.encrypt(`${rs.id}`) },
-              { label: rs.tipo_inmueble.nombre_tipo_inmueble, url: '/admin/property/update/' },
+              { label: 'Vehiculos', url: '/admin/vehicles/' },
+              { label: 'Actualizar', url: '/admin/vehicles/update/' + this.EncryptionService.encrypt(`${rs.id}`) },
+              { label: rs.tipo_inmueble.nombre_tipo_inmueble, url: '/admin/vehicles/update/' },
 
             ];
             this.reset();
@@ -82,7 +82,7 @@ export class FormInmueblesComponent {
 
 
           } else {
-            this.router.navigate(['/admin/property']);
+            this.router.navigate(['/admin/vehicles']);
             return;
           }
 
@@ -91,8 +91,8 @@ export class FormInmueblesComponent {
         this.isLoading = false;
         const breadcrumbs = [
           // { label: 'Dashboard', url: '/admin/dashboard' },
-          { label: 'Inmuebles', url: '/admin/property/' },
-          { label: 'Agregar', url: '/admin/property/new/' },
+          { label: 'Vehiculos', url: '/admin/vehicles/' },
+          { label: 'Agregar', url: '/admin/vehicles/new/' },
         ];
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
         this.reset();
@@ -132,7 +132,7 @@ export class FormInmueblesComponent {
         this.isSending = false;
         this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
       } else {
-        this.router.navigate(['/admin/property']);
+        this.router.navigate(['/admin/vehicles']);
         this.AppComponent.alert({ summary: "Operación exitosa", detail: rs.message, severity: 'success' });
       }
     });
@@ -144,7 +144,7 @@ export class FormInmueblesComponent {
     if (!this.form.valid) {
       this.AppComponent.alert({
         summary: "Formulario invalido",
-        detail: "Por favor, Asegurese que la información del inmueble es valida.",
+        detail: "Por favor, Asegurese que la información del vehiculo es valida.",
         severity: 'warn'
       })
       this.isSending = false;
@@ -158,7 +158,7 @@ export class FormInmueblesComponent {
         this.isSending = false;
         this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
       } else {
-        this.router.navigate(['/admin/property']);
+        this.router.navigate(['/admin/vehicles']);
         this.AppComponent.alert({
           summary: "Operación exitosa",
           detail: rs.message,

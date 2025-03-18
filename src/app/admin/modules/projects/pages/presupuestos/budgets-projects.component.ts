@@ -40,7 +40,7 @@ export class BudgetsProjectsComponent {
         const id = this.EncryptionService.decrypt(params['id']);
 
         if (!id) {
-          this.router.navigate(['/admin/projects']);
+          this.router.navigate(['/admin/workshops']);
           return;
         }
 
@@ -52,9 +52,9 @@ export class BudgetsProjectsComponent {
 
             const breadcrumbs = [
               // { label: 'Dashboard', url: '/admin/dashboard' },
-              { label: 'Proyectos', url: '/admin/projects/' },
-              { label: 'Inmuebles', url: '/admin/projects/budget/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
-              { label: rs.codigo_proyecto + ' - ' + rs.ciudad_municipio_proyecto + ', ' + rs.departamento_proyecto, url: '/admin/projects/budget/' },
+              { label: 'Talleres', url: '/admin/workshops/' },
+              { label: 'Vehiculos', url: '/admin/workshops/budget/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
+              { label: rs.codigo_proyecto + ' - ' + rs.ciudad_municipio_proyecto + ', ' + rs.departamento_proyecto, url: '/admin/workshops/budget/' },
 
             ];
 
@@ -62,13 +62,13 @@ export class BudgetsProjectsComponent {
 
 
           } else {
-            this.router.navigate(['/admin/projects']);
+            this.router.navigate(['/admin/workshops']);
             return;
           }
 
         });
       } else {
-        this.router.navigate(['/admin/projects']);
+        this.router.navigate(['/admin/workshops']);
         return;
 
 
@@ -89,11 +89,11 @@ export class BudgetsProjectsComponent {
   }
 
   budgets() {
-    this.router.navigate(["/admin/projects/budgets/", this.EncryptionService.encrypt(`${this.projects.codigo_proyecto}`)])
+    this.router.navigate(["/admin/workshops/budgets/", this.EncryptionService.encrypt(`${this.projects.codigo_proyecto}`)])
   }
 
   view(row: inmueble) {
-    this.router.navigate(["/admin/property/view/budget/", this.EncryptionService.encrypt(`${row.id}`)])
+    this.router.navigate(["/admin/vehicles/view/budget/", this.EncryptionService.encrypt(`${row.id}`)])
 
   }
 

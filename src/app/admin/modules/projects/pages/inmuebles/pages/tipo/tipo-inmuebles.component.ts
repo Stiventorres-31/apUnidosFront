@@ -42,7 +42,7 @@ export class TipoInmueblesComponent {
         this.filtros = rs;
         const breadcrumbs = [
           // { label: 'Dashboard', url: '/admin/dashboard' },
-          { label: 'Tipo inmuebles', url: '/admin/type-property' },
+          { label: 'Tipo vehiculos', url: '/admin/type-vehicles' },
         ];
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
         this.isLoading = false;
@@ -59,7 +59,7 @@ export class TipoInmueblesComponent {
   }
 
   update(type: tipo_inmueble) {
-    this.Router.navigate(["/admin/type-property/update/", this.EncryptionService.encrypt(`${type.id}`)])
+    this.Router.navigate(["/admin/type-vehicles/update/", this.EncryptionService.encrypt(`${type.id}`)])
   }
 
   filter(event: Event) {
@@ -76,7 +76,7 @@ export class TipoInmueblesComponent {
   delete(row: tipo_inmueble) {
     this.AppComponent.confirm({
       header: `Confirmar eliminación`,
-      message: `¿Estás seguro/a de que deseas eliminar el tipo de inmueble ${row.nombre_tipo_inmueble} ? `,
+      message: `¿Estás seguro/a de que deseas eliminar el tipo de vehiculo ${row.nombre_tipo_inmueble} ? `,
       styles: `warn`
     }).then((rs) => {
       if (rs) {

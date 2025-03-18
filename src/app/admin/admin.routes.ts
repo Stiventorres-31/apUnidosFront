@@ -33,12 +33,12 @@ export const ADMIN_ROUTES: Routes = [
         children: [
             {
                 path: '',
-                redirectTo: 'projects',
+                redirectTo: 'workshops',
                 pathMatch: 'full'
             },
             // { path: 'dashboard', component: DashboardComponent },
             {
-                path: 'projects',
+                path: 'workshops',
                 children: [
                     { path: '', component: ProjectsComponent },
                     {
@@ -80,7 +80,7 @@ export const ADMIN_ROUTES: Routes = [
                 ]
             },
             {
-                path: 'type-property',
+                path: 'type-vehicles',
                 data: { allowedRoles: ['ADMINISTRADOR', 'SUPER ADMIN'] },
                 children: [
                     { path: '', component: TipoInmueblesComponent },
@@ -89,7 +89,7 @@ export const ADMIN_ROUTES: Routes = [
                 ]
             },
             {
-                path: 'property',
+                path: 'vehicles',
                 children: [
                     { path: '', component: InmueblesComponent },
                     {

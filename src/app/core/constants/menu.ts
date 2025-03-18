@@ -30,18 +30,18 @@ export class Menu {
       items: [
         {
           icon: 'assets/img/icons/heroicons/outline/folder.svg',
-          label: 'Proyectos',
-          route: '/admin/projects',
+          label: 'Talleres',
+          route: '/admin/workshops',
         },
         {
           icon: 'assets/img/icons/heroicons/outline/tipo_inmueble.svg',
-          label: 'Tipo de Inmuebles',
-          route: '/admin/type-property',
+          label: 'Tipo de Vehiculo',
+          route: '/admin/type-vehicles',
         },
         {
           icon: 'assets/img/icons/heroicons/outline/inmuebles.svg',
-          label: 'Inmuebles',
-          route: '/admin/property',
+          label: 'Vehiculos',
+          route: '/admin/vehicles',
         },
         {
           icon: 'assets/img/icons/heroicons/outline/cube.svg',

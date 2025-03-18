@@ -37,7 +37,7 @@ export class BudgetsUploadComponent {
         const id = this.EncryptionService.decrypt(params['id']);
 
         if (!id) {
-          this.Router.navigate(['/admin/projects']);
+          this.Router.navigate(['/admin/workshops']);
           return;
         }
         this.ProjectService.search(id).subscribe((rs) => {
@@ -46,25 +46,25 @@ export class BudgetsUploadComponent {
             this.isLoading = false;
             const breadcrumbs = [
               // { label: 'Dashboard', url: '/admin/dashboard' },
-              { label: 'Proyectos', url: '/admin/projects' },
-              { label: 'Presupuestos CSV', url: '/admin/projects/budgets/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
-              { label: rs.codigo_proyecto + ' - ' + rs.ciudad_municipio_proyecto + ', ' + rs.departamento_proyecto, url: '/admin/projects/budgets/' },
+              { label: 'Talleres', url: '/admin/workshops' },
+              { label: 'Presupuestos CSV', url: '/admin/workshops/budgets/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
+              { label: rs.codigo_proyecto + ' - ' + rs.ciudad_municipio_proyecto + ', ' + rs.departamento_proyecto, url: '/admin/workshops/budgets/' },
             ];
             this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
 
           } else {
             this.AppComponent.alert({
-              summary: "Proyecto no encontrado",
-              detail: "El proyecto solicitado no existe o ha sido eliminado.",
+              summary: "Taller no encontrado",
+              detail: "El taller solicitado no existe o ha sido eliminado.",
               severity: "error"
             });
-            this.Router.navigate(['/admin/projects']);
+            this.Router.navigate(['/admin/workshops']);
             return;
           }
 
         });
       } else {
-        this.Router.navigate(['/admin/projects']);
+        this.Router.navigate(['/admin/workshops']);
         return;
 
 
@@ -106,7 +106,7 @@ export class BudgetsUploadComponent {
     this.BudgetsService.storeCSV(formData).subscribe((rs) => {
       if (!rs.isError) {
         this.AppComponent.alert({ summary: "Operación exitosa", detail: rs.message, severity: 'success' });
-        this.Router.navigate(['/admin/projects']);
+        this.Router.navigate(['/admin/workshops']);
       } else {
         this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
       }

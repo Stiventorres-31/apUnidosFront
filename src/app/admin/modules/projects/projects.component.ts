@@ -72,7 +72,7 @@ export class ProjectsComponent {
         this.filtros = rs.result?.proyectos;
         const breadcrumbs = [
           // { label: 'Dashboard', url: '/admin/dashboard' },
-          { label: 'Proyectos', url: '/admin/projects' },
+          { label: 'Talleres', url: '/admin/workshops' },
         ];
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
         this.isLoading = false;

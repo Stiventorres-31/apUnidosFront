@@ -61,14 +61,14 @@ export class BudgetsInmueblesComponent {
         const id = this.EncryptionService.decrypt(params['id']);
 
         if (!id) {
-          this.router.navigate(['/admin/projects']);
+          this.router.navigate(['/admin/workshops']);
           return;
         }
         this.index(id);
 
 
       } else {
-        this.router.navigate(['/admin/projects']);
+        this.router.navigate(['/admin/workshops']);
         return;
 
 
@@ -97,10 +97,10 @@ export class BudgetsInmueblesComponent {
 
         const breadcrumbs = [
           // { label: 'Dashboard', url: '/admin/dashboard' },
-          { label: 'Proyectos', url: '/admin/projects/' },
-          { label: 'Inmuebles', url: '/admin/projects/budget/' + this.EncryptionService.encrypt(`${rs.proyecto.codigo_proyecto}`) },
-          { label: 'Presupuestos', url: '/admin/property/view/budget/' + this.EncryptionService.encrypt(`${rs.id}`) },
-          { label: rs.proyecto.codigo_proyecto + ' - ' + rs.tipo_inmueble.nombre_tipo_inmueble, url: '/admin/projects/budget/' },
+          { label: 'Talleres', url: '/admin/workshops/' },
+          { label: 'Vehiculos', url: '/admin/workshops/budget/' + this.EncryptionService.encrypt(`${rs.proyecto.codigo_proyecto}`) },
+          { label: 'Presupuestos', url: '/admin/vehicles/view/budget/' + this.EncryptionService.encrypt(`${rs.id}`) },
+          { label: rs.proyecto.codigo_proyecto + ' - ' + rs.tipo_inmueble.nombre_tipo_inmueble, url: '/admin/workshops/budget/' },
 
         ];
 
@@ -108,7 +108,7 @@ export class BudgetsInmueblesComponent {
 
 
       } else {
-        this.router.navigate(['/admin/projects']);
+        this.router.navigate(['/admin/workshops']);
         return;
       }
 
@@ -169,7 +169,7 @@ export class BudgetsInmueblesComponent {
   newBudget() {
     const id = this.EncryptionService.encrypt(`${this.inmueble.id}`);
     const cod = this.EncryptionService.encrypt(`${this.inmueble.proyecto.codigo_proyecto}`)
-    this.router.navigate(['/admin/projects/budget/new/', id, cod]);
+    this.router.navigate(['/admin/workshops/budget/new/', id, cod]);
   }
 
 

@@ -60,7 +60,7 @@ export class FormAssignmentComponent {
         const id = this.EncryptionService.decrypt(params['id']);
         const cod = this.EncryptionService.decrypt(params['cod']);
         if (!id || !cod) {
-          this.Router.navigate(['/admin/projects']);
+          this.Router.navigate(['/admin/workshops']);
           return;
         }
         this.data = {
@@ -72,7 +72,7 @@ export class FormAssignmentComponent {
 
 
       } else {
-        this.Router.navigate(['/admin/projects']);
+        this.Router.navigate(['/admin/workshops']);
         return;
       }
     });
@@ -127,10 +127,10 @@ export class FormAssignmentComponent {
 
         const breadcrumbs = [
           // { label: 'Dashboard', url: '/admin/dashboard' },
-          { label: 'Proyectos', url: '/admin/projects/' },
-          { label: 'Asignaciones', url: '/admin/property/view/assignment/' + this.EncryptionService.encrypt(this.data.inmueble_id) },
-          { label: 'Agregar', url: '/admin/projects/assignment/new/' + this.EncryptionService.encrypt(this.data.inmueble_id) + '/' + this.EncryptionService.encrypt(this.data.codigo_proyecto) },
-          { label: this.data.codigo_proyecto, url: '/admin/projects/assignment/new/' },
+          { label: 'Talleres', url: '/admin/workshops/' },
+          { label: 'Asignaciones', url: '/admin/vehicles/view/assignment/' + this.EncryptionService.encrypt(this.data.inmueble_id) },
+          { label: 'Agregar', url: '/admin/workshops/assignment/new/' + this.EncryptionService.encrypt(this.data.inmueble_id) + '/' + this.EncryptionService.encrypt(this.data.codigo_proyecto) },
+          { label: this.data.codigo_proyecto, url: '/admin/workshops/assignment/new/' },
 
         ];
 
@@ -210,7 +210,7 @@ export class FormAssignmentComponent {
           this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
         } else {
           const id = this.EncryptionService.encrypt(`${this.data.inmueble_id}`);
-          this.Router.navigate(['/admin/property/view/assignment/', id]);
+          this.Router.navigate(['/admin/vehicles/view/assignment/', id]);
 
           this.AppComponent.alert({
             summary: "Operación exitosa",

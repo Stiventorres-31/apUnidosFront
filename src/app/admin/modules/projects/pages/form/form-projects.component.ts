@@ -54,7 +54,7 @@ export class FormProjectsComponent {
       if (params['id']) {
         const id = this.EncryptionService.decrypt(params['id']);
         if (!id) {
-          this.router.navigate(['/admin/projects']);
+          this.router.navigate(['/admin/workshops']);
           return;
         }
         this.isUpdate = true;
@@ -65,16 +65,16 @@ export class FormProjectsComponent {
 
             const breadcrumbs = [
               // { label: 'Dashboard', url: '/admin/dashboard' },
-              { label: 'Proyecto', url: '/admin/projects/' },
-              { label: 'Actualizar', url: '/admin/projects/update/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
-              { label: rs.codigo_proyecto, url: '/admin/projects/update/' },
+              { label: 'Talleres', url: '/admin/workshops/' },
+              { label: 'Actualizar', url: '/admin/workshops/update/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
+              { label: rs.codigo_proyecto, url: '/admin/workshops/update/' },
 
             ];
             this.reset();
             this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
 
           } else {
-            this.router.navigate(['/admin/projects']);
+            this.router.navigate(['/admin/workshops']);
             return;
           }
 
@@ -83,8 +83,8 @@ export class FormProjectsComponent {
         this.isLoading = false;
         const breadcrumbs = [
           // { label: 'Dashboard', url: '/admin/dashboard' },
-          { label: 'Proyectos', url: '/admin/projects/' },
-          { label: 'Agregar', url: '/admin/projects/new/' },
+          { label: 'Talleres', url: '/admin/workshops/' },
+          { label: 'Agregar', url: '/admin/workshops/new/' },
         ];
         this.BreadCrumbService.setBreadcrumbs(breadcrumbs);
         this.reset();
@@ -112,7 +112,7 @@ export class FormProjectsComponent {
         this.isSending = false;
         this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
       } else {
-        this.router.navigate(['/admin/projects']);
+        this.router.navigate(['/admin/workshops']);
         this.AppComponent.alert({ summary: "Operación exitosa", detail: rs.message, severity: 'success' });
       }
     });
@@ -124,7 +124,7 @@ export class FormProjectsComponent {
     if (!this.form.valid) {
       this.AppComponent.alert({
         summary: "Formulario invalido",
-        detail: "Por favor, Asegurese que la información del proyecto es valida.",
+        detail: "Por favor, Asegurese que la información del taller es valido.",
         severity: 'warn'
       })
       this.isSending = false;
@@ -138,7 +138,7 @@ export class FormProjectsComponent {
         this.isSending = false;
         this.AppComponent.alert({ summary: "Operación fallida", detail: rs.message, severity: 'error' });
       } else {
-        this.router.navigate(['/admin/projects']);
+        this.router.navigate(['/admin/workshops']);
         this.AppComponent.alert({
           summary: "Operación exitosa",
           detail: rs.message,

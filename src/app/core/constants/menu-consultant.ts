@@ -22,13 +22,13 @@ export class MenuConsultant {
       items: [
         {
           icon: 'assets/img/icons/heroicons/outline/folder.svg',
-          label: 'Proyectos',
-          route: '/admin/projects',
+          label: 'Talleres',
+          route: '/admin/workshops',
         },
         {
           icon: 'assets/img/icons/heroicons/outline/inmuebles.svg',
-          label: 'Inmuebles',
-          route: '/admin/property',
+          label: 'Vehiculos',
+          route: '/admin/vehicles',
         },
       ],
     },

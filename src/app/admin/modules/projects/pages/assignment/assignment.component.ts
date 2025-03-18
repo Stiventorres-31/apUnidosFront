@@ -39,7 +39,7 @@ export class AssignmentComponent {
       if (params['id']) {
         const id = this.EncryptionService.decrypt(params['id']);
         if (!id) {
-          this.router.navigate(['/admin/projects']);
+          this.router.navigate(['/admin/workshops']);
           return;
         }
 
@@ -51,9 +51,9 @@ export class AssignmentComponent {
 
             const breadcrumbs = [
               // { label: 'Dashboard', url: '/admin/dashboard' },
-              { label: 'Proyectos', url: '/admin/projects/' },
-              { label: 'Inmuebles', url: '/admin/projects/assignment/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
-              { label: rs.codigo_proyecto + ' - ' + rs.ciudad_municipio_proyecto + ', ' + rs.departamento_proyecto, url: '/admin/projects/assignment/' },
+              { label: 'Talleres', url: '/admin/workshops/' },
+              { label: 'Vehiculos', url: '/admin/workshops/assignment/' + this.EncryptionService.encrypt(`${rs.codigo_proyecto}`) },
+              { label: rs.codigo_proyecto + ' - ' + rs.ciudad_municipio_proyecto + ', ' + rs.departamento_proyecto, url: '/admin/workshops/assignment/' },
 
             ];
 
@@ -61,13 +61,13 @@ export class AssignmentComponent {
 
 
           } else {
-            this.router.navigate(['/admin/projects']);
+            this.router.navigate(['/admin/workshops']);
             return;
           }
 
         });
       } else {
-        this.router.navigate(['/admin/projects']);
+        this.router.navigate(['/admin/workshops']);
         return;
 
 
@@ -88,11 +88,11 @@ export class AssignmentComponent {
   }
 
   assignments() {
-    this.router.navigate(["/admin/projects/assignments/", this.EncryptionService.encrypt(`${this.projects.codigo_proyecto}`)])
+    this.router.navigate(["/admin/workshops/assignments/", this.EncryptionService.encrypt(`${this.projects.codigo_proyecto}`)])
   }
 
   view(row: inmueble) {
-    this.router.navigate(["/admin/property/view/assignment/", this.EncryptionService.encrypt(`${row.id}`)])
+    this.router.navigate(["/admin/vehicles/view/assignment/", this.EncryptionService.encrypt(`${row.id}`)])
 
   }
 

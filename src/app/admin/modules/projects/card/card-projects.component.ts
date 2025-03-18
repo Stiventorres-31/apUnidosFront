@@ -29,15 +29,15 @@ export class CardProjectsComponent {
   }
 
   update() {
-    this.Router.navigate(["/admin/projects/update/", this.EncryptionService.encrypt(`${this.project.codigo_proyecto}`)])
+    this.Router.navigate(["/admin/workshops/update/", this.EncryptionService.encrypt(`${this.project.codigo_proyecto}`)])
   }
 
   assignment() {
-    this.Router.navigate(["/admin/projects/assignment/", this.EncryptionService.encrypt(`${this.project.codigo_proyecto}`)])
+    this.Router.navigate(["/admin/workshops/assignment/", this.EncryptionService.encrypt(`${this.project.codigo_proyecto}`)])
   }
 
   inmuebles() {
-    this.Router.navigate(["/admin/projects/budget/", this.EncryptionService.encrypt(`${this.project.codigo_proyecto}`)])
+    this.Router.navigate(["/admin/workshops/budget/", this.EncryptionService.encrypt(`${this.project.codigo_proyecto}`)])
   }
 
 
@@ -47,7 +47,7 @@ export class CardProjectsComponent {
         const url = window.URL.createObjectURL(rs);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `reporte_proyecto_${this.project.id}_${this.project.codigo_proyecto}.csv`;
+        a.download = `reporte_taller_${this.project.id}_${this.project.codigo_proyecto}.csv`;
         a.click();
         window.URL.revokeObjectURL(url);
       }
@@ -57,7 +57,7 @@ export class CardProjectsComponent {
   delete() {
     this.AppComponent.confirm({
       header: `Confirmar eliminación`,
-      message: `¿Estás seguro/a de que deseas eliminar el proyecto con código ${this.project.codigo_proyecto} ? `,
+      message: `¿Estás seguro/a de que deseas eliminar el taller con código ${this.project.codigo_proyecto} ? `,
       styles: `warn`
     }).then((rs) => {
       if (rs) {
@@ -68,7 +68,7 @@ export class CardProjectsComponent {
 
               if (!rx.isError) this.onload.emit(true);
             } else {
-              this.AppComponent.alert({ summary: 'Error al eliminar', detail: 'No se pudo eliminar el proyecto', severity: 'error' });
+              this.AppComponent.alert({ summary: 'Error al eliminar', detail: 'No se pudo eliminar el taller', severity: 'error' });
             }
 
           }

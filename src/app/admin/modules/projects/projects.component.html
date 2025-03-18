@@ -48,8 +48,8 @@
             <div class="flex">
                 @if(hasRole('ADMINISTRADOR', 'SUPER ADMIN')){
                 <div class="flex gap-2 rounded-full items-center px-4 py-3 cursor-pointer bg-blue-500 hover:bg-blue-400 text-white"
-                    [routerLink]="'/admin/projects/new'">
-                    <span class="text-white">Agregar proyecto</span>
+                    [routerLink]="'/admin/workshops/new'">
+                    <span class="text-white">Agregar taller</span>
                     <i translate="no" class="material-icons text-white">add</i>
 
 
@@ -65,7 +65,7 @@
             @if(!isSearching){
             <div class="w-full flex justify-start mb-3">
                 <span class="text-gray-700 ">Se encontraron {{ filtros.meta ? filtros.meta.total : filtros.total}}
-                    proyectos</span>
+                    talleres</span>
             </div>
             }
 

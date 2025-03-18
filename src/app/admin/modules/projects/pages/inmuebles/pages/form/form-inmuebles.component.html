@@ -43,12 +43,12 @@
                                 @if(isUpdate){
                                 <div (click)="update()"
                                     class=" w-56 rounded-full bg-primary cursor-pointer text-white flex justify-center items-center h-10">
-                                    Actualizar inmueble
+                                    Actualizar vehiculos
                                 </div>
                                 }@else {
                                 <div (click)="store()"
                                     class=" w-56 rounded-full bg-primary cursor-pointer text-white flex justify-center items-center h-10">
-                                    <span class="material-icons mr-2" translate="no">add</span>Agregar inmueble
+                                    <span class="material-icons mr-2" translate="no">add</span>Agregar vehiculo
                                 </div>
                                 }
                             </ng-container>
@@ -63,7 +63,7 @@
                             <div class="mt-6 input-container  ">
                                 <label for="codigo_proyecto"
                                     [ngClass]="{'label-float-active': inputs['codigo_proyecto'], 'label-float-inactive': !inputs['codigo_proyecto'] || inputs['codigo_proyecto'] == null }"
-                                    class="label-flotante label-float-active required">Código Proyecto</label>
+                                    class="label-flotante label-float-active required">Código Taller</label>
                                 <select (change)="labelBlur('codigo_proyecto', $event);"
                                     (focus)="labelFocus('codigo_proyecto')" formControlName="codigo_proyecto"
                                     (blur)="labelBlur('codigo_proyecto', $event)"
