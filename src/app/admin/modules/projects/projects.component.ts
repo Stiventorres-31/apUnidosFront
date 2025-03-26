@@ -140,6 +140,9 @@ export class ProjectsComponent {
         detail: 'Formulario invalido',
         summary: 'Por favor, seleccione un código de taller'
       })
+
+      this.isSending = false;
+      return;
     }
 
     const data = this.form.value;

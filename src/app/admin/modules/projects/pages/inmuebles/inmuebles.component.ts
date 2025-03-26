@@ -92,7 +92,7 @@ export class InmueblesComponent {
     this.form.patchValue({
       id: vehi.id,
       type: type,
-      codigo_proyecto: vehi.codigo_proyecto
+      codigo_proyecto: vehi.proyecto.codigo_proyecto
     })
     this.showModal = true;
 
@@ -111,6 +111,8 @@ export class InmueblesComponent {
         detail: 'Formulario invalido',
         summary: 'Por favor, seleccione un carro'
       })
+      this.isSending = false;
+      return;
     }
 
     const data = this.form.value;
