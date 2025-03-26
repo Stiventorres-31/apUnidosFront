@@ -44,6 +44,7 @@ export class InmueblesComponent {
     this.form = this.fb.group({
       id: ['', Validators.required],
       type: ['', Validators.required],
+      codigo_proyecto: ['', Validators.required],
       fecha_desde: [''],
       fecha_hasta: ['']
     })
@@ -87,10 +88,11 @@ export class InmueblesComponent {
   }
 
 
-  openModal(cod: string, type: boolean) {
+  openModal(vehi: inmueble, type: boolean) {
     this.form.patchValue({
-      id: cod,
-      type: type
+      id: vehi.id,
+      type: type,
+      codigo_proyecto: vehi.codigo_proyecto
     })
     this.showModal = true;
 

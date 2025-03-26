@@ -113,13 +113,13 @@
                     <ng-template let-row="row" ngx-datatable-cell-template>
                         <div class="flex gap-3 ">
 
-                            <div data-title="Reporte presupuestos" (click)="openModal(row.id, true )"
+                            <div data-title="Reporte presupuestos" (click)="openModal(row, true )"
                                 class=" flex items-center cursor-pointer tooltip-left h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-green-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">description</span>
                             </div>
 
-                            <div data-title="Reporte asignaciones" (click)="openModal(row.id, false)"
+                            <div data-title="Reporte asignaciones" (click)="openModal(row, false)"
                                 class=" flex items-center cursor-pointer tooltip-left h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-primary align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">description</span>
