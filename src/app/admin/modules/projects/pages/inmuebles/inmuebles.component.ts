@@ -128,6 +128,12 @@ export class InmueblesComponent {
         a.download = `reporte_vehiculos_${name}_${data.id}_${data.codigo_proyecto}.csv`;
         a.click();
         window.URL.revokeObjectURL(url);
+      } else {
+        this.AppComponent.alert({
+          severity: 'error',
+          detail: 'Operación fallida',
+          summary: 'No se puedo realizar la operación, por favor intenta más tarde'
+        })
       }
     });
   }
