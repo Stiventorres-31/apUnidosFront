@@ -8,11 +8,14 @@ import { BreadCrumbService } from '../../../../../shared/services/breadcrumbs/br
 import { AppComponent } from '../../../../../app.component';
 import { inmueble } from './models/inmuebles.interface';
 import { filter_ngx } from '../../../../../core/pipes/filter.pipe';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { FilterDateComponent } from '../../../../../shared/components/filter-date/filter-date.component';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-inmuebles',
   standalone: true,
-  imports: [RouterLink, NgxDatatableModule],
+  imports: [ReactiveFormsModule, FilterDateComponent, MatProgressSpinnerModule, RouterLink, NgxDatatableModule],
   templateUrl: './inmuebles.component.html',
   styles: ''
 })
@@ -24,10 +27,26 @@ export class InmueblesComponent {
   public data: inmueble[] = [];
   public filtros: inmueble[] = [];
   protected usuarioRol: string = '';
+  public isSending: boolean = false;
+  public showModal: boolean = false;
 
-  constructor(private InmueblesService: InmueblesService, private EncryptionService: EncryptionService, private Router: Router, private BreadCrumbService: BreadCrumbService, private AppComponent: AppComponent
+  public form!: FormGroup;
+
+  constructor(
+    private InmueblesService: InmueblesService,
+    private EncryptionService: EncryptionService,
+    private Router: Router,
+    private BreadCrumbService: BreadCrumbService,
+    private AppComponent: AppComponent,
+    private fb: FormBuilder
   ) {
     this.usuarioRol = this.EncryptionService.loadData('role');
+    this.form = this.fb.group({
+      id: ['', Validators.required],
+      type: ['', Validators.required],
+      fecha_desde: [''],
+      fecha_hasta: ['']
+    })
   }
 
 
@@ -67,32 +86,74 @@ export class InmueblesComponent {
     this.Router.navigate(["/admin/vehicles/update/", this.EncryptionService.encrypt(`${type.id}`)])
   }
 
-  reportB(type: inmueble) {
-    this.InmueblesService.report(`${type.id}`, true).subscribe((rs: Blob) => {
 
+  openModal(cod: string, type: boolean) {
+    this.form.patchValue({
+      id: cod,
+      type: type
+    })
+    this.showModal = true;
+
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.form.reset();
+  }
+
+  report() {
+    this.isSending = true;
+    if (!this.form.valid) {
+      this.AppComponent.alert({
+        severity: 'error',
+        detail: 'Formulario invalido',
+        summary: 'Por favor, seleccione un carro'
+      })
+    }
+
+    const data = this.form.value;
+    const name = data.type ? 'presupuesto' : 'asignacion';
+
+    this.InmueblesService.report(data).subscribe((rs: Blob) => {
+      this.isSending = false;
       if (rs.size > 0) {
+        this.closeModal();
         const url = window.URL.createObjectURL(rs);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `reporte_presupuesto_${type.id}_${type.proyecto.codigo_proyecto}.csv`;
+        a.download = `reporte_vehiculos_${name}_${data.id}_${data.codigo_proyecto}.csv`;
         a.click();
         window.URL.revokeObjectURL(url);
       }
     });
   }
 
-  reportA(type: inmueble) {
-    this.InmueblesService.report(`${type.id}`, false).subscribe((rs: Blob) => {
-      if (rs.size > 0) {
-        const url = window.URL.createObjectURL(rs);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `reporte_asignacion_${type.id}_${type.proyecto.codigo_proyecto}.csv`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-      }
-    });
-  }
+  // reportB(type: inmueble) {
+  //   this.InmueblesService.report(`${type.id}`, true).subscribe((rs: Blob) => {
+
+  //     if (rs.size > 0) {
+  //       const url = window.URL.createObjectURL(rs);
+  //       const a = document.createElement('a');
+  //       a.href = url;
+  //       a.download = `reporte_presupuesto_${type.id}_${type.proyecto.codigo_proyecto}.csv`;
+  //       a.click();
+  //       window.URL.revokeObjectURL(url);
+  //     }
+  //   });
+  // }
+
+  // reportA(type: inmueble) {
+  //   this.InmueblesService.report(`${type.id}`, false).subscribe((rs: Blob) => {
+  //     if (rs.size > 0) {
+  //       const url = window.URL.createObjectURL(rs);
+  //       const a = document.createElement('a');
+  //       a.href = url;
+  //       a.download = `reporte_asignacion_${type.id}_${type.proyecto.codigo_proyecto}.csv`;
+  //       a.click();
+  //       window.URL.revokeObjectURL(url);
+  //     }
+  //   });
+  // }
 
   filter(event: Event) {
     const key = event.target as HTMLInputElement;

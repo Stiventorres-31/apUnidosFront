@@ -13,11 +13,13 @@ import { environment } from '../../../../environments/environment';
 import { pagination_interface } from '../../../shared/models/pagination/pagination.interface';
 import { PaginationTableComponent } from '../../../shared/components/pagination/pagination-table.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { FilterDateComponent } from '../../../shared/components/filter-date/filter-date.component';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [NgxDatatableModule, ReactiveFormsModule, RouterLink, CardProjectsComponent, PaginationTableComponent],
+  imports: [FilterDateComponent, MatProgressSpinnerModule, NgxDatatableModule, ReactiveFormsModule, RouterLink, CardProjectsComponent, PaginationTableComponent],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss'
 })
@@ -33,6 +35,8 @@ export class ProjectsComponent {
   private searchTimeout: any;
   public typeOrigin: number = 0; //0  = index, 1 = input busqueda
   protected usuarioRol: string = '';
+  public showModal: boolean = false;
+  public isSending: boolean = false;
 
   constructor(private ProjectService: ProjectService,
     private EncryptionService: EncryptionService,
@@ -43,8 +47,9 @@ export class ProjectsComponent {
   ) {
     this.usuarioRol = this.EncryptionService.loadData('role');
     this.form = this.fb.group({
-      codigo_proyecto: ['', Validators.required
-      ],
+      codigo_proyecto: ['', Validators.required],
+      fecha_desde: [''],
+      fecha_hasta: ['']
     })
   }
 
@@ -126,6 +131,45 @@ export class ProjectsComponent {
     }
   }
 
+  report() {
+
+    this.isSending = true;
+    if (!this.form.valid) {
+      this.AppComponent.alert({
+        severity: 'error',
+        detail: 'Formulario invalido',
+        summary: 'Por favor, seleccione un código de taller'
+      })
+    }
+
+    const data = this.form.value;
+
+    this.ProjectService.report(data).subscribe((rs: Blob) => {
+      this.isSending = false;
+      if (rs.size > 0) {
+        this.closeModal();
+        const url = window.URL.createObjectURL(rs);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `reporte_taller_${data.id}_${data.codigo_proyecto}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    });
+  }
+
+  openModal(cod: string) {
+    this.form.patchValue({
+      codigo_proyecto: cod
+    })
+    this.showModal = true;
+
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.form.reset();
+  }
 
 
   showDetails(row: any) {

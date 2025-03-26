@@ -30,7 +30,7 @@
         <div class="w-full flex flex-wrap justify-center mt-20 px-4">
             <div class="w-full lg:w-8/12 xl:w-6/12">
                 <div class="input-container w-full ">
-                    <input type="text" #inputSearch formControlName="termino" (input)="filter($event)"
+                    <input type="text" #inputSearch (input)="filter($event)"
                         class=" py-3 pl-11 pr-3 w-full rounded-3xl h-11 outline-none border border-slate-300 bg-slate-100 slideInTop"
                         placeholder="Buscar...">
                     <div class="absolute top-[10px] left-3">
@@ -113,13 +113,13 @@
                     <ng-template let-row="row" ngx-datatable-cell-template>
                         <div class="flex gap-3 ">
 
-                            <div data-title="Reporte presupuestos" (click)="reportB(row)"
+                            <div data-title="Reporte presupuestos" (click)="openModal(row.id, true )"
                                 class=" flex items-center cursor-pointer tooltip-left h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-green-300 align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">description</span>
                             </div>
 
-                            <div data-title="Reporte asignaciones" (click)="reportA(row)"
+                            <div data-title="Reporte asignaciones" (click)="openModal(row.id, false)"
                                 class=" flex items-center cursor-pointer tooltip-left h-full tool-tip relative">
                                 <span matRipple style="font-size: 16px !important;"
                                     class="text-center text-white bg-primary align-baseline inline-flex px-4 py-2 mr-auto items-center material-icons leading-none rounded-lg">description</span>
@@ -155,3 +155,40 @@
     }
 
 </div>
+
+
+
+@if(showModal){
+<div class="show-form">
+    <div class="modal-flotante bg-white rounded" (click)="$event.stopPropagation()">
+        <div class="header bg-primary text-white">
+            <span class="text-base font-medium">Reporte {{form.get('type')?.value ? 'presupuestos' : 'asignaciones'}}
+                vehículo: {{form.get('id')?.value}}</span>
+
+        </div>
+
+        <div class="body" [formGroup]="form">
+            <div class="w-full flex justify-center">
+                <div class="cursor-pointer ">
+                    <filter-date class="w-full" [filtros]="form"></filter-date>
+                </div>
+
+            </div>
+
+        </div>
+        <hr>
+        <div class="footer space-x-3 text-right">
+            @if(isSending){
+            <div class="flex justify-end">
+                <mat-spinner [diameter]="30"></mat-spinner>
+            </div>
+
+            }@else {
+            <button class="px-4 py-2 rounded-full bg-gray-500 text-white " (click)="closeModal()">Cancelar</button>
+            <button class="px-4 py-2 rounded-full bg-primary text-white" (click)="report()">Guardar</button>
+            }
+
+        </div>
+    </div>
+</div>
+}

@@ -61,12 +61,12 @@ export class InmueblesService {
 
   }
 
-  report(id: string, type: boolean = true): Observable<Blob> {
+  report(form: { id: number, type: string, fecha_desde: string, fecha_hasta: string }): Observable<Blob> {
     let url = 'api/inmueble/report/';
-    if (!type) {
+    if (!form.type) {
       url += `asignacion/`;
     }
-    return this.http.get(environment.backend + url + `${id}`, {
+    return this.http.post(environment.backend + url + `${form.id}`, { ...form }, {
       headers: this.headersService.getFileHeaders(),
       responseType: 'blob'  // Esto es importante para recibir el archivo como un blob
     }).pipe(

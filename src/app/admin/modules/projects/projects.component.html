@@ -178,7 +178,7 @@
             @if(!isSearching){
             <ng-container>
                 @for(project of projects_data; track $index){
-                <card-projects [project]="project" (onload)="index()"></card-projects>
+                <card-projects [project]="project" (projectId)="openModal($event);" (onload)="index()"></card-projects>
                 }
             </ng-container>
 
@@ -205,3 +205,38 @@
     }
 
 </div>
+
+
+@if(showModal){
+<div class="show-form">
+    <div class="modal-flotante bg-white rounded" (click)="$event.stopPropagation()">
+        <div class="header bg-primary text-white">
+            <span class="text-base font-medium">Reporte taller: {{form.get('codigo_proyecto')?.value}}</span>
+
+        </div>
+
+        <div class="body" [formGroup]="form">
+            <div class="w-full flex justify-center">
+                <div class="cursor-pointer ">
+                    <filter-date class="w-full" [filtros]="form"></filter-date>
+                </div>
+
+            </div>
+
+        </div>
+        <hr>
+        <div class="footer space-x-3 text-right">
+            @if(isSending){
+            <div class="flex justify-end">
+                <mat-spinner [diameter]="30"></mat-spinner>
+            </div>
+
+            }@else {
+            <button class="px-4 py-2 rounded-full bg-gray-500 text-white " (click)="closeModal()">Cancelar</button>
+            <button class="px-4 py-2 rounded-full bg-primary text-white" (click)="report()">Guardar</button>
+            }
+
+        </div>
+    </div>
+</div>
+}

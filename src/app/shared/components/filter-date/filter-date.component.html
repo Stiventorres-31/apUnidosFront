@@ -1,0 +1,36 @@
+<div [formGroup]="filtros">
+    <div class="type flex items-center gap-2" (click)="picker.open()">
+
+        <i translate="no" class="material-icons text-red-600">calendar_month</i>
+
+        @if (fecha_inicio && fecha_fin) {
+        <div class="flex items-center gap-2">
+            <div>
+                {{fecha_inicio}}
+                <span class="font-bold text-green-700"> - </span>
+                {{fecha_fin }}
+            </div>
+            <div class="bg-red-100 rounded-full p-1 flex justify-center items-center" (click)="reset($event)">
+                <i translate="no" class="material-symbols-outlined text-red-600">
+                    close
+                </i>
+            </div>
+        </div>
+        }@else {
+        <span class="text-gray-700">Filtrar por fecha</span>
+
+        }
+    </div>
+    <div class="left-0 right-0 top-14 absolute">
+        <mat-form-field class="bg-white  "
+            style="border: none !important;height: 0px !important;width: 0px !important;">
+            <mat-date-range-input [rangePicker]="picker" [required]="true" class="hidden"
+                style="border: none !important;">
+                <input class="bg-white" matStartDate formControlName="fecha_desde" placeholder="Fecha de inicio">
+                <input class="bg-white" matEndDate formControlName="fecha_hasta" placeholder="Fecha de fin"
+                    (dateChange)="index()">
+            </mat-date-range-input>
+            <mat-date-range-picker #picker style="border: none !important;"></mat-date-range-picker>
+        </mat-form-field>
+    </div>
+</div>

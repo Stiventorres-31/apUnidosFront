@@ -15,6 +15,7 @@ import { inmueble } from '../pages/inmuebles/models/inmuebles.interface';
 })
 export class CardProjectsComponent {
   @Output() onload = new EventEmitter<boolean>
+  @Output() projectId = new EventEmitter<string>
   @Input() project!: projects;
   protected usuarioRol: string = '';
   constructor(
@@ -42,16 +43,18 @@ export class CardProjectsComponent {
 
 
   report() {
-    this.ProjectService.report(`${this.project.codigo_proyecto}`).subscribe((rs: Blob) => {
-      if (rs.size > 0) {
-        const url = window.URL.createObjectURL(rs);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `reporte_taller_${this.project.id}_${this.project.codigo_proyecto}.csv`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-      }
-    });
+
+    this.projectId.emit(this.project.codigo_proyecto);
+    // this.ProjectService.report(`${this.project.codigo_proyecto}`).subscribe((rs: Blob) => {
+    //   if (rs.size > 0) {
+    //     const url = window.URL.createObjectURL(rs);
+    //     const a = document.createElement('a');
+    //     a.href = url;
+    //     a.download = `reporte_taller_${this.project.id}_${this.project.codigo_proyecto}.csv`;
+    //     a.click();
+    //     window.URL.revokeObjectURL(url);
+    //   }
+    // });
   }
 
   delete() {
