@@ -79,7 +79,15 @@
                             </div>
                         </div>
                         <div class="w-full">
+                            <div class="mt-6 input-container  ">
+                                <label for="nombre"
+                                    [ngClass]="{'label-float-active': inputs['nombre'], 'label-float-inactive': !inputs['nombre'] || inputs['nombre'] == null }"
+                                    class="label-flotante label-float-active required">Nombre</label>
+                                <input (input)="labelBlur('nombre', $event);" autocomplete="false"
+                                    (focus)="labelFocus('nombre')" (blur)="labelBlur('nombre', $event)" type="text"
+                                    class="form-control input-control  " id="nombre" formControlName="nombre" required>
 
+                            </div>
                         </div>
                     </div>
 

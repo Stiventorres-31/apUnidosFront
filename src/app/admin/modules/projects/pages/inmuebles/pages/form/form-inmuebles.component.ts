@@ -50,6 +50,7 @@ export class FormInmueblesComponent {
       codigo_proyecto: ['', Validators.required],
       cantidad_inmueble: [1, Validators.required],
       tipo_inmueble: ['', Validators.required],
+      nombre: ['', Validators.required],
     });
     this.inputs = this.labels.inputs_data;
   }

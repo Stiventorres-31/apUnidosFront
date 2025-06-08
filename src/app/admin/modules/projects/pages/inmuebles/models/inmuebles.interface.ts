@@ -12,6 +12,7 @@ export interface tipo_inmueble {
 export interface inmueble {
     id: number;
     codigo_proyecto: string;
+    nombre: string;
     tipo_inmueble: tipo_inmueble;
     presupuestos?: any[];
     asignaciones?: any[];
